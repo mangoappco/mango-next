@@ -1,0 +1,17 @@
+# Dependencias de Composer
+/vendor/
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+
+# Configuración local de VS Code
+.vscode/
