@@ -1,0 +1,19 @@
+{
+    "name": "mangoappco/mango-next",
+    "description": "Nueva versión de ManGo!, construida desde cero, con buenas prácticas.",
+    "type": "project",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Mango\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Danny Estrada",
+            "email": "mangoappco@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
