@@ -7,9 +7,9 @@ declare(strict_types=1);
 // dirname(__DIR__) sube desde public/ hasta la raíz del proyecto.
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-// Crea una instancia de la aplicación principal y le entrega la raíz del proyecto.
+// Crea una instancia de la aplicación principal.
 // Composer encuentra esta clase gracias al autoload PSR-4.
-$application = new Mango\Core\Application(dirname(__DIR__));
+$application = new Mango\Core\Application();
 
 // Inicia el flujo principal de la aplicación.
 $application->run();
