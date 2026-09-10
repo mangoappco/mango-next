@@ -50,9 +50,5 @@ function escaparTextoLogin(string $valor): string
     <p>
         <a href="index.php?accion=recuperar">¿Olvidaste tu contraseña?</a>
     </p>
-
-    <p>
-        <a href="index.php">Volver</a>
-    </p>
 </body>
 </html>

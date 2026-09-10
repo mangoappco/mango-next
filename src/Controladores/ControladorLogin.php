@@ -9,6 +9,9 @@ namespace Mango\Controladores;
 // Importa el modelo que consulta los usuarios almacenados.
 use Mango\Modelos\ModeloUsuario;
 
+// Importa el servicio que envía correos de recuperación.
+use Mango\Core\ServicioCorreo;
+
 // Coordina la validación de las credenciales de acceso.
 final class ControladorLogin
 {
@@ -19,7 +22,10 @@ final class ControladorLogin
     private const DURACION_BLOQUEO = 300;
 
     // Recibe el modelo mediante inyección de dependencias.
-    public function __construct(private ModeloUsuario $modeloUsuario)
+    public function __construct(
+        private ModeloUsuario $modeloUsuario,
+        private ServicioCorreo $servicioCorreo
+    )
     {
     }
 
@@ -166,8 +172,18 @@ final class ControladorLogin
         // Guarda el hash durante una hora.
         $this->modeloUsuario->crearTokenRecuperacion((int) $usuario['id'], $tokenHash, $expiraEn);
 
-        // Devuelve el enlace solo para simular el correo en desarrollo.
-        $resultado['enlace'] = 'index.php?accion=restablecer&token=' . urlencode($token);
+        // Construye una URL completa para local y producción.
+        $enlace = rtrim((string) $this->servicioCorreo->urlAplicacion(), '/')
+            . '/index.php?accion=restablecer&token='
+            . urlencode($token);
+
+        // En producción envía el enlace; en local el servicio no envía correo real.
+        $this->servicioCorreo->enviarRecuperacion((string) $usuario['correo'], $enlace);
+
+        // Solo devuelve el enlace a la vista cuando estamos en desarrollo.
+        if ($this->servicioCorreo->esEntornoLocal()) {
+            $resultado['enlace'] = $enlace;
+        }
 
         return $resultado;
     }

@@ -89,11 +89,14 @@ final class Application
         // Crea el modelo y le entrega la conexión que necesita.
         $modeloUsuario = new ModeloUsuario($database->connection());
 
+        // Crea el servicio encargado de enviar correos SMTP.
+        $servicioCorreo = new ServicioCorreo($config);
+
         // Crea el controlador y le entrega el modelo correspondiente.
         $controladorUsuarios = new ControladorUsuarios($modeloUsuario);
 
         // Crea el controlador que validará las credenciales del login.
-        $controladorLogin = new ControladorLogin($modeloUsuario);
+        $controladorLogin = new ControladorLogin($modeloUsuario, $servicioCorreo);
 
         // Permite solicitar recuperación sin tener una sesión autenticada.
         if ($accion === 'recuperar') {

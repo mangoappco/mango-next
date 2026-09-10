@@ -42,5 +42,9 @@ function escaparTextoRestablecer(string $valor): string
 
         <button type="submit">Restablecer contraseña</button>
     </form>
+
+    <p>
+        <a href="index.php">Volver al index</a>
+    </p>
 </body>
 </html>
