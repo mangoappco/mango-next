@@ -141,6 +141,72 @@ final class ControladorLogin
         return ['errores' => []];
     }
 
+    // Solicita una recuperación sin revelar si el correo está registrado.
+    public function solicitarRecuperacion(string $correo): array
+    {
+        // Busca el usuario asociado al correo recibido.
+        $usuario = $this->modeloUsuario->buscarPorCorreo($correo);
+
+        // Devuelve siempre el mismo resultado visible para evitar enumerar cuentas.
+        $resultado = [
+            'mensaje' => 'Si el correo existe, se generó un enlace de recuperación.',
+            'enlace' => null,
+        ];
+
+        // No genera tokens para correos inexistentes o usuarios inactivos.
+        if ($usuario === null || (int) $usuario['activo'] !== 1) {
+            return $resultado;
+        }
+
+        // Genera un token aleatorio que solo se conocerá por el enlace enviado.
+        $token = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $token);
+        $expiraEn = date('Y-m-d H:i:s', time() + 3600);
+
+        // Guarda el hash durante una hora.
+        $this->modeloUsuario->crearTokenRecuperacion((int) $usuario['id'], $tokenHash, $expiraEn);
+
+        // Devuelve el enlace solo para simular el correo en desarrollo.
+        $resultado['enlace'] = 'index.php?accion=restablecer&token=' . urlencode($token);
+
+        return $resultado;
+    }
+
+    // Valida un token y establece la nueva contraseña.
+    public function restablecerContrasena(string $token, array $datos): array
+    {
+        // Obtiene el registro usando únicamente el hash del token recibido.
+        $tokenHash = hash('sha256', $token);
+        $recuperacion = $this->modeloUsuario->buscarRecuperacionValida($tokenHash);
+        $nueva = (string) ($datos['contrasena_nueva'] ?? '');
+        $confirmacion = (string) ($datos['contrasena_confirmacion'] ?? '');
+        $errores = [];
+
+        // Rechaza tokens inexistentes, vencidos o usados.
+        if ($recuperacion === null) {
+            $errores[] = 'El enlace no es válido o ya expiró.';
+        }
+
+        // Aplica la misma regla mínima del cambio autenticado.
+        if (strlen($nueva) < 8) {
+            $errores[] = 'La nueva contraseña debe tener al menos 8 caracteres.';
+        }
+
+        if ($nueva !== $confirmacion) {
+            $errores[] = 'La confirmación no coincide con la nueva contraseña.';
+        }
+
+        if ($errores !== []) {
+            return ['errores' => $errores];
+        }
+
+        // Cambia la contraseña y consume el token en la misma operación lógica.
+        $this->modeloUsuario->cambiarContrasena((int) $recuperacion['usuario_id'], $nueva);
+        $this->modeloUsuario->marcarRecuperacionUsada((int) $recuperacion['recuperacion_id']);
+
+        return ['errores' => []];
+    }
+
     // Devuelve los segundos que faltan para terminar el bloqueo actual.
     private function segundosBloqueoRestantes(): int
     {

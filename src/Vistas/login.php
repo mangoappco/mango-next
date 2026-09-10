@@ -19,6 +19,10 @@ function escaparTextoLogin(string $valor): string
 <body>
     <h1>Iniciar sesión</h1>
 
+    <?php if ($mensaje !== null): ?>
+        <p><?= escaparTextoLogin((string) $mensaje) ?></p>
+    <?php endif; ?>
+
     <?php if ($errores !== []): ?>
         <ul>
             <?php foreach ($errores as $error): ?>
@@ -42,6 +46,10 @@ function escaparTextoLogin(string $valor): string
 
         <button type="submit">Iniciar sesión</button>
     </form>
+
+    <p>
+        <a href="index.php?accion=recuperar">¿Olvidaste tu contraseña?</a>
+    </p>
 
     <p>
         <a href="index.php">Volver</a>

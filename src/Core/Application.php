@@ -44,6 +44,12 @@ final class Application
             $errores = [];
             $datos = ['correo' => ''];
 
+            // Recupera un mensaje temporal, por ejemplo después de restablecer la contraseña.
+            $mensaje = $_SESSION['mensaje'] ?? null;
+
+            // Elimina el mensaje para mostrarlo una sola vez.
+            unset($_SESSION['mensaje']);
+
             // Carga la vista del formulario de acceso.
             require $rootPath . '/src/Vistas/login.php';
             return;
@@ -89,11 +95,61 @@ final class Application
         // Crea el controlador que validará las credenciales del login.
         $controladorLogin = new ControladorLogin($modeloUsuario);
 
+        // Permite solicitar recuperación sin tener una sesión autenticada.
+        if ($accion === 'recuperar') {
+            $errores = [];
+            $mensajeRecuperacion = null;
+            $enlaceRecuperacion = null;
+            $correoRecuperacion = '';
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } else {
+                    $correoRecuperacion = trim((string) ($_POST['correo'] ?? ''));
+                    $resultadoRecuperacion = $controladorLogin->solicitarRecuperacion($correoRecuperacion);
+                    $mensajeRecuperacion = $resultadoRecuperacion['mensaje'];
+                    $enlaceRecuperacion = $resultadoRecuperacion['enlace'];
+                }
+            }
+
+            require $rootPath . '/src/Vistas/recuperar.php';
+            return;
+        }
+
+        // Permite establecer una nueva contraseña con un token vigente.
+        if ($accion === 'restablecer') {
+            $tokenRecuperacion = (string) ($_GET['token'] ?? '');
+            $errores = [];
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } else {
+                    $resultadoRestablecimiento = $controladorLogin->restablecerContrasena(
+                        $tokenRecuperacion,
+                        $_POST
+                    );
+                    $errores = $resultadoRestablecimiento['errores'];
+                }
+
+                if ($errores === []) {
+                    $_SESSION['mensaje'] = 'Contraseña restablecida correctamente.';
+                    header('Location: index.php?accion=login');
+                    exit;
+                }
+            }
+
+            require $rootPath . '/src/Vistas/restablecer.php';
+            return;
+        }
+
         // Procesa el formulario de login mediante POST.
         if ($accion === 'login') {
             // Prepara los valores que la vista conservará si hay errores.
             $errores = [];
             $datos = ['correo' => trim((string) ($_POST['correo'] ?? ''))];
+            $mensaje = null;
 
             // Valida primero que el formulario pertenezca a esta sesión.
             if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {

@@ -80,6 +80,64 @@ final class ModeloUsuario
         return $hash === false ? null : (string) $hash;
     }
 
+    // Crea un token temporal y devuelve el valor que se enviaría por correo.
+    public function crearTokenRecuperacion(int $usuarioId, string $tokenHash, string $expiraEn): void
+    {
+        // Invalida tokens anteriores del mismo usuario.
+        $invalidar = $this->connection->prepare(
+            'UPDATE recuperacion_contrasenas
+             SET usado_en = CURRENT_TIMESTAMP
+             WHERE usuario_id = :usuario_id
+               AND usado_en IS NULL'
+        );
+        $invalidar->execute(['usuario_id' => $usuarioId]);
+
+        // Guarda únicamente el hash del token, nunca el token original.
+        $statement = $this->connection->prepare(
+            'INSERT INTO recuperacion_contrasenas
+                (usuario_id, token_hash, expira_en)
+             VALUES
+                (:usuario_id, :token_hash, :expira_en)'
+        );
+        $statement->execute([
+            'usuario_id' => $usuarioId,
+            'token_hash' => $tokenHash,
+            'expira_en' => $expiraEn,
+        ]);
+    }
+
+    // Busca un token vigente y devuelve el usuario asociado.
+    public function buscarRecuperacionValida(string $tokenHash): ?array
+    {
+        // Solo acepta tokens no usados y que todavía no hayan expirado.
+        $statement = $this->connection->prepare(
+            'SELECT r.id AS recuperacion_id, r.usuario_id
+             FROM recuperacion_contrasenas AS r
+             INNER JOIN usuarios AS u ON u.id = r.usuario_id
+             WHERE r.token_hash = :token_hash
+               AND r.usado_en IS NULL
+               AND r.expira_en > CURRENT_TIMESTAMP
+               AND u.activo = 1
+             LIMIT 1'
+        );
+        $statement->execute(['token_hash' => $tokenHash]);
+        $recuperacion = $statement->fetch();
+
+        return $recuperacion === false ? null : $recuperacion;
+    }
+
+    // Marca un token como usado para impedir reutilizarlo.
+    public function marcarRecuperacionUsada(int $recuperacionId): void
+    {
+        // Actualiza el momento exacto en que el token se consumió.
+        $statement = $this->connection->prepare(
+            'UPDATE recuperacion_contrasenas
+             SET usado_en = CURRENT_TIMESTAMP
+             WHERE id = :id'
+        );
+        $statement->execute(['id' => $recuperacionId]);
+    }
+
     // Comprueba si un correo ya pertenece a otro usuario.
     public function correoExiste(string $correo, ?int $idExcluir = null): bool
     {
