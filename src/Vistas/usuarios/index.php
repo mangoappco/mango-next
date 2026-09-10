@@ -4,10 +4,10 @@
 declare(strict_types=1);
 
 // Convierte cualquier valor recibido en texto seguro para HTML.
-function escapeHtml(string $value): string
+function escaparHtml(string $valor): string
 {
     // Evita que los datos de la base de datos se interpreten como HTML.
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
 }
 ?>
 <!DOCTYPE html>
@@ -19,7 +19,7 @@ function escapeHtml(string $value): string
 <body>
     <h1>Usuarios</h1>
 
-    <?php if ($users === []): ?>
+    <?php if ($usuarios === []): ?>
         <p>No hay usuarios registrados.</p>
     <?php else: ?>
         <table>
@@ -34,14 +34,14 @@ function escapeHtml(string $value): string
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($users as $user): ?>
+                <?php foreach ($usuarios as $usuario): ?>
                     <tr>
-                        <td><?= escapeHtml((string) $user['id']) ?></td>
-                        <td><?= escapeHtml((string) $user['correo']) ?></td>
-                        <td><?= escapeHtml((string) $user['nombres']) ?></td>
-                        <td><?= escapeHtml((string) $user['apellidos']) ?></td>
-                        <td><?= escapeHtml((string) $user['tipo']) ?></td>
-                        <td><?= (int) $user['activo'] === 1 ? 'Sí' : 'No' ?></td>
+                        <td><?= escaparHtml((string) $usuario['id']) ?></td>
+                        <td><?= escaparHtml((string) $usuario['correo']) ?></td>
+                        <td><?= escaparHtml((string) $usuario['nombres']) ?></td>
+                        <td><?= escaparHtml((string) $usuario['apellidos']) ?></td>
+                        <td><?= escaparHtml((string) $usuario['tipo']) ?></td>
+                        <td><?= (int) $usuario['activo'] === 1 ? 'Sí' : 'No' ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

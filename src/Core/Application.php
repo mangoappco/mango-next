@@ -7,10 +7,10 @@ declare(strict_types=1);
 namespace Mango\Core;
 
 // Importa el controlador que coordina la consulta de usuarios.
-use Mango\Controllers\UserController;
+use Mango\Controladores\ControladorUsuarios;
 
 // Importa el modelo que trabaja con la tabla usuarios.
-use Mango\Models\UserModel;
+use Mango\Modelos\ModeloUsuario;
 
 // Representa el punto de coordinación principal de la aplicación.
 final class Application
@@ -28,15 +28,15 @@ final class Application
         $database = new Database($config);
 
         // Crea el modelo y le entrega la conexión que necesita.
-        $userModel = new UserModel($database->connection());
+        $modeloUsuario = new ModeloUsuario($database->connection());
 
         // Crea el controlador y le entrega el modelo correspondiente.
-        $userController = new UserController($userModel);
+        $controladorUsuarios = new ControladorUsuarios($modeloUsuario);
 
         // Ejecuta la acción que obtiene la lista de usuarios.
-        $users = $userController->index();
+        $usuarios = $controladorUsuarios->index();
 
         // Carga la vista y le proporciona los usuarios obtenidos.
-        require $rootPath . '/src/Views/users/index.php';
+        require $rootPath . '/src/Vistas/usuarios/index.php';
     }
 }

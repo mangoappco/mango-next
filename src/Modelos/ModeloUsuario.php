@@ -4,13 +4,13 @@
 declare(strict_types=1);
 
 // Esta clase pertenece a la capa de modelos de ManGo!.
-namespace Mango\Models;
+namespace Mango\Modelos;
 
 // PDO permite ejecutar consultas preparadas contra MySQL.
 use PDO;
 
 // Representa los usuarios almacenados en la tabla usuarios.
-final class UserModel
+final class ModeloUsuario
 {
     // Recibe la conexión desde fuera para mantener la clase fácil de probar.
     public function __construct(private PDO $connection)
@@ -18,7 +18,7 @@ final class UserModel
     }
 
     // Busca un usuario por su correo electrónico.
-    public function findByEmail(string $email): ?array
+    public function buscarPorCorreo(string $correo): ?array
     {
         // La consulta utiliza un parámetro nombrado para evitar concatenar datos del formulario.
         $statement = $this->connection->prepare(
@@ -29,17 +29,17 @@ final class UserModel
         );
 
         // Asocia el correo recibido con el parámetro de la consulta.
-        $statement->execute(['correo' => $email]);
+        $statement->execute(['correo' => $correo]);
 
         // Obtiene una fila o false si no existe un usuario con ese correo.
-        $user = $statement->fetch();
+        $usuario = $statement->fetch();
 
         // Convierte false en null para que el método tenga un resultado consistente.
-        return $user === false ? null : $user;
+        return $usuario === false ? null : $usuario;
     }
 
     // Obtiene todos los usuarios para mostrarlos en la lista del CRUD.
-    public function findAll(): array
+    public function buscarTodos(): array
     {
         // Selecciona únicamente los datos necesarios para la tabla de usuarios.
         $statement = $this->connection->query(
@@ -53,15 +53,15 @@ final class UserModel
     }
 
     // Crea un usuario guardando la contraseña como un hash irreversible.
-    public function create(
-        string $email,
-        string $password,
-        string $firstName,
-        string $lastName,
+    public function crear(
+        string $correo,
+        string $contrasena,
+        string $nombres,
+        string $apellidos,
         string $type = 'usuario'
     ): int {
         // Convierte la contraseña original en un hash seguro antes de guardarla.
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $passwordHash = password_hash($contrasena, PASSWORD_DEFAULT);
 
         // La consulta preparada separa los datos del código SQL.
         $statement = $this->connection->prepare(
@@ -73,10 +73,10 @@ final class UserModel
 
         // Ejecuta la inserción con los valores recibidos como parámetros.
         $statement->execute([
-            'correo' => $email,
+            'correo' => $correo,
             'contrasena' => $passwordHash,
-            'nombres' => $firstName,
-            'apellidos' => $lastName,
+            'nombres' => $nombres,
+            'apellidos' => $apellidos,
             'tipo' => $type,
         ]);
 

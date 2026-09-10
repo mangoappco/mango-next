@@ -4,16 +4,16 @@
 declare(strict_types=1);
 
 // Esta clase pertenece a la capa de controladores de ManGo!.
-namespace Mango\Controllers;
+namespace Mango\Controladores;
 
 // Importa el modelo que contiene las consultas de usuarios.
-use Mango\Models\UserModel;
+use Mango\Modelos\ModeloUsuario;
 
 // Coordina las acciones relacionadas con los usuarios.
-final class UserController
+final class ControladorUsuarios
 {
     // Recibe el modelo mediante inyección de dependencias.
-    public function __construct(private UserModel $userModel)
+    public function __construct(private ModeloUsuario $modeloUsuario)
     {
     }
 
@@ -21,6 +21,6 @@ final class UserController
     public function index(): array
     {
         // Delega la consulta al modelo y devuelve sus resultados.
-        return $this->userModel->findAll();
+        return $this->modeloUsuario->buscarTodos();
     }
 }
