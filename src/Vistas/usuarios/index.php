@@ -35,7 +35,7 @@ function escaparHtml(string $valor): string
                     <th>Apellidos</th>
                     <th>Tipo</th>
                     <th>Activo</th>
-                        <th>Acciones</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,7 +48,9 @@ function escaparHtml(string $valor): string
                         <td><?= escaparHtml((string) $usuario['tipo']) ?></td>
                         <td><?= (int) $usuario['activo'] === 1 ? 'Sí' : 'No' ?></td>
                         <td>
+                            <a href="index.php?accion=ver&id=<?= (int) $usuario['id'] ?>">Ver</a>
                             <a href="index.php?accion=editar&id=<?= (int) $usuario['id'] ?>">Editar</a>
+                            <a href="index.php?accion=eliminar&id=<?= (int) $usuario['id'] ?>">Eliminar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

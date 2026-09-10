@@ -151,4 +151,17 @@ final class ModeloUsuario
         // Ejecuta la actualización con los datos separados del SQL.
         $statement->execute($datos);
     }
+
+    // Elimina un usuario usando su identificador.
+    public function eliminar(int $id): void
+    {
+        // Prepara una consulta que solo puede eliminar el identificador recibido.
+        $statement = $this->connection->prepare(
+            'DELETE FROM usuarios
+             WHERE id = :id'
+        );
+
+        // Ejecuta la eliminación con un parámetro preparado.
+        $statement->execute(['id' => $id]);
+    }
 }

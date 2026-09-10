@@ -142,4 +142,16 @@ final class ControladorUsuarios
             'datos' => [],
         ];
     }
+
+    // Valida el identificador y solicita al modelo eliminar el usuario.
+    public function eliminar(int $id): void
+    {
+        // Evita enviar una eliminación con un identificador inexistente o inválido.
+        if ($id <= 0) {
+            throw new \InvalidArgumentException('El identificador del usuario no es válido.');
+        }
+
+        // Delega la eliminación al modelo.
+        $this->modeloUsuario->eliminar($id);
+    }
 }

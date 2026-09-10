@@ -59,6 +59,24 @@ final class Application
             return;
         }
 
+        // Muestra los datos públicos de un usuario individual.
+        if ($accion === 'ver') {
+            // Obtiene el identificador recibido en la URL.
+            $id = (int) ($_GET['id'] ?? 0);
+            $usuario = $controladorUsuarios->obtener($id);
+
+            // Muestra un error sencillo si el usuario no existe.
+            if ($usuario === null) {
+                http_response_code(404);
+                echo 'Usuario no encontrado.';
+                return;
+            }
+
+            // Carga la vista de detalle y le entrega el usuario encontrado.
+            require $rootPath . '/src/Vistas/usuarios/detalle.php';
+            return;
+        }
+
         // Obtiene el identificador cuando se solicita editar un usuario.
         if ($accion === 'editar') {
             $id = (int) ($_GET['id'] ?? 0);
@@ -89,6 +107,34 @@ final class Application
 
             // Carga la vista de edición con los datos actuales o los datos corregidos.
             require $rootPath . '/src/Vistas/usuarios/editar.php';
+            return;
+        }
+
+        // Elimina un usuario únicamente cuando la petición utiliza POST.
+        if ($accion === 'eliminar') {
+            // Obtiene el usuario para mostrarlo en la confirmación o validar el borrado.
+            $id = (int) ($_GET['id'] ?? 0);
+            $usuario = $controladorUsuarios->obtener($id);
+
+            // Muestra un error sencillo si el identificador no corresponde a un usuario.
+            if ($usuario === null) {
+                http_response_code(404);
+                echo 'Usuario no encontrado.';
+                return;
+            }
+
+            // Procesa la eliminación únicamente cuando el formulario utiliza POST.
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Solicita al controlador eliminar el usuario confirmado.
+                $controladorUsuarios->eliminar($id);
+
+                // Vuelve a la lista después de eliminarlo.
+                header('Location: index.php');
+                exit;
+            }
+
+            // Carga la vista que pide confirmar la eliminación.
+            require $rootPath . '/src/Vistas/usuarios/eliminar.php';
             return;
         }
 
