@@ -18,6 +18,11 @@ final class Application
     // Ejecuta la aplicación.
     public function run(): void
     {
+        // Inicia la sesión para poder conservar mensajes entre peticiones.
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         // Obtiene la ruta raíz para que Config pueda localizar el archivo .env.
         $rootPath = dirname(__DIR__, 2);
 
@@ -49,6 +54,9 @@ final class Application
 
                 // Si no hubo errores, vuelve a la lista para mostrar el usuario creado.
                 if ($errores === []) {
+                    // Guarda un mensaje temporal que se mostrará después de la redirección.
+                    $_SESSION['mensaje'] = 'Usuario creado correctamente.';
+
                     header('Location: index.php');
                     exit;
                 }
@@ -100,6 +108,9 @@ final class Application
 
                 // Si no hubo errores, vuelve a la lista actualizada.
                 if ($errores === []) {
+                    // Guarda un mensaje temporal que se mostrará después de la redirección.
+                    $_SESSION['mensaje'] = 'Usuario actualizado correctamente.';
+
                     header('Location: index.php');
                     exit;
                 }
@@ -129,6 +140,9 @@ final class Application
                 $controladorUsuarios->eliminar($id);
 
                 // Vuelve a la lista después de eliminarlo.
+                // Guarda un mensaje temporal que se mostrará después de la redirección.
+                $_SESSION['mensaje'] = 'Usuario eliminado correctamente.';
+
                 header('Location: index.php');
                 exit;
             }
@@ -140,6 +154,12 @@ final class Application
 
         // Ejecuta la acción que obtiene la lista de usuarios.
         $usuarios = $controladorUsuarios->index();
+
+        // Recupera el mensaje temporal creado por una operación anterior.
+        $mensaje = $_SESSION['mensaje'] ?? null;
+
+        // Elimina el mensaje para que solo aparezca una vez.
+        unset($_SESSION['mensaje']);
 
         // Carga la vista y le proporciona los usuarios obtenidos.
         require $rootPath . '/src/Vistas/usuarios/index.php';

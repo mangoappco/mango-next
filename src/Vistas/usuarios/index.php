@@ -19,6 +19,10 @@ function escaparHtml(string $valor): string
 <body>
     <h1>Usuarios</h1>
 
+    <?php if ($mensaje !== null): ?>
+        <p><?= escaparHtml((string) $mensaje) ?></p>
+    <?php endif; ?>
+
     <p>
         <a href="index.php?accion=crear">Crear usuario</a>
     </p>
