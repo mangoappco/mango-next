@@ -150,6 +150,9 @@ final class ControladorLogin
     // Solicita una recuperación sin revelar si el correo está registrado.
     public function solicitarRecuperacion(string $correo): array
     {
+        // Limpia tokens antiguos antes de generar uno nuevo.
+        $this->modeloUsuario->limpiarTokensRecuperacion();
+
         // Busca el usuario asociado al correo recibido.
         $usuario = $this->modeloUsuario->buscarPorCorreo($correo);
 

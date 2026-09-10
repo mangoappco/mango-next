@@ -106,6 +106,20 @@ final class ModeloUsuario
         ]);
     }
 
+    // Elimina tokens vencidos o que ya fueron utilizados.
+    public function limpiarTokensRecuperacion(): void
+    {
+        // Los tokens usados y expirados ya no pueden tener ninguna utilidad.
+        $statement = $this->connection->prepare(
+            'DELETE FROM recuperacion_contrasenas
+             WHERE usado_en IS NOT NULL
+                OR expira_en <= CURRENT_TIMESTAMP'
+        );
+
+        // Ejecuta la limpieza sin recibir datos del formulario.
+        $statement->execute();
+    }
+
     // Busca un token vigente y devuelve el usuario asociado.
     public function buscarRecuperacionValida(string $tokenHash): ?array
     {
