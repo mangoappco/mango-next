@@ -9,6 +9,9 @@ namespace Mango\Core;
 // Importa el controlador que coordina la consulta de usuarios.
 use Mango\Controladores\ControladorUsuarios;
 
+// Importa el controlador que coordina la autenticación.
+use Mango\Controladores\ControladorLogin;
+
 // Importa el modelo que trabaja con la tabla usuarios.
 use Mango\Modelos\ModeloUsuario;
 
@@ -29,6 +32,20 @@ final class Application
         // Obtiene la ruta raíz para que Config pueda localizar el archivo .env.
         $rootPath = dirname(__DIR__, 2);
 
+        // Lee la acción solicitada desde la URL y usa la lista como valor predeterminado.
+        $accion = $_GET['accion'] ?? 'listar';
+
+        // Muestra el formulario de login antes de cargar la conexión a la base de datos.
+        if ($accion === 'login' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            // Prepara los valores iniciales que la vista necesita.
+            $errores = [];
+            $datos = ['correo' => ''];
+
+            // Carga la vista del formulario de acceso.
+            require $rootPath . '/src/Vistas/login.php';
+            return;
+        }
+
         // Carga la configuración del proyecto.
         $config = new Config($rootPath);
 
@@ -41,8 +58,47 @@ final class Application
         // Crea el controlador y le entrega el modelo correspondiente.
         $controladorUsuarios = new ControladorUsuarios($modeloUsuario);
 
-        // Lee la acción solicitada desde la URL y usa la lista como valor predeterminado.
-        $accion = $_GET['accion'] ?? 'listar';
+        // Crea el controlador que validará las credenciales del login.
+        $controladorLogin = new ControladorLogin($modeloUsuario);
+
+        // Procesa el formulario de login mediante POST.
+        if ($accion === 'login') {
+            // Prepara los valores que la vista conservará si hay errores.
+            $errores = [];
+            $datos = ['correo' => trim((string) ($_POST['correo'] ?? ''))];
+
+            // Valida primero que el formulario pertenezca a esta sesión.
+            if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+            } else {
+                // Envía las credenciales al controlador especializado.
+                $resultado = $controladorLogin->autenticar($_POST);
+                $errores = $resultado['errores'];
+                $datos = $resultado['datos'];
+            }
+
+            // Si las credenciales son correctas, crea la sesión autenticada.
+            if ($errores === []) {
+                // Regenera el identificador para evitar fijación de sesión.
+                session_regenerate_id(true);
+
+                // Guarda solo datos necesarios, nunca la contraseña ni su hash.
+                $_SESSION['usuario'] = [
+                    'id' => $resultado['usuario']['id'],
+                    'correo' => $resultado['usuario']['correo'],
+                    'tipo' => $resultado['usuario']['tipo'],
+                ];
+
+                // Guarda un mensaje temporal y vuelve a la lista.
+                $_SESSION['mensaje'] = 'Inicio de sesión correcto.';
+                header('Location: index.php');
+                exit;
+            }
+
+            // Vuelve a mostrar el formulario con los errores encontrados.
+            require $rootPath . '/src/Vistas/login.php';
+            return;
+        }
 
         // Muestra el formulario cuando se solicita la acción de creación.
         if ($accion === 'crear') {
