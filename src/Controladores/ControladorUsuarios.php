@@ -24,6 +24,13 @@ final class ControladorUsuarios
         return $this->modeloUsuario->buscarTodos();
     }
 
+    // Busca los datos necesarios para cargar el formulario de edición.
+    public function obtener(int $id): ?array
+    {
+        // Delega la búsqueda por identificador al modelo.
+        return $this->modeloUsuario->buscarPorId($id);
+    }
+
     // Valida los datos recibidos y solicita al modelo crear el usuario.
     public function guardar(array $datos): array
     {
@@ -71,6 +78,65 @@ final class ControladorUsuarios
         $this->modeloUsuario->crear($correo, $contrasena, $nombres, $apellidos, $tipo);
 
         // Devuelve un resultado exitoso para que la aplicación redirija a la lista.
+        return [
+            'errores' => [],
+            'datos' => [],
+        ];
+    }
+
+    // Valida los datos editados y solicita al modelo actualizar el usuario.
+    public function actualizar(int $id, array $datos): array
+    {
+        // Normaliza los datos recibidos desde el formulario.
+        $correo = trim((string) ($datos['correo'] ?? ''));
+        $contrasena = (string) ($datos['contrasena'] ?? '');
+        $nombres = trim((string) ($datos['nombres'] ?? ''));
+        $apellidos = trim((string) ($datos['apellidos'] ?? ''));
+        $tipo = trim((string) ($datos['tipo'] ?? 'usuario'));
+        $errores = [];
+
+        // Comprueba que el identificador sea válido.
+        if ($id <= 0) {
+            $errores[] = 'El identificador del usuario no es válido.';
+        }
+
+        // Comprueba los datos que siempre son obligatorios.
+        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            $errores[] = 'El correo electrónico no es válido.';
+        }
+
+        if ($nombres === '') {
+            $errores[] = 'Los nombres son obligatorios.';
+        }
+
+        if ($apellidos === '') {
+            $errores[] = 'Los apellidos son obligatorios.';
+        }
+
+        // Devuelve los datos y errores para volver al formulario si algo falla.
+        if ($errores !== []) {
+            return [
+                'errores' => $errores,
+                'datos' => [
+                    'correo' => $correo,
+                    'nombres' => $nombres,
+                    'apellidos' => $apellidos,
+                    'tipo' => $tipo,
+                ],
+            ];
+        }
+
+        // Solicita al modelo actualizar los datos del usuario.
+        $this->modeloUsuario->actualizar(
+            $id,
+            $correo,
+            $nombres,
+            $apellidos,
+            $tipo,
+            $contrasena
+        );
+
+        // Indica que la actualización terminó correctamente.
         return [
             'errores' => [],
             'datos' => [],

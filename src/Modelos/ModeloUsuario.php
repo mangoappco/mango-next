@@ -38,6 +38,27 @@ final class ModeloUsuario
         return $usuario === false ? null : $usuario;
     }
 
+    // Busca un usuario por su identificador para cargar el formulario de edición.
+    public function buscarPorId(int $id): ?array
+    {
+        // Prepara una consulta que filtra por el identificador recibido.
+        $statement = $this->connection->prepare(
+            'SELECT id, correo, nombres, apellidos, tipo, activo
+             FROM usuarios
+             WHERE id = :id
+             LIMIT 1'
+        );
+
+        // Ejecuta la consulta usando un parámetro preparado.
+        $statement->execute(['id' => $id]);
+
+        // Obtiene el usuario o false si no existe.
+        $usuario = $statement->fetch();
+
+        // Devuelve null cuando no se encontró el identificador.
+        return $usuario === false ? null : $usuario;
+    }
+
     // Obtiene todos los usuarios para mostrarlos en la lista del CRUD.
     public function buscarTodos(): array
     {
@@ -82,5 +103,52 @@ final class ModeloUsuario
 
         // Devuelve el identificador asignado por AUTO_INCREMENT.
         return (int) $this->connection->lastInsertId();
+    }
+
+    // Actualiza los datos de un usuario sin cambiar su contraseña por accidente.
+    public function actualizar(
+        int $id,
+        string $correo,
+        string $nombres,
+        string $apellidos,
+        string $tipo,
+        string $contrasena = ''
+    ): void {
+        // Define los datos que siempre se actualizan.
+        $datos = [
+            'id' => $id,
+            'correo' => $correo,
+            'nombres' => $nombres,
+            'apellidos' => $apellidos,
+            'tipo' => $tipo,
+        ];
+
+        // Si se recibió una contraseña, la actualiza usando un hash seguro.
+        if ($contrasena !== '') {
+            $datos['contrasena'] = password_hash($contrasena, PASSWORD_DEFAULT);
+
+            $statement = $this->connection->prepare(
+                'UPDATE usuarios
+                 SET correo = :correo,
+                     contrasena = :contrasena,
+                     nombres = :nombres,
+                     apellidos = :apellidos,
+                     tipo = :tipo
+                 WHERE id = :id'
+            );
+        } else {
+            // Si la contraseña está vacía, conserva el hash existente.
+            $statement = $this->connection->prepare(
+                'UPDATE usuarios
+                 SET correo = :correo,
+                     nombres = :nombres,
+                     apellidos = :apellidos,
+                     tipo = :tipo
+                 WHERE id = :id'
+            );
+        }
+
+        // Ejecuta la actualización con los datos separados del SQL.
+        $statement->execute($datos);
     }
 }

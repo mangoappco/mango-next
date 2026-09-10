@@ -59,6 +59,39 @@ final class Application
             return;
         }
 
+        // Obtiene el identificador cuando se solicita editar un usuario.
+        if ($accion === 'editar') {
+            $id = (int) ($_GET['id'] ?? 0);
+            $usuario = $controladorUsuarios->obtener($id);
+
+            // Muestra un error sencillo si el identificador no corresponde a un usuario.
+            if ($usuario === null) {
+                http_response_code(404);
+                echo 'Usuario no encontrado.';
+                return;
+            }
+
+            $errores = [];
+            $datos = $usuario;
+
+            // Procesa los cambios únicamente cuando llegan mediante POST.
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $resultado = $controladorUsuarios->actualizar($id, $_POST);
+                $errores = $resultado['errores'];
+                $datos = array_merge($datos, $resultado['datos']);
+
+                // Si no hubo errores, vuelve a la lista actualizada.
+                if ($errores === []) {
+                    header('Location: index.php');
+                    exit;
+                }
+            }
+
+            // Carga la vista de edición con los datos actuales o los datos corregidos.
+            require $rootPath . '/src/Vistas/usuarios/editar.php';
+            return;
+        }
+
         // Ejecuta la acción que obtiene la lista de usuarios.
         $usuarios = $controladorUsuarios->index();
 
