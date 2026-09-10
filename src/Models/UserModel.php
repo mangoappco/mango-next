@@ -38,6 +38,20 @@ final class UserModel
         return $user === false ? null : $user;
     }
 
+    // Obtiene todos los usuarios para mostrarlos en la lista del CRUD.
+    public function findAll(): array
+    {
+        // Selecciona únicamente los datos necesarios para la tabla de usuarios.
+        $statement = $this->connection->query(
+            'SELECT id, correo, nombres, apellidos, tipo, activo, creado_en, actualizado_en
+             FROM usuarios
+             ORDER BY id DESC'
+        );
+
+        // Devuelve todas las filas como un arreglo de usuarios.
+        return $statement->fetchAll();
+    }
+
     // Crea un usuario guardando la contraseña como un hash irreversible.
     public function create(
         string $email,

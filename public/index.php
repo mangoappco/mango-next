@@ -12,4 +12,4 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 $application = new Mango\Core\Application();
 
 // Inicia el flujo principal de la aplicación.
-$application->run();
+$application->run();    
