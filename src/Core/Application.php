@@ -35,6 +35,9 @@ final class Application
         // Obtiene la ruta raíz para que Config pueda localizar el archivo .env.
         $rootPath = dirname(__DIR__, 2);
 
+        // Carga la configuración antes de decidir si una sesión autenticada expiró.
+        $config = new Config($rootPath);
+
         // Lee la acción solicitada desde la URL y usa la lista como valor predeterminado.
         $accion = $_GET['accion'] ?? 'listar';
 
@@ -80,8 +83,19 @@ final class Application
             exit;
         }
 
-        // Carga la configuración del proyecto.
-        $config = new Config($rootPath);
+        // Comprueba la expiración por inactividad antes de cargar el CRUD.
+        if (
+            $this->usuarioAutenticado()
+            && $accion !== 'login'
+            && $accion !== 'cerrar-sesion'
+            && $this->sesionExpirada($config)
+        ) {
+            // Destruye la sesión vencida y solicita un nuevo acceso.
+            $_SESSION = [];
+            session_destroy();
+            header('Location: index.php?accion=login');
+            exit;
+        }
 
         // Crea la conexión reutilizable con la base de datos.
         $database = new Database($config);
@@ -507,6 +521,31 @@ final class Application
 
         // Una sesión autenticada debe contener un arreglo con un identificador.
         return is_array($usuario) && isset($usuario['id']);
+    }
+
+    // Comprueba y actualiza la actividad de la sesión autenticada.
+    private function sesionExpirada(Config $config): bool
+    {
+        // Obtiene el tiempo máximo desde .env o utiliza 30 minutos.
+        $duracion = (int) $config->get('SESSION_TIMEOUT', '1800');
+
+        // Protege la aplicación contra una configuración inválida o demasiado permisiva.
+        if ($duracion <= 0) {
+            $duracion = 1800;
+        }
+
+        // Lee el momento de la última petición autenticada.
+        $ultimaActividad = (int) ($_SESSION['ultima_actividad'] ?? 0);
+
+        // Si existe actividad anterior y superó el límite, la sesión expiró.
+        if ($ultimaActividad > 0 && (time() - $ultimaActividad) >= $duracion) {
+            return true;
+        }
+
+        // Renueva la actividad mientras el usuario sigue usando la aplicación.
+        $_SESSION['ultima_actividad'] = time();
+
+        return false;
     }
 
     // Comprueba si el usuario autenticado tiene permisos administrativos.
