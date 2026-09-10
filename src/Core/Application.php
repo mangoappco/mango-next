@@ -343,9 +343,9 @@ final class Application
             return;
         }
 
-        // Elimina un usuario únicamente cuando la petición utiliza POST.
-        if ($accion === 'eliminar') {
-            // Solo los administradores pueden eliminar usuarios.
+        // Desactiva un usuario únicamente cuando la petición utiliza POST.
+        if ($accion === 'desactivar') {
+            // Solo los administradores pueden desactivar usuarios.
             if (!$this->esAdministrador()) {
                 $this->mostrarAccesoDenegado($rootPath);
                 return;
@@ -371,18 +371,18 @@ final class Application
                     return;
                 }
 
-                // Solicita al controlador eliminar el usuario confirmado.
-                $controladorUsuarios->eliminar($id);
+                // Solicita al controlador desactivar el usuario confirmado.
+                $controladorUsuarios->desactivar($id);
 
                 // Vuelve a la lista después de eliminarlo.
                 // Guarda un mensaje temporal que se mostrará después de la redirección.
-                $_SESSION['mensaje'] = 'Usuario eliminado correctamente.';
+                $_SESSION['mensaje'] = 'Usuario desactivado correctamente.';
 
                 header('Location: index.php');
                 exit;
             }
 
-            // Carga la vista que pide confirmar la eliminación.
+            // Carga la vista que pide confirmar la desactivación.
             require $rootPath . '/src/Vistas/usuarios/eliminar.php';
             return;
         }

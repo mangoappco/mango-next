@@ -46,8 +46,8 @@ function escaparTextoDetalle(string $valor): string
     </p>
 
     <p>
-        <?php if ($esAdministrador): ?>
-            <a href="index.php?accion=eliminar&id=<?= (int) $usuario['id'] ?>">Eliminar usuario</a>
+        <?php if ($esAdministrador && (int) $usuario['activo'] === 1): ?>
+            <a href="index.php?accion=desactivar&id=<?= (int) $usuario['id'] ?>">Desactivar usuario</a>
         <?php endif; ?>
     </p>
 

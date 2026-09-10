@@ -298,16 +298,17 @@ final class ModeloUsuario
         ]);
     }
 
-    // Elimina un usuario usando su identificador.
-    public function eliminar(int $id): void
+    // Desactiva un usuario sin eliminarlo de la base de datos.
+    public function desactivar(int $id): void
     {
-        // Prepara una consulta que solo puede eliminar el identificador recibido.
+        // Prepara una consulta que conserva el registro y cambia su estado.
         $statement = $this->connection->prepare(
-            'DELETE FROM usuarios
+            'UPDATE usuarios
+             SET activo = 0
              WHERE id = :id'
         );
 
-        // Ejecuta la eliminación con un parámetro preparado.
+        // Ejecuta la desactivación con un parámetro preparado.
         $statement->execute(['id' => $id]);
     }
 }

@@ -14,12 +14,12 @@ function escaparTextoEliminacion(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Eliminar usuario</title>
+    <title>Desactivar usuario</title>
 </head>
 <body>
-    <h1>Eliminar usuario</h1>
+    <h1>Desactivar usuario</h1>
 
-    <p>¿Deseas eliminar este usuario?</p>
+    <p>¿Deseas desactivar este usuario? El registro se conservará en la base de datos.</p>
 
     <dl>
         <dt>ID</dt>
@@ -35,9 +35,9 @@ function escaparTextoEliminacion(string $valor): string
         <dd><?= escaparTextoEliminacion((string) $usuario['apellidos']) ?></dd>
     </dl>
 
-    <form method="post" action="index.php?accion=eliminar&id=<?= (int) $usuario['id'] ?>">
+    <form method="post" action="index.php?accion=desactivar&id=<?= (int) $usuario['id'] ?>">
         <input type="hidden" name="token_csrf" value="<?= escaparTextoEliminacion($tokenCsrf) ?>">
-        <button type="submit">Confirmar eliminación</button>
+        <button type="submit">Confirmar desactivación</button>
     </form>
 
     <p>
