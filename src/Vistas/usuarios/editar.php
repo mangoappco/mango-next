@@ -28,6 +28,8 @@ function escaparTextoEdicion(string $valor): string
     <?php endif; ?>
 
     <form method="post" action="index.php?accion=editar&id=<?= (int) $datos['id'] ?>">
+        <input type="hidden" name="token_csrf" value="<?= escaparTextoEdicion($tokenCsrf) ?>">
+
         <p>
             <label for="correo">Correo electrónico</label>
             <input type="email" id="correo" name="correo" value="<?= escaparTextoEdicion((string) $datos['correo']) ?>" required>

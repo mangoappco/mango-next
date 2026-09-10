@@ -28,6 +28,8 @@ function escaparTextoFormulario(string $valor): string
     <?php endif; ?>
 
     <form method="post" action="index.php?accion=crear">
+        <input type="hidden" name="token_csrf" value="<?= escaparTextoFormulario($tokenCsrf) ?>">
+
         <p>
             <label for="correo">Correo electrónico</label>
             <input type="email" id="correo" name="correo" value="<?= escaparTextoFormulario((string) ($datos['correo'] ?? '')) ?>" required>

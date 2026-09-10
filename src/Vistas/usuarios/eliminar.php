@@ -36,6 +36,7 @@ function escaparTextoEliminacion(string $valor): string
     </dl>
 
     <form method="post" action="index.php?accion=eliminar&id=<?= (int) $usuario['id'] ?>">
+        <input type="hidden" name="token_csrf" value="<?= escaparTextoEliminacion($tokenCsrf) ?>">
         <button type="submit">Confirmar eliminación</button>
     </form>
 

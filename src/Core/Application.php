@@ -23,6 +23,9 @@ final class Application
             session_start();
         }
 
+        // Obtiene el token que protegerá los formularios que modifican datos.
+        $tokenCsrf = $this->obtenerTokenCsrf();
+
         // Obtiene la ruta raíz para que Config pueda localizar el archivo .env.
         $rootPath = dirname(__DIR__, 2);
 
@@ -48,9 +51,14 @@ final class Application
 
             // Procesa el formulario únicamente cuando el navegador lo envía mediante POST.
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $resultado = $controladorUsuarios->guardar($_POST);
-                $errores = $resultado['errores'];
-                $datos = $resultado['datos'];
+                // Rechaza el formulario si el token no coincide con el de la sesión.
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } else {
+                    $resultado = $controladorUsuarios->guardar($_POST);
+                    $errores = $resultado['errores'];
+                    $datos = $resultado['datos'];
+                }
 
                 // Si no hubo errores, vuelve a la lista para mostrar el usuario creado.
                 if ($errores === []) {
@@ -102,9 +110,14 @@ final class Application
 
             // Procesa los cambios únicamente cuando llegan mediante POST.
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $resultado = $controladorUsuarios->actualizar($id, $_POST);
-                $errores = $resultado['errores'];
-                $datos = array_merge($datos, $resultado['datos']);
+                // Rechaza el formulario si el token no coincide con el de la sesión.
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } else {
+                    $resultado = $controladorUsuarios->actualizar($id, $_POST);
+                    $errores = $resultado['errores'];
+                    $datos = array_merge($datos, $resultado['datos']);
+                }
 
                 // Si no hubo errores, vuelve a la lista actualizada.
                 if ($errores === []) {
@@ -136,6 +149,13 @@ final class Application
 
             // Procesa la eliminación únicamente cuando el formulario utiliza POST.
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Rechaza la eliminación si el token no coincide con el de la sesión.
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    http_response_code(403);
+                    echo 'La solicitud no es válida.';
+                    return;
+                }
+
                 // Solicita al controlador eliminar el usuario confirmado.
                 $controladorUsuarios->eliminar($id);
 
@@ -163,5 +183,32 @@ final class Application
 
         // Carga la vista y le proporciona los usuarios obtenidos.
         require $rootPath . '/src/Vistas/usuarios/index.php';
+    }
+
+    // Genera y devuelve un token estable durante la sesión del usuario.
+    private function obtenerTokenCsrf(): string
+    {
+        // Genera un token nuevo si la sesión todavía no tiene uno válido.
+        if (!isset($_SESSION['token_csrf']) || !is_string($_SESSION['token_csrf'])) {
+            $_SESSION['token_csrf'] = bin2hex(random_bytes(32));
+        }
+
+        // Devuelve el token que las vistas incluirán en sus formularios.
+        return $_SESSION['token_csrf'];
+    }
+
+    // Comprueba que el token recibido pertenezca a la sesión actual.
+    private function tokenCsrfValido(mixed $token): bool
+    {
+        // Obtiene el token almacenado en la sesión.
+        $tokenSesion = $_SESSION['token_csrf'] ?? null;
+
+        // Rechaza valores que no sean cadenas o que no existan en la sesión.
+        if (!is_string($token) || !is_string($tokenSesion)) {
+            return false;
+        }
+
+        // Compara los valores de forma segura contra ataques de temporización.
+        return hash_equals($tokenSesion, $token);
     }
 }
