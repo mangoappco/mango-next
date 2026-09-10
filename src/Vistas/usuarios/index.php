@@ -27,8 +27,23 @@ function escaparHtml(string $valor): string
         <a href="index.php?accion=crear">Crear usuario</a>
     </p>
 
-    <?php if ($usuarios === []): ?>
+    <form method="get" action="index.php">
+        <label for="buscar">Buscar usuario</label>
+        <input type="search" id="buscar" name="buscar" value="<?= escaparHtml($busqueda) ?>">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <?php if ($busqueda !== ''): ?>
+        <p>
+            Resultados para: <?= escaparHtml($busqueda) ?>
+            <a href="index.php">Limpiar búsqueda</a>
+        </p>
+    <?php endif; ?>
+
+    <?php if ($usuarios === [] && $busqueda === ''): ?>
         <p>No hay usuarios registrados.</p>
+    <?php elseif ($usuarios === []): ?>
+        <p>No se encontraron usuarios.</p>
     <?php else: ?>
         <table>
             <thead>

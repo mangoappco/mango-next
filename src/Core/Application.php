@@ -172,8 +172,11 @@ final class Application
             return;
         }
 
-        // Ejecuta la acción que obtiene la lista de usuarios.
-        $usuarios = $controladorUsuarios->index();
+        // Lee y normaliza el texto de búsqueda enviado mediante GET.
+        $busqueda = trim((string) ($_GET['buscar'] ?? ''));
+
+        // Ejecuta la acción que obtiene la lista filtrada de usuarios.
+        $usuarios = $controladorUsuarios->index($busqueda);
 
         // Recupera el mensaje temporal creado por una operación anterior.
         $mensaje = $_SESSION['mensaje'] ?? null;

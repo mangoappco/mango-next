@@ -17,11 +17,11 @@ final class ControladorUsuarios
     {
     }
 
-    // Obtiene los usuarios que la vista debe mostrar.
-    public function index(): array
+    // Obtiene los usuarios que coinciden con la búsqueda solicitada.
+    public function index(string $busqueda = ''): array
     {
-        // Delega la consulta al modelo y devuelve sus resultados.
-        return $this->modeloUsuario->buscarTodos();
+        // Delega la búsqueda al modelo y devuelve sus resultados.
+        return $this->modeloUsuario->buscarTodos($busqueda);
     }
 
     // Busca los datos necesarios para cargar el formulario de edición.

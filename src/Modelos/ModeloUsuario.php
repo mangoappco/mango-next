@@ -82,15 +82,39 @@ final class ModeloUsuario
         return (int) $statement->fetchColumn() > 0;
     }
 
-    // Obtiene todos los usuarios para mostrarlos en la lista del CRUD.
-    public function buscarTodos(): array
+    // Obtiene todos los usuarios o los que coinciden con una búsqueda.
+    public function buscarTodos(string $busqueda = ''): array
     {
-        // Selecciona únicamente los datos necesarios para la tabla de usuarios.
-        $statement = $this->connection->query(
-            'SELECT id, correo, nombres, apellidos, tipo, activo, creado_en, actualizado_en
-             FROM usuarios
-             ORDER BY id DESC'
-        );
+        // Define la consulta con las columnas necesarias para la tabla.
+        $sql = 'SELECT id, correo, nombres, apellidos, tipo, activo, creado_en, actualizado_en
+                FROM usuarios';
+
+        // Prepara los valores que se enviarán a la consulta.
+        $parametros = [];
+
+        // Agrega filtros cuando el usuario escribió un texto de búsqueda.
+        if ($busqueda !== '') {
+            $sql .= ' WHERE correo LIKE :busqueda_correo
+                      OR nombres LIKE :busqueda_nombres
+                      OR apellidos LIKE :busqueda_apellidos
+                      OR tipo LIKE :busqueda_tipo';
+
+            // Los comodines permiten encontrar el texto en cualquier posición.
+            $valorBusqueda = '%' . $busqueda . '%';
+
+            // Cada marcador nombrado recibe su propio valor para funcionar con PDO real.
+            $parametros['busqueda_correo'] = $valorBusqueda;
+            $parametros['busqueda_nombres'] = $valorBusqueda;
+            $parametros['busqueda_apellidos'] = $valorBusqueda;
+            $parametros['busqueda_tipo'] = $valorBusqueda;
+        }
+
+        // Ordena los resultados más recientes primero.
+        $sql .= ' ORDER BY id DESC';
+
+        // Prepara y ejecuta la consulta con sus parámetros.
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($parametros);
 
         // Devuelve todas las filas como un arreglo de usuarios.
         return $statement->fetchAll();
