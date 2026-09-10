@@ -47,6 +47,11 @@ final class ControladorUsuarios
             $errores[] = 'El correo electrónico no es válido.';
         }
 
+        // Evita registrar dos usuarios con el mismo correo.
+        if ($errores === [] && $this->modeloUsuario->correoExiste($correo)) {
+            $errores[] = 'Ya existe un usuario con ese correo electrónico.';
+        }
+
         // Comprueba que la contraseña no esté vacía.
         if ($contrasena === '') {
             $errores[] = 'La contraseña es obligatoria.';
@@ -103,6 +108,11 @@ final class ControladorUsuarios
         // Comprueba los datos que siempre son obligatorios.
         if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
             $errores[] = 'El correo electrónico no es válido.';
+        }
+
+        // Evita usar el correo de otro usuario, pero permite conservar el propio.
+        if ($errores === [] && $this->modeloUsuario->correoExiste($correo, $id)) {
+            $errores[] = 'Ya existe otro usuario con ese correo electrónico.';
         }
 
         if ($nombres === '') {

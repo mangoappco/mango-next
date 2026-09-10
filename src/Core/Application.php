@@ -84,7 +84,7 @@ final class Application
             // Muestra un error sencillo si el usuario no existe.
             if ($usuario === null) {
                 http_response_code(404);
-                echo 'Usuario no encontrado.';
+                require $rootPath . '/src/Vistas/errores/404.php';
                 return;
             }
 
@@ -101,7 +101,7 @@ final class Application
             // Muestra un error sencillo si el identificador no corresponde a un usuario.
             if ($usuario === null) {
                 http_response_code(404);
-                echo 'Usuario no encontrado.';
+                require $rootPath . '/src/Vistas/errores/404.php';
                 return;
             }
 
@@ -143,7 +143,7 @@ final class Application
             // Muestra un error sencillo si el identificador no corresponde a un usuario.
             if ($usuario === null) {
                 http_response_code(404);
-                echo 'Usuario no encontrado.';
+                require $rootPath . '/src/Vistas/errores/404.php';
                 return;
             }
 

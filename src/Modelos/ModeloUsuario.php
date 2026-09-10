@@ -59,6 +59,29 @@ final class ModeloUsuario
         return $usuario === false ? null : $usuario;
     }
 
+    // Comprueba si un correo ya pertenece a otro usuario.
+    public function correoExiste(string $correo, ?int $idExcluir = null): bool
+    {
+        // Prepara la consulta base para buscar coincidencias por correo.
+        $sql = 'SELECT COUNT(*) FROM usuarios WHERE correo = :correo';
+
+        // Guarda el correo que se utilizará como parámetro preparado.
+        $parametros = ['correo' => $correo];
+
+        // En edición excluye el usuario actual para permitir conservar su correo.
+        if ($idExcluir !== null) {
+            $sql .= ' AND id <> :id_excluir';
+            $parametros['id_excluir'] = $idExcluir;
+        }
+
+        // Ejecuta la consulta de existencia.
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($parametros);
+
+        // Devuelve true cuando existe al menos una coincidencia.
+        return (int) $statement->fetchColumn() > 0;
+    }
+
     // Obtiene todos los usuarios para mostrarlos en la lista del CRUD.
     public function buscarTodos(): array
     {
