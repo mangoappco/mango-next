@@ -27,6 +27,11 @@ function escaparHtml(string $valor): string
         <a href="index.php?accion=crear">Crear usuario</a>
     </p>
 
+    <form method="post" action="index.php?accion=cerrar-sesion">
+        <input type="hidden" name="token_csrf" value="<?= escaparHtml($tokenCsrf) ?>">
+        <button type="submit">Cerrar sesión</button>
+    </form>
+
     <form method="get" action="index.php">
         <label for="buscar">Buscar usuario</label>
         <input type="search" id="buscar" name="buscar" value="<?= escaparHtml($busqueda) ?>">

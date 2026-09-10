@@ -46,6 +46,31 @@ final class Application
             return;
         }
 
+        // Cierra la sesión únicamente mediante un formulario POST protegido.
+        if ($accion === 'cerrar-sesion') {
+            // Rechaza cualquier intento de cerrar sesión mediante GET.
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                echo 'El cierre de sesión requiere una petición POST.';
+                return;
+            }
+
+            // Rechaza el formulario si el token no pertenece a la sesión actual.
+            if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                http_response_code(403);
+                echo 'La solicitud no es válida.';
+                return;
+            }
+
+            // Elimina todos los datos almacenados en la sesión.
+            $_SESSION = [];
+            session_destroy();
+
+            // Envía al usuario al formulario de acceso.
+            header('Location: index.php?accion=login');
+            exit;
+        }
+
         // Carga la configuración del proyecto.
         $config = new Config($rootPath);
 
