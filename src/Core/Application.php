@@ -116,7 +116,7 @@ final class Application
 
                 // Guarda un mensaje temporal y vuelve a la lista.
                 $_SESSION['mensaje'] = 'Inicio de sesión correcto.';
-                header('Location: index.php');
+                header('Location: index.php?accion=bienvenida');
                 exit;
             }
 
@@ -129,6 +129,16 @@ final class Application
         if (!$this->usuarioAutenticado()) {
             header('Location: index.php?accion=login');
             exit;
+        }
+
+        // Muestra la página de bienvenida al usuario autenticado.
+        if ($accion === 'bienvenida') {
+            // Obtiene los datos seguros guardados durante el login.
+            $usuarioAutenticado = $_SESSION['usuario'];
+
+            // Carga la vista de bienvenida.
+            require $rootPath . '/src/Vistas/bienvenida.php';
+            return;
         }
 
         // Muestra el formulario cuando se solicita la acción de creación.
