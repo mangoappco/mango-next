@@ -58,31 +58,6 @@ final class Application
             return;
         }
 
-        // Cierra la sesión únicamente mediante un formulario POST protegido.
-        if ($accion === 'cerrar-sesion') {
-            // Rechaza cualquier intento de cerrar sesión mediante GET.
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                http_response_code(405);
-                echo 'El cierre de sesión requiere una petición POST.';
-                return;
-            }
-
-            // Rechaza el formulario si el token no pertenece a la sesión actual.
-            if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
-                http_response_code(403);
-                echo 'La solicitud no es válida.';
-                return;
-            }
-
-            // Elimina todos los datos almacenados en la sesión.
-            $_SESSION = [];
-            session_destroy();
-
-            // Envía al usuario al formulario de acceso.
-            header('Location: index.php?accion=login');
-            exit;
-        }
-
         // Comprueba la expiración por inactividad antes de cargar el CRUD.
         if (
             $this->usuarioAutenticado()
@@ -111,6 +86,39 @@ final class Application
 
         // Crea el controlador que validará las credenciales del login.
         $controladorLogin = new ControladorLogin($modeloUsuario, $servicioCorreo);
+
+        // Cierra la sesión únicamente mediante un formulario POST protegido.
+        if ($accion === 'cerrar-sesion') {
+            // Rechaza cualquier intento de cerrar sesión mediante GET.
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                echo 'El cierre de sesión requiere una petición POST.';
+                return;
+            }
+
+            // Rechaza el formulario si el token no pertenece a la sesión actual.
+            if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                http_response_code(403);
+                echo 'La solicitud no es válida.';
+                return;
+            }
+
+            // Registra el cierre antes de destruir los datos de la sesión.
+            $usuarioSesion = $_SESSION['usuario'] ?? [];
+            $modeloUsuario->registrarActividad(
+                isset($usuarioSesion['id']) ? (int) $usuarioSesion['id'] : null,
+                isset($usuarioSesion['correo']) ? (string) $usuarioSesion['correo'] : null,
+                'logout'
+            );
+
+            // Elimina todos los datos almacenados en la sesión.
+            $_SESSION = [];
+            session_destroy();
+
+            // Envía al usuario al formulario de acceso.
+            header('Location: index.php?accion=login');
+            exit;
+        }
 
         // Permite solicitar recuperación sin tener una sesión autenticada.
         if ($accion === 'recuperar') {
@@ -388,6 +396,13 @@ final class Application
                 // Solicita al controlador desactivar el usuario confirmado.
                 $controladorUsuarios->desactivar($id);
 
+                // Registra la acción administrativa.
+                $modeloUsuario->registrarActividad(
+                    (int) $_SESSION['usuario']['id'],
+                    (string) $_SESSION['usuario']['correo'],
+                    'usuario_desactivado'
+                );
+
                 // Vuelve a la lista después de eliminarlo.
                 // Guarda un mensaje temporal que se mostrará después de la redirección.
                 $_SESSION['mensaje'] = 'Usuario desactivado correctamente.';
@@ -430,6 +445,13 @@ final class Application
 
                 // Solicita al controlador reactivar el usuario confirmado.
                 $controladorUsuarios->reactivar($id);
+
+                // Registra la acción administrativa.
+                $modeloUsuario->registrarActividad(
+                    (int) $_SESSION['usuario']['id'],
+                    (string) $_SESSION['usuario']['correo'],
+                    'usuario_reactivado'
+                );
 
                 // Informa el resultado y vuelve a la lista.
                 $_SESSION['mensaje'] = 'Usuario reactivado correctamente.';

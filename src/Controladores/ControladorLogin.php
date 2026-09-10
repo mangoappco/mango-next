@@ -64,6 +64,9 @@ final class ControladorLogin
 
         // Detiene la búsqueda si los datos básicos no son válidos.
         if ($errores !== []) {
+            // Registra el intento incompleto sin guardar la contraseña.
+            $this->modeloUsuario->registrarActividad(null, $correo, 'login_datos_invalidos');
+
             return [
                 'errores' => $errores,
                 'datos' => ['correo' => $correo],
@@ -83,6 +86,13 @@ final class ControladorLogin
             // Registra el fallo antes de devolver el mensaje genérico.
             $intentos = $this->registrarIntentoFallido();
 
+            // Registra el intento fallido sin guardar la contraseña.
+            $this->modeloUsuario->registrarActividad(
+                $usuario === null ? null : (int) $usuario['id'],
+                $correo,
+                'login_fallido'
+            );
+
             // Informa del bloqueo solo cuando se alcanzó el máximo configurado.
             $mensaje = $intentos >= self::INTENTOS_MAXIMOS
                 ? 'Demasiados intentos fallidos. Intenta nuevamente en '
@@ -99,6 +109,13 @@ final class ControladorLogin
 
         // Limpia los fallos anteriores después de una autenticación correcta.
         unset($_SESSION['intentos_login']);
+
+        // Registra el acceso correcto.
+        $this->modeloUsuario->registrarActividad(
+            (int) $usuario['id'],
+            (string) $usuario['correo'],
+            'login_exitoso'
+        );
 
         // Devuelve el usuario válido para que Application pueda iniciar su sesión.
         return [
@@ -143,6 +160,9 @@ final class ControladorLogin
         // Solicita al modelo guardar el nuevo hash.
         $this->modeloUsuario->cambiarContrasena($id, $nueva);
 
+        // Registra el cambio sin guardar ninguna contraseña.
+        $this->modeloUsuario->registrarActividad($id, null, 'cambio_contrasena');
+
         // Informa que el cambio terminó correctamente.
         return ['errores' => []];
     }
@@ -155,6 +175,13 @@ final class ControladorLogin
 
         // Busca el usuario asociado al correo recibido.
         $usuario = $this->modeloUsuario->buscarPorCorreo($correo);
+
+        // Registra el id cuando el correo existe, sin revelarlo en la respuesta pública.
+        $this->modeloUsuario->registrarActividad(
+            $usuario === null ? null : (int) $usuario['id'],
+            $correo,
+            'recuperacion_solicitada'
+        );
 
         // Devuelve siempre el mismo resultado visible para evitar enumerar cuentas.
         $resultado = [
@@ -222,6 +249,13 @@ final class ControladorLogin
         // Cambia la contraseña y consume el token en la misma operación lógica.
         $this->modeloUsuario->cambiarContrasena((int) $recuperacion['usuario_id'], $nueva);
         $this->modeloUsuario->marcarRecuperacionUsada((int) $recuperacion['recuperacion_id']);
+
+        // Registra el restablecimiento sin guardar el token ni la contraseña.
+        $this->modeloUsuario->registrarActividad(
+            (int) $recuperacion['usuario_id'],
+            (string) $recuperacion['correo'],
+            'contrasena_restablecida'
+        );
 
         return ['errores' => []];
     }

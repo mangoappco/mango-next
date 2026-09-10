@@ -9,12 +9,43 @@ namespace Mango\Modelos;
 // PDO permite ejecutar consultas preparadas contra MySQL.
 use PDO;
 
+// Permite registrar errores de auditoría sin interrumpir el flujo principal.
+use PDOException;
+
 // Representa los usuarios almacenados en la tabla usuarios.
 final class ModeloUsuario
 {
     // Recibe la conexión desde fuera para mantener la clase fácil de probar.
     public function __construct(private PDO $connection)
     {
+    }
+
+    // Registra una acción de seguridad sin guardar datos secretos.
+    public function registrarActividad(?int $usuarioId, ?string $correo, string $accion): void
+    {
+        // Obtiene datos técnicos de la petición actual.
+        $direccionIp = $_SERVER['REMOTE_ADDR'] ?? null;
+        $agenteUsuario = $_SERVER['HTTP_USER_AGENT'] ?? null;
+
+        try {
+            // Guarda la actividad mediante una consulta preparada.
+            $statement = $this->connection->prepare(
+                'INSERT INTO registro_actividad
+                    (usuario_id, correo, accion, direccion_ip, agente_usuario)
+                 VALUES
+                    (:usuario_id, :correo, :accion, :direccion_ip, :agente_usuario)'
+            );
+            $statement->execute([
+                'usuario_id' => $usuarioId,
+                'correo' => $correo,
+                'accion' => $accion,
+                'direccion_ip' => $direccionIp,
+                'agente_usuario' => $agenteUsuario,
+            ]);
+        } catch (PDOException $exception) {
+            // Un fallo de auditoría no debe impedir el login o la recuperación.
+            error_log('No se pudo registrar actividad: ' . $exception->getMessage());
+        }
     }
 
     // Busca un usuario por su correo electrónico.
@@ -125,7 +156,7 @@ final class ModeloUsuario
     {
         // Solo acepta tokens no usados y que todavía no hayan expirado.
         $statement = $this->connection->prepare(
-            'SELECT r.id AS recuperacion_id, r.usuario_id
+            'SELECT r.id AS recuperacion_id, r.usuario_id, u.correo
              FROM recuperacion_contrasenas AS r
              INNER JOIN usuarios AS u ON u.id = r.usuario_id
              WHERE r.token_hash = :token_hash

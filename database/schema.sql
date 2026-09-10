@@ -30,3 +30,19 @@ CREATE TABLE recuperacion_contrasenas (
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
+
+-- Registra eventos de seguridad sin guardar contraseñas ni tokens.
+CREATE TABLE registro_actividad (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NULL,
+    correo VARCHAR(190) NULL,
+    accion VARCHAR(80) NOT NULL,
+    direccion_ip VARCHAR(45) NULL,
+    agente_usuario TEXT NULL,
+    creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_actividad_usuario (usuario_id),
+    INDEX idx_actividad_accion (accion),
+    INDEX idx_actividad_fecha (creado_en)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
