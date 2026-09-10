@@ -387,6 +387,47 @@ final class Application
             return;
         }
 
+        // Reactiva un usuario únicamente cuando la petición utiliza POST.
+        if ($accion === 'reactivar') {
+            // Solo los administradores pueden reactivar usuarios.
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
+            // Obtiene el usuario para mostrarlo en la confirmación.
+            $id = (int) ($_GET['id'] ?? 0);
+            $usuario = $controladorUsuarios->obtener($id);
+
+            // Muestra un error si el usuario no existe.
+            if ($usuario === null) {
+                http_response_code(404);
+                require $rootPath . '/src/Vistas/errores/404.php';
+                return;
+            }
+
+            // Procesa la reactivación únicamente mediante POST protegido.
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    http_response_code(403);
+                    echo 'La solicitud no es válida.';
+                    return;
+                }
+
+                // Solicita al controlador reactivar el usuario confirmado.
+                $controladorUsuarios->reactivar($id);
+
+                // Informa el resultado y vuelve a la lista.
+                $_SESSION['mensaje'] = 'Usuario reactivado correctamente.';
+                header('Location: index.php');
+                exit;
+            }
+
+            // Carga la vista de confirmación.
+            require $rootPath . '/src/Vistas/usuarios/reactivar.php';
+            return;
+        }
+
         // Lee y normaliza el texto de búsqueda enviado mediante GET.
         $busqueda = trim((string) ($_GET['buscar'] ?? ''));
 

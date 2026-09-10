@@ -164,4 +164,16 @@ final class ControladorUsuarios
         // Delega la desactivación al modelo.
         $this->modeloUsuario->desactivar($id);
     }
+
+    // Valida el identificador y solicita al modelo reactivar el usuario.
+    public function reactivar(int $id): void
+    {
+        // Evita enviar una reactivación con un identificador inexistente o inválido.
+        if ($id <= 0) {
+            throw new \InvalidArgumentException('El identificador del usuario no es válido.');
+        }
+
+        // Delega la reactivación al modelo.
+        $this->modeloUsuario->reactivar($id);
+    }
 }

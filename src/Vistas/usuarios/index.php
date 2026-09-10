@@ -75,6 +75,8 @@ function escaparHtml(string $valor): string
                                 <a href="index.php?accion=editar&id=<?= (int) $usuario['id'] ?>">Editar</a>
                                 <?php if ((int) $usuario['activo'] === 1): ?>
                                     <a href="index.php?accion=desactivar&id=<?= (int) $usuario['id'] ?>">Desactivar</a>
+                                <?php else: ?>
+                                    <a href="index.php?accion=reactivar&id=<?= (int) $usuario['id'] ?>">Reactivar</a>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </td>

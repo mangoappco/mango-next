@@ -311,4 +311,18 @@ final class ModeloUsuario
         // Ejecuta la desactivación con un parámetro preparado.
         $statement->execute(['id' => $id]);
     }
+
+    // Reactiva un usuario conservando todos sus datos existentes.
+    public function reactivar(int $id): void
+    {
+        // Prepara una consulta que cambia únicamente el estado del usuario.
+        $statement = $this->connection->prepare(
+            'UPDATE usuarios
+             SET activo = 1
+             WHERE id = :id'
+        );
+
+        // Ejecuta la reactivación con un parámetro preparado.
+        $statement->execute(['id' => $id]);
+    }
 }
