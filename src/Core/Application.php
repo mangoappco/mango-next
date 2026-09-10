@@ -100,6 +100,12 @@ final class Application
             return;
         }
 
+        // Impide acceder al CRUD si la sesión todavía no está autenticada.
+        if (!$this->usuarioAutenticado()) {
+            header('Location: index.php?accion=login');
+            exit;
+        }
+
         // Muestra el formulario cuando se solicita la acción de creación.
         if ($accion === 'crear') {
             $errores = [];
@@ -269,5 +275,15 @@ final class Application
 
         // Compara los valores de forma segura contra ataques de temporización.
         return hash_equals($tokenSesion, $token);
+    }
+
+    // Comprueba si existe una sesión de usuario válida.
+    private function usuarioAutenticado(): bool
+    {
+        // Obtiene los datos del usuario guardados durante el login.
+        $usuario = $_SESSION['usuario'] ?? null;
+
+        // Una sesión autenticada debe contener un arreglo con un identificador.
+        return is_array($usuario) && isset($usuario['id']);
     }
 }
