@@ -21,6 +21,10 @@ function escaparTextoBienvenida(string $valor): string
 
     <p>Has iniciado sesión correctamente.</p>
 
+    <?php if ($mensaje !== null): ?>
+        <p><?= escaparTextoBienvenida((string) $mensaje) ?></p>
+    <?php endif; ?>
+
     <dl>
         <dt>Correo electrónico</dt>
         <dd><?= escaparTextoBienvenida((string) $usuarioAutenticado['correo']) ?></dd>
@@ -31,6 +35,7 @@ function escaparTextoBienvenida(string $valor): string
 
     <p>
         <a href="index.php">Entrar al CRUD de usuarios</a>
+        <a href="index.php?accion=cambiar-contrasena">Cambiar contraseña</a>
     </p>
 
     <form method="post" action="index.php?accion=cerrar-sesion">

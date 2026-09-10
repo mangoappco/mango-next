@@ -139,8 +139,45 @@ final class Application
             // Obtiene los datos seguros guardados durante el login.
             $usuarioAutenticado = $_SESSION['usuario'];
 
+            // Recupera el mensaje temporal de una operación anterior.
+            $mensaje = $_SESSION['mensaje'] ?? null;
+
+            // Elimina el mensaje para que se muestre una sola vez.
+            unset($_SESSION['mensaje']);
+
             // Carga la vista de bienvenida.
             require $rootPath . '/src/Vistas/bienvenida.php';
+            return;
+        }
+
+        // Permite al usuario autenticado cambiar únicamente su propia contraseña.
+        if ($accion === 'cambiar-contrasena') {
+            $errores = [];
+
+            // Procesa el formulario solo cuando llega mediante POST.
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Rechaza el formulario si el token no pertenece a la sesión.
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } else {
+                    // Usa el id de la sesión, nunca uno enviado por el navegador.
+                    $resultado = $controladorLogin->cambiarContrasena(
+                        (int) $_SESSION['usuario']['id'],
+                        $_POST
+                    );
+                    $errores = $resultado['errores'];
+                }
+
+                // Redirige a la bienvenida después de guardar correctamente.
+                if ($errores === []) {
+                    $_SESSION['mensaje'] = 'Contraseña actualizada correctamente.';
+                    header('Location: index.php?accion=bienvenida');
+                    exit;
+                }
+            }
+
+            // Carga el formulario con los errores, si los hubiera.
+            require $rootPath . '/src/Vistas/cambiar-contrasena.php';
             return;
         }
 

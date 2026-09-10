@@ -102,6 +102,45 @@ final class ControladorLogin
         ];
     }
 
+    // Verifica la contraseña actual y prepara el cambio de contraseña.
+    public function cambiarContrasena(int $id, array $datos): array
+    {
+        // Obtiene los valores enviados sin incluir el identificador desde el formulario.
+        $actual = (string) ($datos['contrasena_actual'] ?? '');
+        $nueva = (string) ($datos['contrasena_nueva'] ?? '');
+        $confirmacion = (string) ($datos['contrasena_confirmacion'] ?? '');
+        $errores = [];
+
+        // Busca el hash usando el usuario autenticado.
+        $hashActual = $this->modeloUsuario->buscarHashContrasenaPorId($id);
+
+        // Comprueba que la contraseña actual sea correcta.
+        if ($hashActual === null || !password_verify($actual, $hashActual)) {
+            $errores[] = 'La contraseña actual no es correcta.';
+        }
+
+        // Exige una longitud mínima para la nueva contraseña.
+        if (strlen($nueva) < 8) {
+            $errores[] = 'La nueva contraseña debe tener al menos 8 caracteres.';
+        }
+
+        // Comprueba que ambos campos nuevos coincidan.
+        if ($nueva !== $confirmacion) {
+            $errores[] = 'La confirmación no coincide con la nueva contraseña.';
+        }
+
+        // Devuelve los errores sin guardar ningún cambio.
+        if ($errores !== []) {
+            return ['errores' => $errores];
+        }
+
+        // Solicita al modelo guardar el nuevo hash.
+        $this->modeloUsuario->cambiarContrasena($id, $nueva);
+
+        // Informa que el cambio terminó correctamente.
+        return ['errores' => []];
+    }
+
     // Devuelve los segundos que faltan para terminar el bloqueo actual.
     private function segundosBloqueoRestantes(): int
     {

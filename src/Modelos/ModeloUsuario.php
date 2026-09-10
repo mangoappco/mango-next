@@ -59,6 +59,27 @@ final class ModeloUsuario
         return $usuario === false ? null : $usuario;
     }
 
+    // Obtiene únicamente el hash necesario para verificar la contraseña actual.
+    public function buscarHashContrasenaPorId(int $id): ?string
+    {
+        // Prepara una consulta que no expone el hash completo a la vista.
+        $statement = $this->connection->prepare(
+            'SELECT contrasena
+             FROM usuarios
+             WHERE id = :id
+             LIMIT 1'
+        );
+
+        // Ejecuta la consulta con el identificador de la sesión.
+        $statement->execute(['id' => $id]);
+
+        // Obtiene el hash o false si el usuario ya no existe.
+        $hash = $statement->fetchColumn();
+
+        // Devuelve null cuando no se encontró el usuario.
+        return $hash === false ? null : (string) $hash;
+    }
+
     // Comprueba si un correo ya pertenece a otro usuario.
     public function correoExiste(string $correo, ?int $idExcluir = null): bool
     {
@@ -197,6 +218,26 @@ final class ModeloUsuario
 
         // Ejecuta la actualización con los datos separados del SQL.
         $statement->execute($datos);
+    }
+
+    // Guarda un nuevo hash de contraseña para un usuario concreto.
+    public function cambiarContrasena(int $id, string $contrasena): void
+    {
+        // Convierte la nueva contraseña en un hash irreversible.
+        $hash = password_hash($contrasena, PASSWORD_DEFAULT);
+
+        // Prepara la actualización para separar datos y SQL.
+        $statement = $this->connection->prepare(
+            'UPDATE usuarios
+             SET contrasena = :contrasena
+             WHERE id = :id'
+        );
+
+        // Guarda el hash asociado al usuario autenticado.
+        $statement->execute([
+            'id' => $id,
+            'contrasena' => $hash,
+        ]);
     }
 
     // Elimina un usuario usando su identificador.
