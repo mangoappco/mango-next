@@ -21,6 +21,9 @@ final class Application
     // Ejecuta la aplicación.
     public function run(): void
     {
+        // Configura la cookie y las reglas de seguridad antes de iniciar la sesión.
+        $this->configurarSesion();
+
         // Inicia la sesión para poder conservar mensajes entre peticiones.
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -317,6 +320,31 @@ final class Application
 
         // Devuelve el token que las vistas incluirán en sus formularios.
         return $_SESSION['token_csrf'];
+    }
+
+    // Configura las opciones de seguridad de la sesión antes de abrirla.
+    private function configurarSesion(): void
+    {
+        // Evita reutilizar identificadores de sesión no registrados por el servidor.
+        ini_set('session.use_strict_mode', '1');
+
+        // Usa un nombre propio para diferenciar la sesión de ManGo! de otras aplicaciones.
+        session_name('MANGO_SESION');
+
+        // Configura la cookie para que JavaScript no pueda leerla.
+        session_set_cookie_params([
+            // Mantiene la cookie disponible para las rutas de la aplicación.
+            'path' => '/',
+
+            // Solo permite enviar la cookie en solicitudes del mismo sitio.
+            'samesite' => 'Lax',
+
+            // Impide que JavaScript acceda al identificador de sesión.
+            'httponly' => true,
+
+            // Activa Secure automáticamente cuando la aplicación usa HTTPS.
+            'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        ]);
     }
 
     // Comprueba que el token recibido pertenezca a la sesión actual.
