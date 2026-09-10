@@ -1,0 +1,111 @@
+/*
+CSS para ManGoApp
+FORMS
+Autor: Danny Estrada
+*/
+
+/* Container */
+.rdm-form--container {
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 1em;
+    box-sizing: border-box;
+  }
+  
+/* Form Base */
+.rdm-form--elevated,
+.rdm-form--filled, 
+.rdm-form--outlined,
+.rdm-form--flat {
+  border-radius: 0.75em;
+  margin-right: 0.5em;
+  box-sizing: border-box;
+  box-shadow: none;
+  width: 100%;
+}
+
+/* Elevated Form */
+.rdm-form--elevated {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  border: solid 0.0625em rgba(0, 0, 0, 0);
+  box-shadow: 
+    0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+}
+
+/* Filled Form */
+.rdm-form--filled {  
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  border: solid 0.0625em rgba(0, 0, 0, 0);
+}
+
+/* Outlined Form */
+.rdm-form--outlined {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  border: solid 0.0625em var(--md-sys-color-outline);
+}
+
+/* Flat Form (sin borde ni sombra) */
+.rdm-form--flat {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  border: solid 0.0625em rgba(0, 0, 0, 0);
+}
+
+/* Eliminar el margen derecho del último hijo */
+.rdm-form--container .rdm-form--elevated:last-child,
+.rdm-form--container .rdm-form--filled:last-child,
+.rdm-form--container .rdm-form--outlined:last-child,
+.rdm-form--container .rdm-form--flat:last-child {
+  margin-right: 0;
+}
+
+/* Anatomy */
+
+/* Media */
+.rdm-form--media {
+  text-align: left;
+  background-color: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+  width: 100%;
+  min-height: 15em;
+  border-radius: 0.75em;
+  box-sizing: border-box; 
+  padding: 0em 1em;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(10);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+}
+
+/* Body */
+.rdm-form--body {
+  padding: 0em 1em;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+/* Action */
+.rdm-form--action-left, 
+.rdm-form--action-center, 
+.rdm-form--action-right { 
+  padding: 0em 1em;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.rdm-form--action-center {   
+  text-align: center;
+}
+
+.rdm-form--action-right {   
+  text-align: right;
+}

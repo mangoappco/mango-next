@@ -1,0 +1,253 @@
+/*
+CSS para ManGoApp
+ESTILOS
+Autor: Danny Estrada
+*/
+
+@import url(md/theme.css);
+@import url(normalize.css);
+@import url(typography.css);
+@import url(icons.css);
+@import url(shape.css);
+@import url(button.css);
+@import url(card.css);
+@import url(list.css);
+@import url(badge.css);
+@import url(topbar.css);
+@import url(bottombar.css);
+@import url(navigation_bar.css);
+@import url(navigation_drawer.css);
+@import url(navigation_rail.css);
+@import url(tab.css);
+@import url(form.css);
+@import url(textfield.css);
+@import url(select.css);
+@import url(search.css);
+@import url(checkbox.css);
+@import url(radiobutton.css);
+@import url(switches.css);
+
+
+/* Colores base de ripple por tema */
+:root {
+	--rdm-ripple-color: rgba(0, 0, 0, 0.14);
+}
+html[data-theme="light"] {
+	--rdm-ripple-color: rgba(0, 0, 0, 0.14);
+}
+html[data-theme="dark"] {
+	--rdm-ripple-color: rgba(255, 255, 255, 0.20);
+}
+
+:root {
+	--rdm-focus-color: var(--md-sys-color-primary);
+}
+
+
+
+
+  /*fondos temprorales para resaltar diseños*/
+  /* :root {
+    --bg-color1: rgba(255, 0, 0, 0.1);
+    --bg-color2: rgba(0, 0, 0, 0.1);
+	--bg-color3: rgba(0, 0, 0, 0.05);
+  } */
+
+
+
+/*elementos comunes*/
+body{
+	background-color: var(--md-sys-color-surface);
+	color: var(--md-sys-color-on-surface);
+	font-family: Product Sans;
+	font-size: 16px; 
+	font-weight: normal; 
+	margin: 0; 
+}
+
+/* Transición global de tema (suaviza el cambio de colores) */
+html.theme-transition, body.theme-transition {
+	transition: background-color 400ms ease, color 400ms ease, border-color 400ms ease;
+}
+
+.theme-transition .rdm-topbar--small-container,
+.theme-transition .rdm-bottombar--small-container,
+.theme-transition .rdm-navbar--container,
+.theme-transition .rdm-navrail--container,
+.theme-transition .rdm-card--elevated,
+.theme-transition .rdm-card--filled,
+.theme-transition .rdm-card--outlined,
+.theme-transition .rdm-list--container,
+.theme-transition .rdm-button--filled,
+.theme-transition .rdm-button--tonal,
+.theme-transition .rdm-button--elevated,
+.theme-transition .rdm-button--outlined,
+.theme-transition .rdm-button--text,
+.theme-transition .rdm-button--fab,
+.theme-transition .rdm-button--fab-small,
+.theme-transition .rdm-switch--track,
+.theme-transition .rdm-switch--handle {
+	transition: background-color 400ms ease, color 400ms ease, border-color 400ms ease, box-shadow 400ms ease;
+}
+
+/* Suaviza cambios en iconos al alternar tema */
+.theme-transition .material-symbols-rounded,
+.theme-transition .material-symbols-outlined {
+	transition: color 400ms ease, background-color 400ms ease;
+}
+
+/* Transiciones para texto (encabezados, párrafos, enlaces, etc.) */
+.theme-transition h1,
+.theme-transition h2,
+.theme-transition h3,
+.theme-transition h4,
+.theme-transition h5,
+.theme-transition h6,
+.theme-transition p,
+.theme-transition a,
+.theme-transition li,
+.theme-transition span,
+.theme-transition small {
+	transition: color 400ms ease;
+}
+
+/* Top bar: asegurar misma velocidad para el texto y su fondo */
+.theme-transition .rdm-topbar--body-headline,
+.theme-transition .rdm-sys-typography--title-large {
+	transition: color 400ms ease, background-color 400ms ease;
+}
+
+/* Regla genérica para todos los wrappers tipográficos */
+.theme-transition [class^="rdm-sys-typography--"],
+.theme-transition [class*=" rdm-sys-typography--"] {
+	transition: color 400ms ease;
+}
+
+/* Lists: headlines y textos de soporte */
+.theme-transition .rdm-list--body-headline,
+.theme-transition .rdm-list--body-suporting-text,
+.theme-transition .rdm-list--trailing-suporting-text {
+	transition: color 400ms ease, background-color 400ms ease;
+}
+
+/* Bottom bar: headline */
+.theme-transition .rdm-bottombar--body-headline {
+	transition: color 400ms ease, background-color 400ms ease;
+}
+
+/* Navigation bar/rail/drawer/tabs: labels */
+.theme-transition .rdm-navbar--destination-body-label-text,
+.theme-transition .rdm-navrail--destination-body-label-text,
+.theme-transition .rdm-navdraw--destination-body-label-text,
+.theme-transition .rdm-tabs--destination-body-label-text {
+	transition: color 400ms ease, background-color 400ms ease;
+}
+
+/* Elementos semánticos comunes de texto/código */
+.theme-transition blockquote,
+.theme-transition code,
+.theme-transition pre,
+.theme-transition kbd,
+.theme-transition samp,
+.theme-transition cite,
+.theme-transition mark,
+.theme-transition em,
+.theme-transition strong {
+	transition: color 400ms ease, background-color 400ms ease, border-color 400ms ease;
+}
+
+/* Ripple: círculo y animación */
+.rdm-ripple-circle {
+	position: absolute;
+	border-radius: 50%;
+	transform: scale(0);
+	opacity: 0.35;
+	background-color: var(--rdm-ripple-color, rgba(0, 0, 0, 0.14));
+	pointer-events: none;
+	animation: rdm-ripple 520ms ease-out forwards;
+	z-index: 1;
+}
+
+@keyframes rdm-ripple {
+	from { transform: scale(0); opacity: 0.35; }
+	to   { transform: scale(1); opacity: 0; }
+}
+
+/* Focus ring accesible (solo al tabular) */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.rdm-list--container:focus-visible,
+a:focus-visible .rdm-list--container {
+	outline: 2px solid var(--rdm-focus-color);
+	outline-offset: 2px;
+}
+
+a{
+	color: inherit;
+	text-decoration: none;
+	outline: none;
+}
+
+.rdm--contenedor-toolbar {
+	box-sizing: border-box; /*el padding y margin no incrementan el ancho*/
+	margin: 0 auto; /*espacio entre el contenido y el borde*/
+	max-width: 600px; /*ancho máximo del menú del contenedor*/
+	width: 95%; /*ancho del contenedor*/
+	margin-top: 5.5em;
+	margin-bottom: 6em;
+}
+
+a.ancla{
+	display: block; /*visualización en bloque*/
+	position: relative; /*posiciones relativa*/
+	top: -4em; /*la margen superior es negativa para compensar el espacio del cabezote*/
+	visibility: hidden; /*no se muestra*/
+}
+
+.rdm-resaltado
+{
+    color: #009688;
+    font-weight: 600;
+}
+
+.flecha_aba{
+    border-right:0.4em solid transparent;
+    border-left:0.4em solid transparent;
+    border-top:0.4em solid #F44336;
+    display: inline-block;
+    margin-right: 0.25em;
+}
+
+.flecha_arr{
+    border-right:0.4em solid transparent;
+    border-left:0.4em solid transparent;
+    border-bottom:0.4em solid #009688;
+    display: inline-block;
+    margin-bottom: 0.25em;
+    margin-right: 0.25em;
+}
+
+.texto_neutro{
+		font-size: 1.15em;
+		font-weight: bold;
+	}
+
+.texto_exito{
+	color: #009688;
+	font-weight: bold;
+}
+
+.texto_error{
+	color: #F44336;
+	font-size: 1.15em;
+	font-weight: bold;
+}
+
+/*media queries*/
+@media screen and (max-width: 530px) {
+	body {
+	  font-size: 15px;
+	}
+  }

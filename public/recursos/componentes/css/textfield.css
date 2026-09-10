@@ -1,0 +1,310 @@
+/*
+CSS para ManGoApp
+TEXT FIELDS (MD3-inspired)
+Autor: Danny Estrada / Ajustado por Copilot
+*/
+
+.rdm-textfield--wrapper {
+  display: block;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.rdm-textfield--container {
+  display: block;
+  width: 100%;
+}
+
+/* Outlined */
+.rdm-textfield--outlined {
+  position: relative;
+  /* MD: extra-small shape */
+  border-radius: 0.25em;
+  background-color: transparent;
+  border: 0.0625em solid var(--md-sys-color-outline);
+  color: var(--md-sys-color-on-surface);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+/* Hover state */
+.rdm-textfield--outlined:hover:not(:focus-within):not(:has(input:disabled)):not(:has(textarea:disabled)) {
+  border-color: var(--md-sys-color-on-surface);
+}
+
+
+/* Control */
+.rdm-textfield--control {
+  position: relative;
+  padding: 0.5em 0.75em;
+  display: flex;
+  align-items: center;
+  gap: 1em; /* 16px gap entre iconos y input */
+}
+
+/* Iconos leading y trailing */
+.rdm-textfield--leading-icon,
+.rdm-textfield--trailing-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-sys-color-on-surface-variant);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: color 160ms ease;
+  width: 1.5em; /* 24px icono */
+  height: 1.5em; /* 24px icono */
+}
+
+.rdm-textfield--leading-icon {
+  margin-left: 0;
+}
+
+.rdm-textfield--trailing-icon {
+  margin-right: 0;
+}
+
+.rdm-textfield--trailing-icon:hover {
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Ocultar trailing icon por defecto, mostrar cuando tenga .show */
+.rdm-textfield--trailing-icon {
+  display: none;
+}
+
+.rdm-textfield--trailing-icon.show {
+  display: flex;
+}
+
+
+/* Outlined: altura y padding según MD (56 alto, 12px padding con iconos) */
+.rdm-textfield--outlined .rdm-textfield--control {
+  min-height: 3.5em; /* 56px */
+  padding: 0em 0.75em; /* 12px horizontal */
+  align-items: center; /* centrado por defecto */
+}
+
+/* Solo textarea alineado arriba */
+.rdm-textfield--outlined .rdm-textfield--control:has(textarea) {
+  align-items: flex-start;
+}
+
+/* Con iconos: mantener padding de 12px */
+.rdm-textfield--outlined .rdm-textfield--control:has(.rdm-textfield--leading-icon) {
+  padding-left: 0.75em; /* 12px */
+}
+
+.rdm-textfield--outlined .rdm-textfield--control:has(.rdm-textfield--trailing-icon) {
+  padding-right: 0.75em; /* 12px */
+}
+
+
+/* Textarea outlined: altura mínima y padding superior para label */
+.rdm-textfield--outlined .rdm-textfield--control textarea {
+  padding-top: 0.5em; /* espacio desde el borde para el label flotante */
+}
+
+
+.rdm-textfield--control input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  outline: none !important;
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font: inherit;
+  padding: 0.5em 0;
+  caret-color: var(--md-sys-color-primary);
+  flex: 1; /* ocupar espacio disponible sin tapar iconos */
+  min-width: 0; /* permitir shrink */
+}
+
+/* Textarea: estilos base */
+.rdm-textfield--control textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  outline: none !important;
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font: inherit;
+  padding: 0.5em 0;
+  caret-color: var(--md-sys-color-primary);
+  resize: vertical;
+  min-height: 5.5em; /* ~88px para 4 líneas */
+  line-height: 1.5em;
+  flex: 1; /* ocupar espacio disponible sin tapar iconos */
+  min-width: 0; /* permitir shrink */
+}
+
+
+/* Outlined: el texto queda exactamente centrado verticalmente */
+.rdm-textfield--outlined .rdm-textfield--control input {
+  padding: 0;           /* sin padding para que el alto sea sólo la línea de texto */
+  line-height: 1.5em;   /* altura del texto; el flex del contenedor lo centra */
+}
+
+/* Label */
+.rdm-textfield--label {
+  position: absolute;
+  left: 1em; /* 16px del borde */
+  top: 50%; /* centrado vertical en reposo */
+  transform: translateY(-50%);
+  transform-origin: left top;
+  transition: transform 160ms ease, color 160ms ease, background-color 160ms ease, top 160ms ease, left 160ms ease;
+  color: var(--md-sys-color-on-surface-variant);
+  pointer-events: none;
+}
+
+/* Label con leading icon: mover a la derecha del icono */
+.rdm-textfield--control:has(.rdm-textfield--leading-icon) .rdm-textfield--label {
+  left: 3.25em; /* 52px: 12px padding + 24px icono + 16px gap */
+}
+
+/* etiqueta sobre un fondo para outlined (simula notch) */
+.rdm-textfield--outlined .rdm-textfield--label {
+  background-color: var(--md-sys-color-surface);
+  padding: 0 0.25em;
+  z-index: 0; /* cubrir el borde superior para simular notch */
+}
+
+/* Support text (fuera del contenedor) */
+.rdm-textfield--support {
+  padding: 0.25em 1em 0; /* 4px top, 16px horizontal */
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.875em; /* ~label/ayuda */
+  margin-top: 0.25em; /* 4px separación desde el campo */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+
+.rdm-textfield--support-text {
+  flex: 1;
+}
+
+.rdm-textfield--support-counter {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Estados: focus y con contenido */
+.rdm-textfield--container:focus-within .rdm-textfield--label,
+.rdm-textfield--container .rdm-textfield--control input:not(:placeholder-shown) ~ .rdm-textfield--label,
+.rdm-textfield--container .rdm-textfield--control textarea:not(:placeholder-shown) ~ .rdm-textfield--label {
+  color: var(--md-sys-color-primary);
+  transform: translateY(-0.85em) scale(0.85);
+}
+
+/* Ajuste específico para outlined: notch y posición del label flotante */
+.rdm-textfield--outlined:focus-within .rdm-textfield--label,
+.rdm-textfield--outlined .rdm-textfield--control input:not(:placeholder-shown) ~ .rdm-textfield--label,
+.rdm-textfield--outlined .rdm-textfield--control textarea:not(:placeholder-shown) ~ .rdm-textfield--label {
+  top: -0.8em; /* notch a ~8px desde el borde superior */
+  transform: scale(0.85); /* sin translate: usamos top para posición */
+  left: 1em; /* 16px desde el borde izquierdo */
+  padding: 0.25em 0.25em; /* 4px arriba/abajo y 4px laterales para el notch */
+}
+
+.rdm-textfield--outlined:focus-within {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: inset 0 0 0 0.0625em var(--md-sys-color-primary); /* borde adicional interno de 1px */
+}
+
+
+/* Error state (manual): aplicar en wrapper .is-error */
+.rdm-textfield--wrapper.is-error .rdm-textfield--label,
+.rdm-textfield--wrapper.is-error .rdm-textfield--support {
+  color: var(--md-sys-color-error);
+}
+.rdm-textfield--wrapper.is-error .rdm-textfield--outlined {
+  border-color: var(--md-sys-color-error);
+}
+
+/* Disabled */
+.rdm-textfield--control input:disabled,
+.rdm-textfield--control textarea:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Disabled: borde más claro */
+.rdm-textfield--outlined:has(input:disabled),
+.rdm-textfield--outlined:has(textarea:disabled) {
+  opacity: 0.65;
+}
+
+/* Disabled: label más claro pero con background opaco para el notch */
+.rdm-textfield--outlined:has(input:disabled) .rdm-textfield--label,
+.rdm-textfield--outlined:has(textarea:disabled) .rdm-textfield--label {
+  opacity: 1; /* label en outlined maneja su propia opacidad */
+  color: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 65%, transparent);
+  background-color: var(--md-sys-color-surface) !important;
+}
+
+/* Disabled: label sin outlined */
+.rdm-textfield--control:has(input:disabled) .rdm-textfield--label:not(.rdm-textfield--outlined .rdm-textfield--label),
+.rdm-textfield--control:has(textarea:disabled) .rdm-textfield--label:not(.rdm-textfield--outlined .rdm-textfield--label) {
+  opacity: 0.65;
+}
+
+/* Disabled: iconos más claros */
+.rdm-textfield--control:has(input:disabled) .rdm-textfield--leading-icon,
+.rdm-textfield--control:has(input:disabled) .rdm-textfield--trailing-icon,
+.rdm-textfield--control:has(textarea:disabled) .rdm-textfield--leading-icon,
+.rdm-textfield--control:has(textarea:disabled) .rdm-textfield--trailing-icon {
+  opacity: 0.65;
+}
+
+/* Disabled: supporting text más claro */
+.rdm-textfield--wrapper:has(input:disabled) .rdm-textfield--support,
+.rdm-textfield--wrapper:has(textarea:disabled) .rdm-textfield--support {
+  opacity: 0.65;
+}
+
+/* Remover estilos por defecto del autofill del navegador */
+.rdm-textfield--control input:-webkit-autofill {
+  -webkit-box-shadow: inset 0 0 0 100px transparent !important;
+  -webkit-text-fill-color: var(--md-sys-color-on-surface) !important;
+  caret-color: var(--md-sys-color-primary) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.rdm-textfield--control input:-webkit-autofill:hover {
+  -webkit-box-shadow: inset 0 0 0 100px transparent !important;
+  -webkit-text-fill-color: var(--md-sys-color-on-surface) !important;
+}
+
+.rdm-textfield--control input:-webkit-autofill:focus {
+  -webkit-box-shadow: inset 0 0 0 100px transparent !important;
+  -webkit-text-fill-color: var(--md-sys-color-on-surface) !important;
+}
+
+/* Scrollbar styling para textarea */
+.rdm-textfield--control textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.rdm-textfield--control textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rdm-textfield--control textarea::-webkit-scrollbar-thumb {
+  background-color: var(--md-sys-color-outline);
+  border-radius: 4px;
+}
+
+/* Placeholder para la técnica :placeholder-shown */
+.rdm-textfield--control input::placeholder,
+.rdm-textfield--control textarea::placeholder {
+  color: transparent;
+}
+
+/* Disabled (opcional básico) */
+.rdm-textfield--container[aria-disabled="true"] {
+  opacity: 0.62;
+  pointer-events: none;
+}
