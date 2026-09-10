@@ -58,7 +58,7 @@ final class ModeloUsuario
         string $contrasena,
         string $nombres,
         string $apellidos,
-        string $type = 'usuario'
+        string $tipo = 'usuario'
     ): int {
         // Convierte la contraseña original en un hash seguro antes de guardarla.
         $passwordHash = password_hash($contrasena, PASSWORD_DEFAULT);
@@ -77,7 +77,7 @@ final class ModeloUsuario
             'contrasena' => $passwordHash,
             'nombres' => $nombres,
             'apellidos' => $apellidos,
-            'tipo' => $type,
+            'tipo' => $tipo,
         ]);
 
         // Devuelve el identificador asignado por AUTO_INCREMENT.

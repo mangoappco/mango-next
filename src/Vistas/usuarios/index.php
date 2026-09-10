@@ -19,6 +19,10 @@ function escaparHtml(string $valor): string
 <body>
     <h1>Usuarios</h1>
 
+    <p>
+        <a href="index.php?accion=crear">Crear usuario</a>
+    </p>
+
     <?php if ($usuarios === []): ?>
         <p>No hay usuarios registrados.</p>
     <?php else: ?>
