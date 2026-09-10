@@ -171,6 +171,16 @@ final class ControladorLogin
         return ['errores' => []];
     }
 
+    // Verifica la contraseña actual para autorizar una acción sensible.
+    public function verificarContrasenaActual(int $id, string $contrasena): bool
+    {
+        // Obtiene el hash del usuario autenticado.
+        $hash = $this->modeloUsuario->buscarHashContrasenaPorId($id);
+
+        // Compara la contraseña sin exponer el hash almacenado.
+        return $hash !== null && password_verify($contrasena, $hash);
+    }
+
     // Solicita una recuperación sin revelar si el correo está registrado.
     public function solicitarRecuperacion(string $correo): array
     {

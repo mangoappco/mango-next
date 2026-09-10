@@ -164,14 +164,12 @@ final class Application
                     exit;
                 }
             }
-
             require $rootPath . '/src/Vistas/restablecer.php';
             return;
         }
 
         // Procesa el formulario de login mediante POST.
         if ($accion === 'login') {
-            // Prepara los valores que la vista conservará si hay errores.
             $errores = [];
             $datos = ['correo' => trim((string) ($_POST['correo'] ?? ''))];
             $mensaje = null;
@@ -188,17 +186,12 @@ final class Application
 
             // Si las credenciales son correctas, crea la sesión autenticada.
             if ($errores === []) {
-                // Regenera el identificador para evitar fijación de sesión.
                 session_regenerate_id(true);
-
-                // Guarda solo datos necesarios, nunca la contraseña ni su hash.
                 $_SESSION['usuario'] = [
                     'id' => $resultado['usuario']['id'],
                     'correo' => $resultado['usuario']['correo'],
                     'tipo' => $resultado['usuario']['tipo'],
                 ];
-
-                // Guarda un mensaje temporal y vuelve a la lista.
                 $_SESSION['mensaje'] = 'Inicio de sesión correcto.';
                 header('Location: index.php?accion=bienvenida');
                 exit;
@@ -384,31 +377,39 @@ final class Application
                 return;
             }
 
+            // Prepara los errores para la confirmación de desactivación.
+            $errores = [];
+
             // Procesa la eliminación únicamente cuando el formulario utiliza POST.
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Rechaza la eliminación si el token no coincide con el de la sesión.
                 if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
-                    http_response_code(403);
-                    echo 'La solicitud no es válida.';
-                    return;
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } elseif (!$controladorLogin->verificarContrasenaActual(
+                    (int) $_SESSION['usuario']['id'],
+                    (string) ($_POST['contrasena_actual'] ?? '')
+                )) {
+                    // Exige la contraseña actual antes de desactivar.
+                    $errores[] = 'La contraseña actual no es correcta.';
                 }
 
-                // Solicita al controlador desactivar el usuario confirmado.
-                $controladorUsuarios->desactivar($id);
+                if ($errores === []) {
+                    // Solicita al controlador desactivar el usuario confirmado.
+                    $controladorUsuarios->desactivar($id);
 
-                // Registra la acción administrativa.
-                $modeloUsuario->registrarActividad(
-                    (int) $_SESSION['usuario']['id'],
-                    (string) $_SESSION['usuario']['correo'],
-                    'usuario_desactivado'
-                );
+                    // Registra la acción administrativa.
+                    $modeloUsuario->registrarActividad(
+                        (int) $_SESSION['usuario']['id'],
+                        (string) $_SESSION['usuario']['correo'],
+                        'usuario_desactivado'
+                    );
 
-                // Vuelve a la lista después de eliminarlo.
-                // Guarda un mensaje temporal que se mostrará después de la redirección.
-                $_SESSION['mensaje'] = 'Usuario desactivado correctamente.';
+                    // Guarda un mensaje temporal que se mostrará después de la redirección.
+                    $_SESSION['mensaje'] = 'Usuario desactivado correctamente.';
 
-                header('Location: index.php');
-                exit;
+                    header('Location: index.php');
+                    exit;
+                }
             }
 
             // Carga la vista que pide confirmar la desactivación.
@@ -435,28 +436,37 @@ final class Application
                 return;
             }
 
+            // Prepara los errores para la confirmación de reactivación.
+            $errores = [];
+
             // Procesa la reactivación únicamente mediante POST protegido.
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
-                    http_response_code(403);
-                    echo 'La solicitud no es válida.';
-                    return;
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } elseif (!$controladorLogin->verificarContrasenaActual(
+                    (int) $_SESSION['usuario']['id'],
+                    (string) ($_POST['contrasena_actual'] ?? '')
+                )) {
+                    // Exige la contraseña actual antes de reactivar.
+                    $errores[] = 'La contraseña actual no es correcta.';
                 }
 
-                // Solicita al controlador reactivar el usuario confirmado.
-                $controladorUsuarios->reactivar($id);
+                if ($errores === []) {
+                    // Solicita al controlador reactivar el usuario confirmado.
+                    $controladorUsuarios->reactivar($id);
 
-                // Registra la acción administrativa.
-                $modeloUsuario->registrarActividad(
-                    (int) $_SESSION['usuario']['id'],
-                    (string) $_SESSION['usuario']['correo'],
-                    'usuario_reactivado'
-                );
+                    // Registra la acción administrativa.
+                    $modeloUsuario->registrarActividad(
+                        (int) $_SESSION['usuario']['id'],
+                        (string) $_SESSION['usuario']['correo'],
+                        'usuario_reactivado'
+                    );
 
-                // Informa el resultado y vuelve a la lista.
-                $_SESSION['mensaje'] = 'Usuario reactivado correctamente.';
-                header('Location: index.php');
-                exit;
+                    // Informa el resultado y vuelve a la lista.
+                    $_SESSION['mensaje'] = 'Usuario reactivado correctamente.';
+                    header('Location: index.php');
+                    exit;
+                }
             }
 
             // Carga la vista de confirmación.
