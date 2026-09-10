@@ -37,8 +37,12 @@ final class ControladorLogin
         $contrasena = (string) ($datos['contrasena'] ?? '');
         $errores = [];
 
-        // Rechaza temporalmente nuevos intentos si se alcanzó el límite.
-        $segundosRestantes = $this->segundosBloqueoRestantes();
+        // Obtiene la IP para aplicar el límite fuera de la sesión del navegador.
+        $direccionIp = $_SERVER['REMOTE_ADDR'] ?? 'desconocida';
+
+        // Rechaza temporalmente nuevos intentos si se alcanzó el límite persistente.
+        $registroIntentos = $this->modeloUsuario->obtenerIntentosLogin($correo, $direccionIp);
+        $segundosRestantes = $this->segundosBloqueoRestantes($registroIntentos);
 
         if ($segundosRestantes > 0) {
             return [
@@ -83,8 +87,8 @@ final class ControladorLogin
             || (int) $usuario['activo'] !== 1
             || !password_verify($contrasena, (string) $usuario['contrasena'])
         ) {
-            // Registra el fallo antes de devolver el mensaje genérico.
-            $intentos = $this->registrarIntentoFallido();
+            // Registra el fallo en la base de datos antes del mensaje genérico.
+            $intentos = $this->registrarIntentoFallido($correo, $direccionIp, $registroIntentos);
 
             // Registra el intento fallido sin guardar la contraseña.
             $this->modeloUsuario->registrarActividad(
@@ -108,7 +112,7 @@ final class ControladorLogin
         }
 
         // Limpia los fallos anteriores después de una autenticación correcta.
-        unset($_SESSION['intentos_login']);
+        $this->modeloUsuario->limpiarIntentosLogin($correo, $direccionIp);
 
         // Registra el acceso correcto.
         $this->modeloUsuario->registrarActividad(
@@ -261,30 +265,41 @@ final class ControladorLogin
     }
 
     // Devuelve los segundos que faltan para terminar el bloqueo actual.
-    private function segundosBloqueoRestantes(): int
+    private function segundosBloqueoRestantes(?array $registroIntentos): int
     {
-        // Obtiene los datos del límite guardados en la sesión.
-        $intentos = $_SESSION['intentos_login'] ?? [];
-        $bloqueadoHasta = (int) ($intentos['bloqueado_hasta'] ?? 0);
+        // Obtiene el vencimiento guardado en la base de datos.
+        $bloqueadoHasta = $registroIntentos['bloqueado_hasta'] ?? null;
+
+        if (!is_string($bloqueadoHasta) || $bloqueadoHasta === '') {
+            return 0;
+        }
 
         // Calcula el tiempo restante, sin devolver valores negativos.
-        return max(0, $bloqueadoHasta - time());
+        return max(0, strtotime($bloqueadoHasta) - time());
     }
 
-    // Registra un fallo y devuelve la cantidad acumulada.
-    private function registrarIntentoFallido(): int
+    // Registra un fallo persistente y devuelve la cantidad acumulada.
+    private function registrarIntentoFallido(
+        string $correo,
+        string $direccionIp,
+        ?array $registroIntentos
+    ): int
     {
         // Obtiene el contador actual o comienza desde cero.
-        $intentos = $_SESSION['intentos_login'] ?? [];
-        $cantidad = (int) ($intentos['cantidad'] ?? 0) + 1;
+        $cantidad = (int) ($registroIntentos['intentos'] ?? 0) + 1;
 
-        // Guarda el contador actualizado en la sesión.
-        $_SESSION['intentos_login'] = [
-            'cantidad' => $cantidad,
-            'bloqueado_hasta' => $cantidad >= self::INTENTOS_MAXIMOS
-                ? time() + self::DURACION_BLOQUEO
-                : 0,
-        ];
+        // Calcula el momento de desbloqueo al alcanzar el máximo.
+        $bloqueadoHasta = $cantidad >= self::INTENTOS_MAXIMOS
+            ? date('Y-m-d H:i:s', time() + self::DURACION_BLOQUEO)
+            : null;
+
+        // Guarda el contador actualizado en la base de datos.
+        $this->modeloUsuario->guardarIntentosLogin(
+            $correo,
+            $direccionIp,
+            $cantidad,
+            $bloqueadoHasta
+        );
 
         return $cantidad;
     }

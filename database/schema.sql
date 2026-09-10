@@ -46,3 +46,18 @@ CREATE TABLE registro_actividad (
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
+
+  -- Controla intentos fallidos por correo e IP, incluso entre sesiones distintas.
+  CREATE TABLE intentos_login (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    correo VARCHAR(190) NOT NULL,
+    direccion_ip VARCHAR(45) NOT NULL,
+    intentos INT NOT NULL DEFAULT 0,
+    bloqueado_hasta DATETIME NULL,
+    actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+      ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_intentos_correo_ip (correo, direccion_ip),
+    INDEX idx_intentos_bloqueo (bloqueado_hasta)
+  ) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_unicode_ci;

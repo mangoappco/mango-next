@@ -48,6 +48,68 @@ final class ModeloUsuario
         }
     }
 
+    // Obtiene el contador persistente asociado a un correo y una IP.
+    public function obtenerIntentosLogin(string $correo, string $direccionIp): ?array
+    {
+        // Busca el estado actual del límite de intentos.
+        $statement = $this->connection->prepare(
+            'SELECT intentos, bloqueado_hasta
+             FROM intentos_login
+             WHERE correo = :correo
+               AND direccion_ip = :direccion_ip
+             LIMIT 1'
+        );
+        $statement->execute([
+            'correo' => $correo,
+            'direccion_ip' => $direccionIp,
+        ]);
+        $intentos = $statement->fetch();
+
+        return $intentos === false ? null : $intentos;
+    }
+
+    // Guarda o actualiza el estado persistente de los intentos.
+    public function guardarIntentosLogin(
+        string $correo,
+        string $direccionIp,
+        int $cantidad,
+        ?string $bloqueadoHasta
+    ): void {
+        // Inserta el estado o actualiza la fila única de correo e IP.
+        $statement = $this->connection->prepare(
+            'INSERT INTO intentos_login
+                (correo, direccion_ip, intentos, bloqueado_hasta)
+             VALUES
+                (:correo, :direccion_ip, :intentos, :bloqueado_hasta)
+             ON DUPLICATE KEY UPDATE
+                intentos = :intentos_actualizados,
+                bloqueado_hasta = :bloqueado_hasta_actualizado'
+        );
+        $statement->execute([
+            'correo' => $correo,
+            'direccion_ip' => $direccionIp,
+            'intentos' => $cantidad,
+            'bloqueado_hasta' => $bloqueadoHasta,
+            'intentos_actualizados' => $cantidad,
+            'bloqueado_hasta_actualizado' => $bloqueadoHasta,
+        ]);
+    }
+
+    // Reinicia el contador después de un login correcto.
+    public function limpiarIntentosLogin(string $correo, string $direccionIp): void
+    {
+        // Elimina el registro para que el próximo intento empiece desde cero.
+        $statement = $this->connection->prepare(
+            'DELETE FROM intentos_login
+             WHERE correo = :correo
+               AND direccion_ip = :direccion_ip'
+        );
+        $statement->execute([
+            'correo' => $correo,
+            'direccion_ip' => $direccionIp,
+        ]);
+    }
+
     // Busca un usuario por su correo electrónico.
     public function buscarPorCorreo(string $correo): ?array
     {
