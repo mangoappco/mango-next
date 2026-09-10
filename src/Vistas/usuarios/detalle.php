@@ -40,11 +40,15 @@ function escaparTextoDetalle(string $valor): string
     </dl>
 
     <p>
-        <a href="index.php?accion=editar&id=<?= (int) $usuario['id'] ?>">Editar usuario</a>
+        <?php if ($esAdministrador): ?>
+            <a href="index.php?accion=editar&id=<?= (int) $usuario['id'] ?>">Editar usuario</a>
+        <?php endif; ?>
     </p>
 
     <p>
-        <a href="index.php?accion=eliminar&id=<?= (int) $usuario['id'] ?>">Eliminar usuario</a>
+        <?php if ($esAdministrador): ?>
+            <a href="index.php?accion=eliminar&id=<?= (int) $usuario['id'] ?>">Eliminar usuario</a>
+        <?php endif; ?>
     </p>
 
     <p>

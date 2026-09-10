@@ -143,6 +143,12 @@ final class Application
 
         // Muestra el formulario cuando se solicita la acción de creación.
         if ($accion === 'crear') {
+            // Solo los administradores pueden crear usuarios.
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
             $errores = [];
             $datos = [];
 
@@ -186,12 +192,19 @@ final class Application
             }
 
             // Carga la vista de detalle y le entrega el usuario encontrado.
+            $esAdministrador = $this->esAdministrador();
             require $rootPath . '/src/Vistas/usuarios/detalle.php';
             return;
         }
 
         // Obtiene el identificador cuando se solicita editar un usuario.
         if ($accion === 'editar') {
+            // Solo los administradores pueden editar usuarios.
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
             $id = (int) ($_GET['id'] ?? 0);
             $usuario = $controladorUsuarios->obtener($id);
 
@@ -233,6 +246,12 @@ final class Application
 
         // Elimina un usuario únicamente cuando la petición utiliza POST.
         if ($accion === 'eliminar') {
+            // Solo los administradores pueden eliminar usuarios.
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
             // Obtiene el usuario para mostrarlo en la confirmación o validar el borrado.
             $id = (int) ($_GET['id'] ?? 0);
             $usuario = $controladorUsuarios->obtener($id);
@@ -271,6 +290,9 @@ final class Application
 
         // Lee y normaliza el texto de búsqueda enviado mediante GET.
         $busqueda = trim((string) ($_GET['buscar'] ?? ''));
+
+        // Indica a la vista si debe mostrar acciones administrativas.
+        $esAdministrador = $this->esAdministrador();
 
         // Ejecuta la acción que obtiene la lista filtrada de usuarios.
         $usuarios = $controladorUsuarios->index($busqueda);
@@ -320,5 +342,22 @@ final class Application
 
         // Una sesión autenticada debe contener un arreglo con un identificador.
         return is_array($usuario) && isset($usuario['id']);
+    }
+
+    // Comprueba si el usuario autenticado tiene permisos administrativos.
+    private function esAdministrador(): bool
+    {
+        // Compara el tipo guardado en la sesión con el tipo permitido.
+        return ($_SESSION['usuario']['tipo'] ?? null) === 'admin';
+    }
+
+    // Muestra una respuesta 403 cuando el usuario no tiene permiso suficiente.
+    private function mostrarAccesoDenegado(string $rootPath): void
+    {
+        // Informa al navegador que la acción está prohibida.
+        http_response_code(403);
+
+        // Carga una vista comprensible para el usuario.
+        require $rootPath . '/src/Vistas/errores/403.php';
     }
 }

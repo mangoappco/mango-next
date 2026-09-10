@@ -24,7 +24,9 @@ function escaparHtml(string $valor): string
     <?php endif; ?>
 
     <p>
-        <a href="index.php?accion=crear">Crear usuario</a>
+        <?php if ($esAdministrador): ?>
+            <a href="index.php?accion=crear">Crear usuario</a>
+        <?php endif; ?>
         <a href="index.php?accion=bienvenida">Volver a la bienvenida</a>
     </p>
 
@@ -69,8 +71,10 @@ function escaparHtml(string $valor): string
                         <td><?= (int) $usuario['activo'] === 1 ? 'Sí' : 'No' ?></td>
                         <td>
                             <a href="index.php?accion=ver&id=<?= (int) $usuario['id'] ?>">Ver</a>
-                            <a href="index.php?accion=editar&id=<?= (int) $usuario['id'] ?>">Editar</a>
-                            <a href="index.php?accion=eliminar&id=<?= (int) $usuario['id'] ?>">Eliminar</a>
+                            <?php if ($esAdministrador): ?>
+                                <a href="index.php?accion=editar&id=<?= (int) $usuario['id'] ?>">Editar</a>
+                                <a href="index.php?accion=eliminar&id=<?= (int) $usuario['id'] ?>">Eliminar</a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
