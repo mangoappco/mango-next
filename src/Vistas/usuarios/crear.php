@@ -14,7 +14,7 @@ function escaparTextoFormulario(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Crear usuario</title>
+    <title>ManGo! - Crear usuario</title>
 </head>
 <body>
     <h1>Crear usuario</h1>

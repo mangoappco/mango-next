@@ -14,7 +14,7 @@ function escaparTextoBienvenida(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Bienvenida</title>
+    <title>ManGo! - Bienvenida</title>
 </head>
 <body>
     <h1>Bienvenido a ManGo!</h1>

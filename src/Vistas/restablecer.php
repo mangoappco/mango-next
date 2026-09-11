@@ -14,7 +14,7 @@ function escaparTextoRestablecer(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Restablecer contraseña</title>
+    <title>ManGo! - Restablecer contraseña</title>
 </head>
 <body>
     <h1>Restablecer contraseña</h1>

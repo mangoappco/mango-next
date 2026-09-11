@@ -14,7 +14,7 @@ function escaparTextoDetalle(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Detalle del usuario</title>
+    <title>ManGo! - Detalle del usuario</title>
 </head>
 <body>
     <h1>Detalle del usuario</h1>

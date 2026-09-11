@@ -14,7 +14,7 @@ function escaparTextoEdicion(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar usuario</title>
+    <title>ManGo! - Editar usuario</title>
 </head>
 <body>
     <h1>Editar usuario</h1>

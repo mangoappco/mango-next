@@ -14,7 +14,7 @@ function escaparHtml(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Usuarios</title>
+    <title>ManGo! - Usuarios</title>
 </head>
 <body>
     <h1>Usuarios</h1>

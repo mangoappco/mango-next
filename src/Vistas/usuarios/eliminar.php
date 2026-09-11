@@ -14,7 +14,7 @@ function escaparTextoEliminacion(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Desactivar usuario</title>
+    <title>ManGo! - Desactivar usuario</title>
 </head>
 <body>
     <h1>Desactivar usuario</h1>

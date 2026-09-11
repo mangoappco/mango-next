@@ -14,7 +14,7 @@ function escaparTextoReactivacion(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reactivar usuario</title>
+    <title>ManGo! - Reactivar usuario</title>
 </head>
 <body>
     <h1>Reactivar usuario</h1>

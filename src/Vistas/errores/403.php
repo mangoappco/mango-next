@@ -7,7 +7,7 @@ declare(strict_types=1);
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Acceso denegado</title>
+    <title>ManGo! - Acceso denegado</title>
 </head>
 <body>
     <h1>Acceso denegado</h1>

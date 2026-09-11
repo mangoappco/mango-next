@@ -14,41 +14,116 @@ function escaparTextoLogin(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Iniciar sesión</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ManGo! - Iniciar sesión</title>
+    <link rel="stylesheet" href="recursos/componentes/css/estilos.css">
+    <script src="recursos/componentes/js/topbar_scroll.js"></script>
+    <script src="recursos/componentes/js/theme_toggle.js"></script>
 </head>
 <body>
-    <h1>Iniciar sesión</h1>
+    <!-- Barra superior base del container, adaptada para una vista pública. -->
+    <header class="rdm-topbar--position">
+        <div class="rdm-topbar--small-container" id="topbar">
+            <div class="rdm-topbar--media">
+                <div class="rdm-topbar--media-placeholder" aria-hidden="true"></div>
+            </div>
 
-    <?php if ($mensaje !== null): ?>
-        <p><?= escaparTextoLogin((string) $mensaje) ?></p>
-    <?php endif; ?>
+            <div class="rdm-topbar--body">
+                <div class="rdm-sys-typography--title-large">
+                    <div class="rdm-topbar--body-headline">
+                        <div class="rdm-topbar--mango-logo" aria-hidden="true"></div>
+                        ManGo! - Next
+                    </div>
+                </div>
+            </div>
 
-    <?php if ($errores !== []): ?>
-        <ul>
-            <?php foreach ($errores as $error): ?>
-                <li><?= escaparTextoLogin($error) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
+            <div class="rdm-topbar--action">
+                <div class="rdm-topbar--trailing-icon" id="themeToggle" title="Cambiar tema">
+                    <span class="material-symbols-rounded" id="themeToggleIcon">dark_mode</span>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <form method="post" action="index.php?accion=login">
-        <input type="hidden" name="token_csrf" value="<?= escaparTextoLogin($tokenCsrf) ?>">
+    <main class="rdm--contenedor-toolbar">
+        <h1 class="rdm-sys-typography--display-small">Iniciar sesión</h1>
 
-        <p>
-            <label for="correo">Correo electrónico</label>
-            <input type="email" id="correo" name="correo" value="<?= escaparTextoLogin($datos['correo']) ?>" required>
+        <?php if ($mensaje !== null): ?>
+            <p class="rdm-sys-typography--body-large">
+                <?= escaparTextoLogin((string) $mensaje) ?>
+            </p>
+        <?php endif; ?>
+
+        <?php if ($errores !== []): ?>
+            <ul class="rdm-sys-typography--body-large">
+                <?php foreach ($errores as $error): ?>
+                    <li><?= escaparTextoLogin($error) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+        <form class="rdm-form--container" method="post" action="index.php?accion=login">
+            <div class="rdm-form--outlined">
+                <div class="rdm-form--body">
+                    <input type="hidden" name="token_csrf" value="<?= escaparTextoLogin($tokenCsrf) ?>">
+
+                    <div class="rdm-textfield--wrapper">
+                        <div class="rdm-textfield--container rdm-textfield--outlined">
+                            <div class="rdm-textfield--control">
+                                <input
+                                    type="email"
+                                    id="correo"
+                                    name="correo"
+                                    placeholder=" "
+                                    value="<?= escaparTextoLogin($datos['correo']) ?>"
+                                    autocomplete="email"
+                                    required
+                                >
+                                <label class="rdm-textfield--label" for="correo">Correo electrónico</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rdm-textfield--wrapper">
+                        <div class="rdm-textfield--container rdm-textfield--outlined">
+                            <div class="rdm-textfield--control">
+                                <input
+                                    type="password"
+                                    id="contrasena"
+                                    name="contrasena"
+                                    placeholder=" "
+                                    autocomplete="current-password"
+                                    required
+                                >
+                                <label class="rdm-textfield--label" for="contrasena">Contraseña</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="rdm-form--action-right">
+                        <button class="rdm-button--filled" type="submit">
+                            <span class="rdm-button--container">
+                                <span class="rdm-button--body">
+                                    <span class="rdm-sys-typography--label-large">Iniciar sesión</span>
+                                </span>
+                            </span>
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </form>
+
+        <p class="rdm-sys-typography--body-large">
+            <a href="index.php?accion=recuperar">¿Olvidaste tu contraseña?</a>
         </p>
 
-        <p>
-            <label for="contrasena">Contraseña</label>
-            <input type="password" id="contrasena" name="contrasena" required>
-        </p>
-
-        <button type="submit">Iniciar sesión</button>
-    </form>
-
-    <p>
-        <a href="index.php?accion=recuperar">¿Olvidaste tu contraseña?</a>
-    </p>
+        <?php if (($_ENV['APP_ENV'] ?? 'production') !== 'production'): ?>
+            <p class="rdm-sys-typography--body-medium">
+                <a href="../componentes/index.php" target="_blank" rel="noopener">
+                    Ver biblioteca de componentes
+                </a>
+            </p>
+        <?php endif; ?>
+    </main>
 </body>
 </html>

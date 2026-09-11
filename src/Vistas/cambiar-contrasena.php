@@ -14,7 +14,7 @@ function escaparTextoContrasena(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cambiar contraseña</title>
+    <title>ManGo! - Cambiar contraseña</title>
 </head>
 <body>
     <h1>Cambiar contraseña</h1>

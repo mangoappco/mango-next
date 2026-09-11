@@ -7,7 +7,7 @@ declare(strict_types=1);
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Página no encontrada</title>
+    <title>ManGo! - Página no encontrada</title>
 </head>
 <body>
     <h1>Usuario no encontrado</h1>

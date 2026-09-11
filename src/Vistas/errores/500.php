@@ -7,7 +7,7 @@ declare(strict_types=1);
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Error interno</title>
+    <title>ManGo! - Error interno</title>
 </head>
 <body>
     <h1>Error interno</h1>
