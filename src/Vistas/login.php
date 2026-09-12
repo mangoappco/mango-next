@@ -77,10 +77,16 @@ function escaparTextoLogin(string $valor): string
                                     placeholder=" "
                                     value="<?= escaparTextoLogin($datos['correo']) ?>"
                                     autocomplete="email"
+                                    aria-describedby="correo_support"
                                     required
                                 >
                                 <label class="rdm-textfield--label" for="correo">Correo electrónico</label>
                             </div>
+                        </div>
+                        <div class="rdm-textfield--support">
+                            <span class="rdm-textfield--support-text" id="correo_support">
+                                Usa el correo asociado a tu cuenta.
+                            </span>
                         </div>
                     </div>
 
@@ -93,10 +99,16 @@ function escaparTextoLogin(string $valor): string
                                     name="contrasena"
                                     placeholder=" "
                                     autocomplete="current-password"
+                                    aria-describedby="contrasena_support"
                                     required
                                 >
                                 <label class="rdm-textfield--label" for="contrasena">Contraseña</label>
                             </div>
+                        </div>
+                        <div class="rdm-textfield--support">
+                            <span class="rdm-textfield--support-text" id="contrasena_support">
+                                Introduce tu contraseña para continuar.
+                            </span>
                         </div>
                     </div>
 

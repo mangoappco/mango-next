@@ -190,6 +190,8 @@ final class Application
                 $_SESSION['usuario'] = [
                     'id' => $resultado['usuario']['id'],
                     'correo' => $resultado['usuario']['correo'],
+                    'nombres' => $resultado['usuario']['nombres'],
+                    'apellidos' => $resultado['usuario']['apellidos'],
                     'tipo' => $resultado['usuario']['tipo'],
                 ];
                 $_SESSION['mensaje'] = 'Inicio de sesión correcto.';
