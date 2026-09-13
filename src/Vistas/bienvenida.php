@@ -98,18 +98,29 @@ function escaparTextoBienvenida(string $valor): string
                     </p>
                 </div>
             </article>
+
         </section>
 
-        <p class="rdm-form--action-left">
-            <a class="rdm-button--filled" href="index.php">
-                <span class="rdm-button--container">
-                    <span class="rdm-button--body">
-                        <span class="rdm-sys-typography--label-large">Entrar al CRUD</span>
-                    </span>
-                </span>
-            </a>
+        <section class="rdm-card--container">
+            <article class="rdm-card--outlined">
+                <div class="rdm-card--body">
+                    <h2 class="rdm-sys-typography--display-small">Configuración</h2>
+                </div>
 
-        </p>
+                <div class="rdm-card--action-left">
+                    <p>
+                        <button class="rdm-button--filled" type="button" onclick="window.location.href='index.php';">
+                            <div class="rdm-button--container">
+                                <div class="rdm-button--body">
+                                    <span class="rdm-sys-typography--label-large">Usuarios</span>
+                                </div>
+                            </div>
+                        </button>
+                    </p>
+                </div>
+            </article>
+        </section>
+
     </main>
 </body>
 </html>
