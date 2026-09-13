@@ -18,9 +18,23 @@ $rutaImagenPerfil = (string) ($datos['foto_perfil'] ?: 'recursos/img/avatar-defa
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ManGo! - Editar perfil</title>
+    <link rel="stylesheet" href="recursos/componentes/css/estilos.css">
+    <script src="recursos/componentes/js/topbar_scroll.js"></script>
+    <script src="recursos/componentes/js/theme_toggle.js"></script>
 </head>
 <body>
-    <h1>Editar perfil</h1>
+    <header class="rdm-topbar--position">
+        <div class="rdm-topbar--small-container" id="topbar">
+            <div class="rdm-topbar--media">
+                <a href="index.php?accion=bienvenida"><div class="rdm-topbar--leading-navigation-icon"><span class="material-symbols-rounded">arrow_back</span></div></a>
+            </div>
+            <div class="rdm-topbar--body"><div class="rdm-sys-typography--title-large"><div class="rdm-topbar--body-headline">Editar perfil</div></div></div>
+            <div class="rdm-topbar--action"><div class="rdm-topbar--trailing-icon" id="themeToggle" title="Cambiar tema"><span class="material-symbols-rounded" id="themeToggleIcon">dark_mode</span></div></div>
+        </div>
+    </header>
+
+    <main class="rdm--contenedor-toolbar">
+        <h1 class="rdm-sys-typography--display-medium">Mis datos personales</h1>
 
     <?php if ($errores !== []): ?>
         <ul>
@@ -82,5 +96,6 @@ $rutaImagenPerfil = (string) ($datos['foto_perfil'] ?: 'recursos/img/avatar-defa
     <p>
         <a href="index.php?accion=bienvenida">Volver a la bienvenida</a>
     </p>
+    </main>
 </body>
 </html>

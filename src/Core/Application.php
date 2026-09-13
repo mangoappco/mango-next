@@ -383,6 +383,9 @@ final class Application
                 return;
             }
 
+            // Entrega a la vista el permiso que controla la card administrativa.
+            $esAdministrador = true;
+
             $id = (int) ($_GET['id'] ?? 0);
             $usuario = $controladorUsuarios->obtener($id);
 

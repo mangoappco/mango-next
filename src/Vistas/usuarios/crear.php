@@ -14,10 +14,37 @@ function escaparTextoFormulario(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ManGo! - Crear usuario</title>
+    <link rel="stylesheet" href="recursos/componentes/css/estilos.css">
+    <script src="recursos/componentes/js/topbar_scroll.js"></script>
+    <script src="recursos/componentes/js/theme_toggle.js"></script>
 </head>
 <body>
-    <h1>Crear usuario</h1>
+    <header class="rdm-topbar--position">
+        <div class="rdm-topbar--small-container" id="topbar">
+            <div class="rdm-topbar--media">
+                <a href="index.php">
+                    <div class="rdm-topbar--leading-navigation-icon">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </div>
+                </a>
+            </div>
+            <div class="rdm-topbar--body">
+                <div class="rdm-sys-typography--title-large">
+                    <div class="rdm-topbar--body-headline">Crear usuario</div>
+                </div>
+            </div>
+            <div class="rdm-topbar--action">
+                <div class="rdm-topbar--trailing-icon" id="themeToggle" title="Cambiar tema">
+                    <span class="material-symbols-rounded" id="themeToggleIcon">dark_mode</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="rdm--contenedor-toolbar">
+        <h1 class="rdm-sys-typography--display-medium">Nuevo usuario</h1>
 
     <?php if ($errores !== []): ?>
         <ul>
@@ -69,5 +96,6 @@ function escaparTextoFormulario(string $valor): string
     <p>
         <a href="index.php">Volver a la lista</a>
     </p>
+    </main>
 </body>
 </html>

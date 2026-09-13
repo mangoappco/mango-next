@@ -36,8 +36,7 @@ function escaparHtml(string $valor): string
             <div class="rdm-topbar--body">
                 <div class="rdm-sys-typography--title-large">
                     <div class="rdm-topbar--body-headline">
-                        <div class="rdm-topbar--mango-logo" aria-hidden="true"></div>
-                        ManGo! - Next
+                        Usuarios
                     </div>
                 </div>
             </div>
@@ -51,7 +50,7 @@ function escaparHtml(string $valor): string
     </header>
 
     <main class="rdm--contenedor-toolbar">
-        <h1 class="rdm-sys-typography--display-medium">Usuarios</h1>
+        <h1 class="rdm-sys-typography--display-medium">Administración de usuarios</h1>
 
     <?php if ($mensaje !== null): ?>
         <p><?= escaparHtml((string) $mensaje) ?></p>

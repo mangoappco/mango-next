@@ -14,58 +14,94 @@ function escaparTextoDetalle(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ManGo! - Detalle del usuario</title>
+    <link rel="stylesheet" href="recursos/componentes/css/estilos.css">
+    <script src="recursos/componentes/js/topbar_scroll.js"></script>
+    <script src="recursos/componentes/js/theme_toggle.js"></script>
 </head>
 <body>
-    <h1>Detalle del usuario</h1>
+    <header class="rdm-topbar--position">
+        <div class="rdm-topbar--small-container" id="topbar">
+            <div class="rdm-topbar--media">
+                <a href="index.php">
+                    <div class="rdm-topbar--leading-navigation-icon">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </div>
+                </a>
+            </div>
 
-    <dl>
-        <dt>Imagen de perfil</dt>
-        <dd>
-            <img
-                src="<?= escaparTextoDetalle((string) ($usuario['foto_perfil'] ?: 'recursos/img/avatar-default.svg')) ?>"
-                alt="Imagen de perfil de <?= escaparTextoDetalle((string) $usuario['nombres']) ?>"
-                width="160"
-            >
-        </dd>
+            <div class="rdm-topbar--body">
+                <div class="rdm-sys-typography--title-large">
+                    <div class="rdm-topbar--body-headline">
+                        Detalle del usuario
+                    </div>
+                </div>
+            </div>
 
-        <dt>ID</dt>
-        <dd><?= escaparTextoDetalle((string) $usuario['id']) ?></dd>
+            <div class="rdm-topbar--action">
+                <div class="rdm-topbar--trailing-icon" id="themeToggle" title="Cambiar tema">
+                    <span class="material-symbols-rounded" id="themeToggleIcon">dark_mode</span>
+                </div>
+            </div>
+        </div>
+    </header>
 
-        <dt>Correo electrónico</dt>
-        <dd><?= escaparTextoDetalle((string) $usuario['correo']) ?></dd>
+    <main class="rdm--contenedor-toolbar">
+        <h1 class="rdm-sys-typography--display-medium">
+            <?= escaparTextoDetalle((string) $usuario['nombres']) ?>
+            <?= escaparTextoDetalle((string) $usuario['apellidos']) ?>
+        </h1>
 
-        <dt>Nombres</dt>
-        <dd><?= escaparTextoDetalle((string) $usuario['nombres']) ?></dd>
+        <section class="rdm-card--container">
+            <article class="rdm-card--elevated">
+                <div
+                    class="rdm-card--media"
+                    style="background-image: url('<?= escaparTextoDetalle((string) ($usuario['foto_perfil'] ?: 'recursos/img/avatar-default.svg')) ?>');"
+                    role="img"
+                    aria-label="Imagen de perfil de <?= escaparTextoDetalle((string) $usuario['nombres']) ?>"
+                ></div>
 
-        <dt>Apellidos</dt>
-        <dd><?= escaparTextoDetalle((string) $usuario['apellidos']) ?></dd>
+                <div class="rdm-card--body">
+                    <h2 class="rdm-sys-typography--display-small">
+                        <?= escaparTextoDetalle((string) $usuario['tipo']) ?>
+                    </h2>
+                    <h3 class="rdm-sys-typography--title-large">
+                        <?= escaparTextoDetalle((string) $usuario['correo']) ?>
+                    </h3>
+                    <p class="rdm-sys-typography--body-large">
+                        Estado: <?= (int) $usuario['activo'] === 1 ? 'Activo' : 'Inactivo' ?>
+                    </p>
+                    <p class="rdm-sys-typography--body-medium">
+                        ID: <?= escaparTextoDetalle((string) $usuario['id']) ?>
+                    </p>
+                </div>
 
-        <dt>Tipo</dt>
-        <dd><?= escaparTextoDetalle((string) $usuario['tipo']) ?></dd>
+            </article>
+        </section>
 
-        <dt>Estado</dt>
-        <dd><?= (int) $usuario['activo'] === 1 ? 'Activo' : 'Inactivo' ?></dd>
-    </dl>
-
-    <p>
         <?php if ($esAdministrador): ?>
-            <a href="index.php?accion=editar&id=<?= (int) $usuario['id'] ?>">Editar usuario</a>
+            <div class="rdm-button--fab-position">
+                <button
+                    class="rdm-button--fab"
+                    type="button"
+                    title="Editar usuario"
+                    aria-label="Editar usuario"
+                    onclick="window.location.href='index.php?accion=editar&id=<?= (int) $usuario['id'] ?>';"
+                >
+                    <div class="rdm-button--container">
+                        <div class="rdm-button--media">
+                            <div class="rdm-button--icon">
+                                <span class="material-symbols-rounded">edit</span>
+                            </div>
+                        </div>
+                        <div class="rdm-button--body">
+                            <span class="rdm-sys-typography--label-large">Editar usuario</span>
+                        </div>
+                    </div>
+                </button>
+            </div>
         <?php endif; ?>
-    </p>
-
-    <p>
-        <?php if ($esAdministrador): ?>
-            <?php if ((int) $usuario['activo'] === 1): ?>
-                <a href="index.php?accion=desactivar&id=<?= (int) $usuario['id'] ?>">Desactivar usuario</a>
-            <?php else: ?>
-                <a href="index.php?accion=reactivar&id=<?= (int) $usuario['id'] ?>">Reactivar usuario</a>
-            <?php endif; ?>
-        <?php endif; ?>
-    </p>
-
-    <p>
-        <a href="index.php">Volver a la lista</a>
-    </p>
+    </main>
 </body>
 </html>
