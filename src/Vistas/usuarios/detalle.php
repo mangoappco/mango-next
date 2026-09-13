@@ -48,6 +48,12 @@ function escaparTextoDetalle(string $valor): string
     </header>
 
     <main class="rdm--contenedor-toolbar">
+        <?php if ($mensaje !== null): ?>
+            <p class="rdm-sys-typography--body-large">
+                <?= escaparTextoDetalle((string) $mensaje) ?>
+            </p>
+        <?php endif; ?>
+
         <h1 class="rdm-sys-typography--display-medium">
             <?= escaparTextoDetalle((string) $usuario['nombres']) ?>
             <?= escaparTextoDetalle((string) $usuario['apellidos']) ?>

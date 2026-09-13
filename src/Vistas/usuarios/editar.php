@@ -25,7 +25,7 @@ function escaparTextoEdicion(string $valor): string
     <header class="rdm-topbar--position">
         <div class="rdm-topbar--small-container" id="topbar">
             <div class="rdm-topbar--media">
-                <a href="index.php">
+                <a href="index.php?accion=ver&id=<?= (int) $datos['id'] ?>">
                     <div class="rdm-topbar--leading-navigation-icon"><span class="material-symbols-rounded">arrow_back</span></div>
                 </a>
             </div>

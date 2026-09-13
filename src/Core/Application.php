@@ -369,6 +369,12 @@ final class Application
                 return;
             }
 
+            // Recupera el mensaje temporal de una actualización reciente.
+            $mensaje = $_SESSION['mensaje'] ?? null;
+
+            // Evita que el mensaje vuelva a aparecer al recargar el detalle.
+            unset($_SESSION['mensaje']);
+
             // Carga la vista de detalle y le entrega el usuario encontrado.
             $esAdministrador = $this->esAdministrador();
             require $rootPath . '/src/Vistas/usuarios/detalle.php';
@@ -434,7 +440,7 @@ final class Application
                     // Guarda un mensaje temporal que se mostrará después de la redirección.
                     $_SESSION['mensaje'] = 'Usuario actualizado correctamente.';
 
-                    header('Location: index.php');
+                    header('Location: index.php?accion=ver&id=' . $id);
                     exit;
                 }
             }
@@ -493,7 +499,7 @@ final class Application
                     // Guarda un mensaje temporal que se mostrará después de la redirección.
                     $_SESSION['mensaje'] = 'Usuario desactivado correctamente.';
 
-                    header('Location: index.php');
+                    header('Location: index.php?accion=ver&id=' . $id);
                     exit;
                 }
             }
@@ -548,9 +554,9 @@ final class Application
                         'usuario_reactivado'
                     );
 
-                    // Informa el resultado y vuelve a la lista.
+                    // Informa el resultado y vuelve al detalle actualizado.
                     $_SESSION['mensaje'] = 'Usuario reactivado correctamente.';
-                    header('Location: index.php');
+                    header('Location: index.php?accion=ver&id=' . $id);
                     exit;
                 }
             }
