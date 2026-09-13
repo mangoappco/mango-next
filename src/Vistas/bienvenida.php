@@ -64,7 +64,7 @@ $rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/im
         <?php endif; ?>
 
         <section class="rdm-card--container">
-            <article class="rdm-card--outlined">
+            <article class="rdm-card--elevated">
                 <div
                     class="rdm-card--media"
                     style="background-image: url('<?= escaparTextoBienvenida($rutaImagenPerfil) ?>');"
@@ -119,7 +119,7 @@ $rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/im
         </section>
 
         <section class="rdm-card--container">
-            <article class="rdm-card--outlined">
+            <article class="rdm-card--elevated">
                 <div class="rdm-card--body">
                     <h2 class="rdm-sys-typography--display-small">Configuración</h2>
                 </div>

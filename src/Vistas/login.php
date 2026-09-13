@@ -63,7 +63,7 @@ function escaparTextoLogin(string $valor): string
         <?php endif; ?>
 
         <form class="rdm-form--container" method="post" action="index.php?accion=login">
-            <div class="rdm-form--outlined">
+            <div class="rdm-form--elevated">
                 <div class="rdm-form--body">
                     <input type="hidden" name="token_csrf" value="<?= escaparTextoLogin($tokenCsrf) ?>">
 

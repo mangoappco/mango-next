@@ -19,6 +19,8 @@ function escaparHtml(string $valor): string
     <link rel="stylesheet" href="recursos/componentes/css/estilos.css">
     <script src="recursos/componentes/js/topbar_scroll.js"></script>
     <script src="recursos/componentes/js/theme_toggle.js"></script>
+    <script src="recursos/componentes/js/search.js"></script>
+    <script src="recursos/componentes/js/usuarios_search.js"></script>
 </head>
 <body>
     <header class="rdm-topbar--position">
@@ -55,16 +57,34 @@ function escaparHtml(string $valor): string
         <p><?= escaparHtml((string) $mensaje) ?></p>
     <?php endif; ?>
 
-    <form method="get" action="index.php">
-        <label for="buscar">Buscar usuario</label>
-        <input type="search" id="buscar" name="buscar" value="<?= escaparHtml($busqueda) ?>">
-        <button type="submit">Buscar</button>
+    <form class="rdm-search--wrapper" method="get" action="index.php">
+        <div class="rdm-search--container">
+            <div class="rdm-search--bar">
+                <div class="rdm-search--control">
+                    <button class="rdm-search--leading-icon" type="button" aria-label="Buscar usuarios">
+                        <span class="material-symbols-rounded">search</span>
+                    </button>
+                    <input
+                        type="search"
+                        id="buscar"
+                        name="buscar"
+                        value="<?= escaparHtml($busqueda) ?>"
+                        placeholder="Buscar usuarios..."
+                        aria-describedby="buscar_support"
+                    >
+                    <div class="rdm-search--trailing">
+                        <button class="rdm-search--trailing-icon" type="button" aria-label="Limpiar búsqueda">
+                            <span class="material-symbols-rounded">close</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 
     <?php if ($busqueda !== ''): ?>
         <p>
             Resultados para: <?= escaparHtml($busqueda) ?>
-            <a href="index.php">Limpiar búsqueda</a>
         </p>
     <?php endif; ?>
 
@@ -74,7 +94,7 @@ function escaparHtml(string $valor): string
         <p>No se encontraron usuarios.</p>
     <?php else: ?>
         <section class="rdm-card--container">
-            <div class="rdm-card--outlined">
+            <div class="rdm-card--elevated">
                 <?php foreach ($usuarios as $usuario): ?>
                     <a
                         class="rdm-list--container"
