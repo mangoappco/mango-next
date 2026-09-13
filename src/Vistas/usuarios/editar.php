@@ -58,46 +58,6 @@ function escaparTextoEdicion(string $valor): string
                     <div class="rdm-textfield--container rdm-textfield--outlined">
                         <div class="rdm-textfield--control">
                             <input
-                                type="email"
-                                id="correo"
-                                name="correo"
-                                placeholder=" "
-                                value="<?= escaparTextoEdicion((string) $datos['correo']) ?>"
-                                autocomplete="email"
-                                aria-describedby="correo_support"
-                                required
-                            >
-                            <label class="rdm-textfield--label" for="correo">Correo electrónico</label>
-                        </div>
-                    </div>
-                    <div class="rdm-textfield--support">
-                        <span class="rdm-textfield--support-text" id="correo_support">Usa un correo válido.</span>
-                    </div>
-                </div>
-
-                <div class="rdm-textfield--wrapper">
-                    <div class="rdm-textfield--container rdm-textfield--outlined">
-                        <div class="rdm-textfield--control">
-                            <input
-                                type="password"
-                                id="contrasena"
-                                name="contrasena"
-                                placeholder=" "
-                                autocomplete="new-password"
-                                aria-describedby="contrasena_support"
-                            >
-                            <label class="rdm-textfield--label" for="contrasena">Nueva contraseña</label>
-                        </div>
-                    </div>
-                    <div class="rdm-textfield--support">
-                        <span class="rdm-textfield--support-text" id="contrasena_support">Déjalo vacío para conservar la contraseña actual.</span>
-                    </div>
-                </div>
-
-                <div class="rdm-textfield--wrapper">
-                    <div class="rdm-textfield--container rdm-textfield--outlined">
-                        <div class="rdm-textfield--control">
-                            <input
                                 type="text"
                                 id="nombres"
                                 name="nombres"
@@ -133,6 +93,46 @@ function escaparTextoEdicion(string $valor): string
                     </div>
                     <div class="rdm-textfield--support">
                         <span class="rdm-textfield--support-text" id="apellidos_support">Escribe los apellidos del usuario.</span>
+                    </div>
+                </div>
+
+                <div class="rdm-textfield--wrapper">
+                    <div class="rdm-textfield--container rdm-textfield--outlined">
+                        <div class="rdm-textfield--control">
+                            <input
+                                type="email"
+                                id="correo"
+                                name="correo"
+                                placeholder=" "
+                                value="<?= escaparTextoEdicion((string) $datos['correo']) ?>"
+                                autocomplete="email"
+                                aria-describedby="correo_support"
+                                required
+                            >
+                            <label class="rdm-textfield--label" for="correo">Correo electrónico</label>
+                        </div>
+                    </div>
+                    <div class="rdm-textfield--support">
+                        <span class="rdm-textfield--support-text" id="correo_support">Usa un correo válido.</span>
+                    </div>
+                </div>
+
+                <div class="rdm-textfield--wrapper">
+                    <div class="rdm-textfield--container rdm-textfield--outlined">
+                        <div class="rdm-textfield--control">
+                            <input
+                                type="password"
+                                id="contrasena"
+                                name="contrasena"
+                                placeholder=" "
+                                autocomplete="new-password"
+                                aria-describedby="contrasena_support"
+                            >
+                            <label class="rdm-textfield--label" for="contrasena">Nueva contraseña</label>
+                        </div>
+                    </div>
+                    <div class="rdm-textfield--support">
+                        <span class="rdm-textfield--support-text" id="contrasena_support">Déjalo vacío para conservar la contraseña actual.</span>
                     </div>
                 </div>
 
