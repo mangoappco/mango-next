@@ -563,6 +563,9 @@ final class Application
         // Indica a la vista si debe mostrar acciones administrativas.
         $esAdministrador = $this->esAdministrador();
 
+        // Entrega a la topbar los datos visuales del usuario autenticado.
+        $usuarioAutenticado = $_SESSION['usuario'];
+
         // Ejecuta la acción que obtiene la lista filtrada de usuarios.
         $usuarios = $controladorUsuarios->index($busqueda);
 

@@ -43,6 +43,13 @@ $rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/im
                 <div class="rdm-topbar--trailing-icon" id="themeToggle" title="Cambiar tema">
                     <span class="material-symbols-rounded" id="themeToggleIcon">dark_mode</span>
                 </div>
+                <a href="index.php?accion=perfil">
+                    <div
+                        class="rdm-topbar--avatar"
+                        style="background-image: url('<?= escaparTextoBienvenida($rutaImagenPerfil) ?>');"
+                        title="Editar perfil"
+                    ></div>
+                </a>
             </div>
         </div>
     </header>
