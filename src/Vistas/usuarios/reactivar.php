@@ -30,7 +30,7 @@ function escaparTextoReactivacion(string $valor): string
                 </a>
             </div>
             <div class="rdm-topbar--body">
-                <div class="rdm-sys-typography--title-large"><div class="rdm-topbar--body-headline">Editar usuario</div></div>
+                <div class="rdm-sys-typography--title-large"><div class="rdm-topbar--body-headline">Usuarios</div></div>
             </div>
             <div class="rdm-topbar--action">
                 <div class="rdm-topbar--trailing-icon" id="themeToggle" title="Cambiar tema"><span class="material-symbols-rounded" id="themeToggleIcon">dark_mode</span></div>

@@ -136,7 +136,7 @@ final class ModeloUsuario
     {
         // Prepara una consulta que filtra por el identificador recibido.
         $statement = $this->connection->prepare(
-            'SELECT id, correo, nombres, apellidos, tipo, foto_perfil, activo
+            'SELECT id, correo, nombres, apellidos, tipo, foto_perfil, activo, creado_en, actualizado_en
              FROM usuarios
              WHERE id = :id
              LIMIT 1'

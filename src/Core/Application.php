@@ -438,7 +438,7 @@ final class Application
                     }
 
                     // Guarda un mensaje temporal que se mostrará después de la redirección.
-                    $_SESSION['mensaje'] = 'Usuario actualizado correctamente.';
+                    $_SESSION['mensaje'] = 'Cambios guardados';
 
                     header('Location: index.php?accion=ver&id=' . $id);
                     exit;

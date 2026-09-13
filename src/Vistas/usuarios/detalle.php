@@ -34,7 +34,7 @@ function escaparTextoDetalle(string $valor): string
             <div class="rdm-topbar--body">
                 <div class="rdm-sys-typography--title-large">
                     <div class="rdm-topbar--body-headline">
-                        Detalle del usuario
+                        Usuarios
                     </div>
                 </div>
             </div>
@@ -54,10 +54,7 @@ function escaparTextoDetalle(string $valor): string
             </p>
         <?php endif; ?>
 
-        <h1 class="rdm-sys-typography--display-medium">
-            <?= escaparTextoDetalle((string) $usuario['nombres']) ?>
-            <?= escaparTextoDetalle((string) $usuario['apellidos']) ?>
-        </h1>
+        <h1 class="rdm-sys-typography--display-medium">Detalle del usuario</h1>
 
         <section class="rdm-card--container">
             <article class="rdm-card--elevated">
@@ -70,16 +67,28 @@ function escaparTextoDetalle(string $valor): string
 
                 <div class="rdm-card--body">
                     <h2 class="rdm-sys-typography--display-small">
-                        <?= escaparTextoDetalle((string) $usuario['tipo']) ?>
+                        <?= escaparTextoDetalle((string) $usuario['nombres']) ?>
+                        <?= escaparTextoDetalle((string) $usuario['apellidos']) ?>
                     </h2>
-                    <h3 class="rdm-sys-typography--title-large">
-                        <?= escaparTextoDetalle((string) $usuario['correo']) ?>
-                    </h3>
                     <p class="rdm-sys-typography--body-large">
-                        Estado: <?= (int) $usuario['activo'] === 1 ? 'Activo' : 'Inactivo' ?>
+                        <strong>Correo:</strong><br>
+                        <?= escaparTextoDetalle((string) $usuario['correo']) ?>
                     </p>
-                    <p class="rdm-sys-typography--body-medium">
-                        ID: <?= escaparTextoDetalle((string) $usuario['id']) ?>
+                    <p class="rdm-sys-typography--body-large">
+                        <strong>Tipo:</strong><br>
+                        <?= escaparTextoDetalle((string) $usuario['tipo']) ?>
+                    </p>
+                    <p class="rdm-sys-typography--body-large">
+                        <strong>Estado:</strong><br>
+                        <?= (int) $usuario['activo'] === 1 ? 'Activo' : 'Inactivo' ?>
+                    </p>
+                    <p class="rdm-sys-typography--body-large">
+                        <strong>Creado:</strong><br>
+                        <?= escaparTextoDetalle((string) $usuario['creado_en']) ?>
+                    </p>
+                    <p class="rdm-sys-typography--body-large">
+                        <strong>Actualizado:</strong><br>
+                        <?= escaparTextoDetalle((string) $usuario['actualizado_en']) ?>
                     </p>
                 </div>
 

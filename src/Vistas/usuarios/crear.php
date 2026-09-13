@@ -33,7 +33,7 @@ function escaparTextoFormulario(string $valor): string
             </div>
             <div class="rdm-topbar--body">
                 <div class="rdm-sys-typography--title-large">
-                    <div class="rdm-topbar--body-headline">Crear usuario</div>
+                    <div class="rdm-topbar--body-headline">Usuarios</div>
                 </div>
             </div>
             <div class="rdm-topbar--action">

@@ -50,8 +50,6 @@ function escaparHtml(string $valor): string
     </header>
 
     <main class="rdm--contenedor-toolbar">
-        <h1 class="rdm-sys-typography--display-medium">Administración de usuarios</h1>
-
     <?php if ($mensaje !== null): ?>
         <p><?= escaparHtml((string) $mensaje) ?></p>
     <?php endif; ?>
