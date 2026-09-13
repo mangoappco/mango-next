@@ -73,6 +73,8 @@ final class ServicioArchivos
             || !function_exists('imagecreatefromjpeg')
             || !function_exists('imagecreatefrompng')
             || !function_exists('imagejpeg')
+            || !function_exists('imageflip')
+            || !function_exists('imagerotate')
         ) {
             return [
                 'errores' => ['El servidor no tiene habilitado el procesamiento de imágenes.'],
@@ -90,14 +92,6 @@ final class ServicioArchivos
             ];
         }
 
-        // Conserva la proporción y limita el lado mayor a 300 píxeles.
-        $anchoOriginal = (int) $dimensiones[0];
-        $altoOriginal = (int) $dimensiones[1];
-        $ladoMaximo = 300;
-        $factor = min(1, $ladoMaximo / max($anchoOriginal, $altoOriginal));
-        $anchoNuevo = max(1, (int) round($anchoOriginal * $factor));
-        $altoNuevo = max(1, (int) round($altoOriginal * $factor));
-
         $imagenOriginal = match ($tipoMime) {
             'image/jpeg' => @imagecreatefromjpeg((string) $archivo['tmp_name']),
             'image/png' => @imagecreatefrompng((string) $archivo['tmp_name']),
@@ -110,6 +104,66 @@ final class ServicioArchivos
                 'ruta' => null,
             ];
         }
+
+        // Corrige la orientación indicada por EXIF antes de cambiar el tamaño.
+        if ($tipoMime === 'image/jpeg' && function_exists('exif_read_data')) {
+            $metadatos = @exif_read_data((string) $archivo['tmp_name']);
+            $orientacion = (int) ($metadatos['Orientation'] ?? 1);
+
+            switch ($orientacion) {
+                case 2:
+                    imageflip($imagenOriginal, IMG_FLIP_HORIZONTAL);
+                    break;
+                case 3:
+                    $imagenOrientada = imagerotate($imagenOriginal, 180, 0);
+                    if ($imagenOrientada !== false) {
+                        imagedestroy($imagenOriginal);
+                        $imagenOriginal = $imagenOrientada;
+                    }
+                    break;
+                case 4:
+                    imageflip($imagenOriginal, IMG_FLIP_VERTICAL);
+                    break;
+                case 5:
+                    imageflip($imagenOriginal, IMG_FLIP_HORIZONTAL);
+                    $imagenOrientada = imagerotate($imagenOriginal, 90, 0);
+                    if ($imagenOrientada !== false) {
+                        imagedestroy($imagenOriginal);
+                        $imagenOriginal = $imagenOrientada;
+                    }
+                    break;
+                case 6:
+                    $imagenOrientada = imagerotate($imagenOriginal, 270, 0);
+                    if ($imagenOrientada !== false) {
+                        imagedestroy($imagenOriginal);
+                        $imagenOriginal = $imagenOrientada;
+                    }
+                    break;
+                case 7:
+                    imageflip($imagenOriginal, IMG_FLIP_HORIZONTAL);
+                    $imagenOrientada = imagerotate($imagenOriginal, 270, 0);
+                    if ($imagenOrientada !== false) {
+                        imagedestroy($imagenOriginal);
+                        $imagenOriginal = $imagenOrientada;
+                    }
+                    break;
+                case 8:
+                    $imagenOrientada = imagerotate($imagenOriginal, 90, 0);
+                    if ($imagenOrientada !== false) {
+                        imagedestroy($imagenOriginal);
+                        $imagenOriginal = $imagenOrientada;
+                    }
+                    break;
+            }
+        }
+
+        // Conserva la proporción y limita el lado mayor a 300 píxeles.
+        $anchoOriginal = imagesx($imagenOriginal);
+        $altoOriginal = imagesy($imagenOriginal);
+        $ladoMaximo = 300;
+        $factor = min(1, $ladoMaximo / max($anchoOriginal, $altoOriginal));
+        $anchoNuevo = max(1, (int) round($anchoOriginal * $factor));
+        $altoNuevo = max(1, (int) round($altoOriginal * $factor));
 
         $imagenOptimizada = imagecreatetruecolor($anchoNuevo, $altoNuevo);
         // JPG no admite transparencia, por lo que las imágenes transparentes tendrán fondo blanco.

@@ -101,14 +101,20 @@ final class ControladorUsuarios
         }
 
         // El modelo aplica el hash y guarda el usuario en la base de datos.
-        $this->modeloUsuario->crear(
-            $correo,
-            $contrasena,
-            $nombres,
-            $apellidos,
-            $tipo,
-            $resultadoArchivo['ruta']
-        );
+        try {
+            $this->modeloUsuario->crear(
+                $correo,
+                $contrasena,
+                $nombres,
+                $apellidos,
+                $tipo,
+                $resultadoArchivo['ruta']
+            );
+        } catch (\Throwable $exception) {
+            // Si falla la base de datos, elimina la imagen que ya se había guardado.
+            $this->servicioArchivos->eliminarImagenUsuario($resultadoArchivo['ruta'], $rootPath);
+            throw $exception;
+        }
 
         // Devuelve un resultado exitoso para que la aplicación redirija a la lista.
         return [
@@ -203,16 +209,25 @@ final class ControladorUsuarios
         $fotoNueva = $resultadoArchivo['ruta'] ?? null;
 
         // Solicita al modelo actualizar los datos del usuario.
-        $this->modeloUsuario->actualizar(
-            $id,
-            $correo,
-            $nombres,
-            $apellidos,
-            $tipo,
-            $contrasena,
-            $fotoNueva,
-            $solicitaEliminarFoto
-        );
+        try {
+            $this->modeloUsuario->actualizar(
+                $id,
+                $correo,
+                $nombres,
+                $apellidos,
+                $tipo,
+                $contrasena,
+                $fotoNueva,
+                $solicitaEliminarFoto
+            );
+        } catch (\Throwable $exception) {
+            // Si falla la base de datos, conserva la imagen anterior y elimina la nueva.
+            if ($fotoNueva !== null) {
+                $this->servicioArchivos->eliminarImagenUsuario($fotoNueva, $rootPath);
+            }
+
+            throw $exception;
+        }
 
         // Elimina el archivo anterior solo después de actualizar la base de datos.
         if (($fotoNueva !== null && $fotoActual !== $fotoNueva) || $solicitaEliminarFoto) {
