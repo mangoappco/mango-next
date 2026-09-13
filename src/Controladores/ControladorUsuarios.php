@@ -9,11 +9,17 @@ namespace Mango\Controladores;
 // Importa el modelo que contiene las consultas de usuarios.
 use Mango\Modelos\ModeloUsuario;
 
+// Importa el servicio que valida y almacena imágenes.
+use Mango\Core\ServicioArchivos;
+
 // Coordina las acciones relacionadas con los usuarios.
 final class ControladorUsuarios
 {
     // Recibe el modelo mediante inyección de dependencias.
-    public function __construct(private ModeloUsuario $modeloUsuario)
+    public function __construct(
+        private ModeloUsuario $modeloUsuario,
+        private ServicioArchivos $servicioArchivos
+    )
     {
     }
 
@@ -32,7 +38,7 @@ final class ControladorUsuarios
     }
 
     // Valida los datos recibidos y solicita al modelo crear el usuario.
-    public function guardar(array $datos): array
+    public function guardar(array $datos, ?array $archivoFoto, string $rootPath): array
     {
         // Normaliza los textos para evitar guardar espacios innecesarios.
         $correo = trim((string) ($datos['correo'] ?? ''));
@@ -79,8 +85,30 @@ final class ControladorUsuarios
             ];
         }
 
+        // Valida y guarda la imagen solo cuando los datos básicos ya son correctos.
+        $resultadoArchivo = $this->servicioArchivos->guardarImagenUsuario($archivoFoto, $rootPath);
+
+        if ($resultadoArchivo['errores'] !== []) {
+            return [
+                'errores' => $resultadoArchivo['errores'],
+                'datos' => [
+                    'correo' => $correo,
+                    'nombres' => $nombres,
+                    'apellidos' => $apellidos,
+                    'tipo' => $tipo,
+                ],
+            ];
+        }
+
         // El modelo aplica el hash y guarda el usuario en la base de datos.
-        $this->modeloUsuario->crear($correo, $contrasena, $nombres, $apellidos, $tipo);
+        $this->modeloUsuario->crear(
+            $correo,
+            $contrasena,
+            $nombres,
+            $apellidos,
+            $tipo,
+            $resultadoArchivo['ruta']
+        );
 
         // Devuelve un resultado exitoso para que la aplicación redirija a la lista.
         return [
@@ -90,7 +118,14 @@ final class ControladorUsuarios
     }
 
     // Valida los datos editados y solicita al modelo actualizar el usuario.
-    public function actualizar(int $id, array $datos): array
+    public function actualizar(
+        int $id,
+        array $datos,
+        ?array $archivoFoto,
+        string $rootPath,
+        ?string $fotoActual,
+        bool $eliminarFoto
+    ): array
     {
         // Normaliza los datos recibidos desde el formulario.
         $correo = trim((string) ($datos['correo'] ?? ''));
@@ -99,6 +134,9 @@ final class ControladorUsuarios
         $apellidos = trim((string) ($datos['apellidos'] ?? ''));
         $tipo = trim((string) ($datos['tipo'] ?? 'usuario'));
         $errores = [];
+
+        // Convierte la casilla del formulario en una decisión booleana.
+        $solicitaEliminarFoto = $eliminarFoto;
 
         // Comprueba que el identificador sea válido.
         if ($id <= 0) {
@@ -123,6 +161,13 @@ final class ControladorUsuarios
             $errores[] = 'Los apellidos son obligatorios.';
         }
 
+        // Evita que una misma petición intente reemplazar y eliminar la imagen.
+        $hayArchivoNuevo = $archivoFoto !== null
+            && ($archivoFoto['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE;
+        if ($solicitaEliminarFoto && $hayArchivoNuevo) {
+            $errores[] = 'Selecciona una nueva imagen o elimina la actual, pero no ambas opciones.';
+        }
+
         // Devuelve los datos y errores para volver al formulario si algo falla.
         if ($errores !== []) {
             return [
@@ -136,6 +181,27 @@ final class ControladorUsuarios
             ];
         }
 
+        // Valida y guarda la nueva imagen solo cuando los demás datos son correctos.
+        $resultadoArchivo = $solicitaEliminarFoto
+            ? ['errores' => [], 'ruta' => null]
+            : $this->servicioArchivos->guardarImagenUsuario($archivoFoto, $rootPath);
+
+        if ($resultadoArchivo['errores'] !== []) {
+            return [
+                'errores' => $resultadoArchivo['errores'],
+                'datos' => [
+                    'correo' => $correo,
+                    'nombres' => $nombres,
+                    'apellidos' => $apellidos,
+                    'tipo' => $tipo,
+                    'foto_perfil' => $fotoActual,
+                ],
+            ];
+        }
+
+        // Conserva la ruta anterior si no se seleccionó una imagen nueva.
+        $fotoNueva = $resultadoArchivo['ruta'] ?? null;
+
         // Solicita al modelo actualizar los datos del usuario.
         $this->modeloUsuario->actualizar(
             $id,
@@ -143,8 +209,15 @@ final class ControladorUsuarios
             $nombres,
             $apellidos,
             $tipo,
-            $contrasena
+            $contrasena,
+            $fotoNueva,
+            $solicitaEliminarFoto
         );
+
+        // Elimina el archivo anterior solo después de actualizar la base de datos.
+        if (($fotoNueva !== null && $fotoActual !== $fotoNueva) || $solicitaEliminarFoto) {
+            $this->servicioArchivos->eliminarImagenUsuario($fotoActual, $rootPath);
+        }
 
         // Indica que la actualización terminó correctamente.
         return [

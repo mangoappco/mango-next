@@ -115,7 +115,7 @@ final class ModeloUsuario
     {
         // La consulta utiliza un parámetro nombrado para evitar concatenar datos del formulario.
         $statement = $this->connection->prepare(
-            'SELECT id, correo, contrasena, nombres, apellidos, tipo, activo
+            'SELECT id, correo, contrasena, nombres, apellidos, tipo, foto_perfil, activo
              FROM usuarios
              WHERE correo = :correo
              LIMIT 1'
@@ -136,7 +136,7 @@ final class ModeloUsuario
     {
         // Prepara una consulta que filtra por el identificador recibido.
         $statement = $this->connection->prepare(
-            'SELECT id, correo, nombres, apellidos, tipo, activo
+            'SELECT id, correo, nombres, apellidos, tipo, foto_perfil, activo
              FROM usuarios
              WHERE id = :id
              LIMIT 1'
@@ -272,7 +272,7 @@ final class ModeloUsuario
     public function buscarTodos(string $busqueda = ''): array
     {
         // Define la consulta con las columnas necesarias para la tabla.
-        $sql = 'SELECT id, correo, nombres, apellidos, tipo, activo, creado_en, actualizado_en
+        $sql = 'SELECT id, correo, nombres, apellidos, tipo, foto_perfil, activo, creado_en, actualizado_en
                 FROM usuarios';
 
         // Prepara los valores que se enviarán a la consulta.
@@ -312,7 +312,8 @@ final class ModeloUsuario
         string $contrasena,
         string $nombres,
         string $apellidos,
-        string $tipo = 'usuario'
+        string $tipo = 'usuario',
+        ?string $fotoPerfil = null
     ): int {
         // Convierte la contraseña original en un hash seguro antes de guardarla.
         $passwordHash = password_hash($contrasena, PASSWORD_DEFAULT);
@@ -320,9 +321,9 @@ final class ModeloUsuario
         // La consulta preparada separa los datos del código SQL.
         $statement = $this->connection->prepare(
             'INSERT INTO usuarios
-                (correo, contrasena, nombres, apellidos, tipo)
+                (correo, contrasena, nombres, apellidos, tipo, foto_perfil)
              VALUES
-                (:correo, :contrasena, :nombres, :apellidos, :tipo)'
+                (:correo, :contrasena, :nombres, :apellidos, :tipo, :foto_perfil)'
         );
 
         // Ejecuta la inserción con los valores recibidos como parámetros.
@@ -332,6 +333,7 @@ final class ModeloUsuario
             'nombres' => $nombres,
             'apellidos' => $apellidos,
             'tipo' => $tipo,
+            'foto_perfil' => $fotoPerfil,
         ]);
 
         // Devuelve el identificador asignado por AUTO_INCREMENT.
@@ -345,7 +347,9 @@ final class ModeloUsuario
         string $nombres,
         string $apellidos,
         string $tipo,
-        string $contrasena = ''
+        string $contrasena = '',
+        ?string $fotoPerfil = null,
+        bool $eliminarFoto = false
     ): void {
         // Define los datos que siempre se actualizan.
         $datos = [
@@ -356,30 +360,36 @@ final class ModeloUsuario
             'tipo' => $tipo,
         ];
 
+        // Permite distinguir entre conservar la imagen y eliminarla explícitamente.
+        $actualizarFoto = $eliminarFoto || $fotoPerfil !== null;
+        if ($actualizarFoto) {
+            $datos['foto_perfil'] = $eliminarFoto ? null : $fotoPerfil;
+        }
+
         // Si se recibió una contraseña, la actualiza usando un hash seguro.
         if ($contrasena !== '') {
             $datos['contrasena'] = password_hash($contrasena, PASSWORD_DEFAULT);
 
-            $statement = $this->connection->prepare(
-                'UPDATE usuarios
-                 SET correo = :correo,
-                     contrasena = :contrasena,
-                     nombres = :nombres,
-                     apellidos = :apellidos,
-                     tipo = :tipo
-                 WHERE id = :id'
-            );
+            $campos = 'correo = :correo,
+                       contrasena = :contrasena,
+                       nombres = :nombres,
+                       apellidos = :apellidos,
+                       tipo = :tipo';
         } else {
             // Si la contraseña está vacía, conserva el hash existente.
-            $statement = $this->connection->prepare(
-                'UPDATE usuarios
-                 SET correo = :correo,
-                     nombres = :nombres,
-                     apellidos = :apellidos,
-                     tipo = :tipo
-                 WHERE id = :id'
-            );
+            $campos = 'correo = :correo,
+                       nombres = :nombres,
+                       apellidos = :apellidos,
+                       tipo = :tipo';
         }
+
+        if ($actualizarFoto) {
+            $campos .= ', foto_perfil = :foto_perfil';
+        }
+
+        $statement = $this->connection->prepare(
+            'UPDATE usuarios SET ' . $campos . ' WHERE id = :id'
+        );
 
         // Ejecuta la actualización con los datos separados del SQL.
         $statement->execute($datos);

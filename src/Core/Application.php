@@ -78,11 +78,14 @@ final class Application
         // Crea el modelo y le entrega la conexión que necesita.
         $modeloUsuario = new ModeloUsuario($database->connection());
 
+        // Crea el servicio que se encargará de guardar imágenes de usuarios.
+        $servicioArchivos = new ServicioArchivos();
+
         // Crea el servicio encargado de enviar correos SMTP.
         $servicioCorreo = new ServicioCorreo($config);
 
         // Crea el controlador y le entrega el modelo correspondiente.
-        $controladorUsuarios = new ControladorUsuarios($modeloUsuario);
+        $controladorUsuarios = new ControladorUsuarios($modeloUsuario, $servicioArchivos);
 
         // Crea el controlador que validará las credenciales del login.
         $controladorLogin = new ControladorLogin($modeloUsuario, $servicioCorreo);
@@ -193,6 +196,7 @@ final class Application
                     'nombres' => $resultado['usuario']['nombres'],
                     'apellidos' => $resultado['usuario']['apellidos'],
                     'tipo' => $resultado['usuario']['tipo'],
+                    'foto_perfil' => $resultado['usuario']['foto_perfil'],
                 ];
                 $_SESSION['mensaje'] = 'Inicio de sesión correcto.';
                 header('Location: index.php?accion=bienvenida');
@@ -274,7 +278,11 @@ final class Application
                 if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
                     $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
                 } else {
-                    $resultado = $controladorUsuarios->guardar($_POST);
+                    $resultado = $controladorUsuarios->guardar(
+                        $_POST,
+                        $_FILES['foto_perfil'] ?? null,
+                        $rootPath
+                    );
                     $errores = $resultado['errores'];
                     $datos = $resultado['datos'];
                 }
@@ -340,13 +348,32 @@ final class Application
                 if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
                     $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
                 } else {
-                    $resultado = $controladorUsuarios->actualizar($id, $_POST);
+                    $resultado = $controladorUsuarios->actualizar(
+                        $id,
+                        $_POST,
+                        $_FILES['foto_perfil'] ?? null,
+                        $rootPath,
+                        isset($datos['foto_perfil']) ? (string) $datos['foto_perfil'] : null,
+                        isset($_POST['eliminar_foto']) && $_POST['eliminar_foto'] === '1'
+                    );
                     $errores = $resultado['errores'];
                     $datos = array_merge($datos, $resultado['datos']);
                 }
 
                 // Si no hubo errores, vuelve a la lista actualizada.
                 if ($errores === []) {
+                    // Refresca la imagen de la sesión si el usuario editó su propia cuenta.
+                    if ((int) $_SESSION['usuario']['id'] === $id) {
+                        $usuarioActualizado = $controladorUsuarios->obtener($id);
+                        if ($usuarioActualizado !== null) {
+                            $_SESSION['usuario']['correo'] = $usuarioActualizado['correo'];
+                            $_SESSION['usuario']['nombres'] = $usuarioActualizado['nombres'];
+                            $_SESSION['usuario']['apellidos'] = $usuarioActualizado['apellidos'];
+                            $_SESSION['usuario']['tipo'] = $usuarioActualizado['tipo'];
+                            $_SESSION['usuario']['foto_perfil'] = $usuarioActualizado['foto_perfil'];
+                        }
+                    }
+
                     // Guarda un mensaje temporal que se mostrará después de la redirección.
                     $_SESSION['mensaje'] = 'Usuario actualizado correctamente.';
 

@@ -27,7 +27,7 @@ function escaparTextoEdicion(string $valor): string
         </ul>
     <?php endif; ?>
 
-    <form method="post" action="index.php?accion=editar&id=<?= (int) $datos['id'] ?>">
+    <form method="post" action="index.php?accion=editar&id=<?= (int) $datos['id'] ?>" enctype="multipart/form-data">
         <input type="hidden" name="token_csrf" value="<?= escaparTextoEdicion($tokenCsrf) ?>">
 
         <p>
@@ -59,6 +59,34 @@ function escaparTextoEdicion(string $valor): string
                 <option value="admin"<?= $datos['tipo'] === 'admin' ? ' selected' : '' ?>>Administrador</option>
             </select>
         </p>
+
+        <?php if (!empty($datos['foto_perfil'])): ?>
+            <p>
+                <span>Imagen actual</span>
+                <br>
+                <img
+                    src="<?= escaparTextoEdicion((string) $datos['foto_perfil']) ?>"
+                    alt="Imagen de perfil actual de <?= escaparTextoEdicion((string) $datos['nombres']) ?>"
+                    width="160"
+                >
+            </p>
+        <?php endif; ?>
+
+        <p>
+            <label for="foto_perfil">Nueva imagen de perfil</label>
+            <input type="file" id="foto_perfil" name="foto_perfil" accept="image/jpeg,image/png">
+        </p>
+
+        <p>Deja este campo vacío para conservar la imagen actual.</p>
+
+        <?php if (!empty($datos['foto_perfil'])): ?>
+            <p>
+                <label>
+                    <input type="checkbox" name="eliminar_foto" value="1">
+                    Eliminar imagen actual
+                </label>
+            </p>
+        <?php endif; ?>
 
         <button type="submit">Guardar cambios</button>
     </form>

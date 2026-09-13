@@ -16,3 +16,7 @@ Thumbs.db
 
 # Configuración local de VS Code
 .vscode/
+
+# Imágenes de perfil subidas por los usuarios
+/public/uploads/usuarios/*
+!/public/uploads/usuarios/.gitkeep

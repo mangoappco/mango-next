@@ -27,7 +27,7 @@ function escaparTextoFormulario(string $valor): string
         </ul>
     <?php endif; ?>
 
-    <form method="post" action="index.php?accion=crear">
+    <form method="post" action="index.php?accion=crear" enctype="multipart/form-data">
         <input type="hidden" name="token_csrf" value="<?= escaparTextoFormulario($tokenCsrf) ?>">
 
         <p>
@@ -56,6 +56,11 @@ function escaparTextoFormulario(string $valor): string
                 <option value="usuario">Usuario</option>
                 <option value="admin">Administrador</option>
             </select>
+        </p>
+
+        <p>
+            <label for="foto_perfil">Imagen de perfil</label>
+            <input type="file" id="foto_perfil" name="foto_perfil" accept="image/jpeg,image/png">
         </p>
 
         <button type="submit">Guardar usuario</button>

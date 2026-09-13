@@ -59,6 +59,15 @@ function escaparTextoBienvenida(string $valor): string
             <article class="rdm-card--outlined">
                 <div class="rdm-card--body">
                     <h2 class="rdm-sys-typography--display-small">Sesión actual</h2>
+                    <?php if (!empty($usuarioAutenticado['foto_perfil'])): ?>
+                        <p>
+                            <img
+                                src="<?= escaparTextoBienvenida((string) $usuarioAutenticado['foto_perfil']) ?>"
+                                alt="Imagen de perfil de <?= escaparTextoBienvenida((string) $usuarioAutenticado['nombres']) ?>"
+                                width="120"
+                            >
+                        </p>
+                    <?php endif; ?>
                     <h3 class="rdm-sys-typography--title-large">
                         <?= escaparTextoBienvenida((string) $usuarioAutenticado['correo']) ?>
                     </h3>
