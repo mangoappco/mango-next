@@ -244,6 +244,38 @@ function escaparTextoEdicion(string $valor): string
                     </p>
                 </div>
             </div>
+        <?php elseif ($esAdministrador): ?>
+            <h2 class="rdm-sys-typography--display-small">Reactivar</h2>
+
+            <div class="rdm-form--elevated">
+                <div class="rdm-form--body">
+                    <h3 class="rdm-sys-typography--title-large">Usuario inactivo</h3>
+                    <p class="rdm-sys-typography--body-large">
+                        El usuario podrá volver a iniciar sesión después de reactivarlo.
+                    </p>
+                </div>
+
+                <div class="rdm-form--action-left">
+                    <p>
+                        <button
+                            class="rdm-button--filled"
+                            type="button"
+                            onclick="window.location.href='index.php?accion=reactivar&id=<?= (int) $datos['id'] ?>';"
+                        >
+                            <div class="rdm-button--container">
+                                <div class="rdm-button--media">
+                                    <div class="rdm-button--icon">
+                                        <span class="material-symbols-rounded">person_add</span>
+                                    </div>
+                                </div>
+                                <div class="rdm-button--body">
+                                    <span class="rdm-sys-typography--label-large">Reactivar</span>
+                                </div>
+                            </div>
+                        </button>
+                    </p>
+                </div>
+            </div>
         <?php endif; ?>
 
         <div class="rdm-button--fab-position">
