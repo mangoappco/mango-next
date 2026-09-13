@@ -157,10 +157,10 @@ final class ServicioArchivos
             }
         }
 
-        // Conserva la proporción y limita el lado mayor a 300 píxeles.
+        // Conserva la proporción y limita el lado mayor a 600 píxeles.
         $anchoOriginal = imagesx($imagenOriginal);
         $altoOriginal = imagesy($imagenOriginal);
-        $ladoMaximo = 300;
+        $ladoMaximo = 600;
         $factor = min(1, $ladoMaximo / max($anchoOriginal, $altoOriginal));
         $anchoNuevo = max(1, (int) round($anchoOriginal * $factor));
         $altoNuevo = max(1, (int) round($altoOriginal * $factor));

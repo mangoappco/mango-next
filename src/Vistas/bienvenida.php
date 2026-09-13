@@ -9,6 +9,9 @@ function escaparTextoBienvenida(string $valor): string
     // Evita que los datos de sesión se interpreten como HTML.
     return htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
 }
+
+// Usa el avatar predeterminado cuando la sesión no tiene una imagen cargada.
+$rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/img/avatar-default.svg');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -57,23 +60,25 @@ function escaparTextoBienvenida(string $valor): string
 
         <section class="rdm-card--container">
             <article class="rdm-card--outlined">
+                <div
+                    class="rdm-card--media"
+                    style="background-image: url('<?= escaparTextoBienvenida($rutaImagenPerfil) ?>');"
+                    role="img"
+                    aria-label="Imagen de perfil de <?= escaparTextoBienvenida((string) $usuarioAutenticado['nombres']) ?>"
+                >
+                    <h1 class="rdm-sys-typography--display-medium">
+                        <?= escaparTextoBienvenida((string) ($usuarioAutenticado['nombres'] ?? '')) ?>
+                        <?= escaparTextoBienvenida((string) ($usuarioAutenticado['apellidos'] ?? '')) ?>
+                    </h1>
+                </div>
+
                 <div class="rdm-card--body">
-                    <h2 class="rdm-sys-typography--display-small">Sesión actual</h2>
-                    <p>
-                        <img
-                            src="<?= escaparTextoBienvenida((string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/img/avatar-default.svg')) ?>"
-                            alt="Imagen de perfil de <?= escaparTextoBienvenida((string) $usuarioAutenticado['nombres']) ?>"
-                            width="120"
-                        >
-                    </p>
+                    <h2 class="rdm-sys-typography--display-small">
+                        <?= escaparTextoBienvenida((string) $usuarioAutenticado['tipo']) ?>
+                    </h2>
                     <h3 class="rdm-sys-typography--title-large">
                         <?= escaparTextoBienvenida((string) $usuarioAutenticado['correo']) ?>
                     </h3>
-                    <p class="rdm-sys-typography--body-large">
-                        <?= escaparTextoBienvenida((string) ($usuarioAutenticado['nombres'] ?? '')) ?>
-                        <?= escaparTextoBienvenida((string) ($usuarioAutenticado['apellidos'] ?? '')) ?>
-                        (<?= escaparTextoBienvenida((string) $usuarioAutenticado['tipo']) ?>)
-                    </p>
                 </div>
 
                 <form id="form-cerrar-sesion" method="post" action="index.php?accion=cerrar-sesion">
