@@ -20,16 +20,14 @@ function escaparTextoDetalle(string $valor): string
     <h1>Detalle del usuario</h1>
 
     <dl>
-        <?php if (!empty($usuario['foto_perfil'])): ?>
-            <dt>Imagen de perfil</dt>
-            <dd>
-                <img
-                    src="<?= escaparTextoDetalle((string) $usuario['foto_perfil']) ?>"
-                    alt="Imagen de perfil de <?= escaparTextoDetalle((string) $usuario['nombres']) ?>"
-                    width="160"
-                >
-            </dd>
-        <?php endif; ?>
+        <dt>Imagen de perfil</dt>
+        <dd>
+            <img
+                src="<?= escaparTextoDetalle((string) ($usuario['foto_perfil'] ?: 'recursos/img/avatar-default.svg')) ?>"
+                alt="Imagen de perfil de <?= escaparTextoDetalle((string) $usuario['nombres']) ?>"
+                width="160"
+            >
+        </dd>
 
         <dt>ID</dt>
         <dd><?= escaparTextoDetalle((string) $usuario['id']) ?></dd>
