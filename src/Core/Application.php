@@ -198,7 +198,7 @@ final class Application
                     'tipo' => $resultado['usuario']['tipo'],
                     'foto_perfil' => $resultado['usuario']['foto_perfil'],
                 ];
-                $_SESSION['mensaje'] = 'Inicio de sesión correcto.';
+                $_SESSION['mensaje'] = 'Has iniciado sesión correctamente.';
                 header('Location: index.php?accion=bienvenida');
                 exit;
             }
@@ -227,6 +227,60 @@ final class Application
 
             // Carga la vista de bienvenida.
             require $rootPath . '/src/Vistas/bienvenida.php';
+            return;
+        }
+
+        // Permite al usuario editar únicamente los datos de su propio perfil.
+        if ($accion === 'perfil') {
+            $idUsuario = (int) $_SESSION['usuario']['id'];
+            $usuario = $controladorUsuarios->obtener($idUsuario);
+
+            if ($usuario === null) {
+                http_response_code(404);
+                require $rootPath . '/src/Vistas/errores/404.php';
+                return;
+            }
+
+            $errores = [];
+            $datos = $usuario;
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } else {
+                    // Conserva el tipo desde la sesión; el perfil propio no puede cambiar roles.
+                    $datosPerfil = array_merge($_POST, [
+                        'tipo' => (string) $_SESSION['usuario']['tipo'],
+                    ]);
+
+                    $resultado = $controladorUsuarios->actualizar(
+                        $idUsuario,
+                        $datosPerfil,
+                        $_FILES['foto_perfil'] ?? null,
+                        $rootPath,
+                        $usuario['foto_perfil'] !== null ? (string) $usuario['foto_perfil'] : null,
+                        isset($_POST['eliminar_foto']) && $_POST['eliminar_foto'] === '1'
+                    );
+                    $errores = $resultado['errores'];
+                    $datos = array_merge($datos, $resultado['datos']);
+                }
+
+                if ($errores === []) {
+                    $usuarioActualizado = $controladorUsuarios->obtener($idUsuario);
+                    if ($usuarioActualizado !== null) {
+                        $_SESSION['usuario']['correo'] = $usuarioActualizado['correo'];
+                        $_SESSION['usuario']['nombres'] = $usuarioActualizado['nombres'];
+                        $_SESSION['usuario']['apellidos'] = $usuarioActualizado['apellidos'];
+                        $_SESSION['usuario']['foto_perfil'] = $usuarioActualizado['foto_perfil'];
+                    }
+
+                    $_SESSION['mensaje'] = 'Perfil actualizado correctamente.';
+                    header('Location: index.php?accion=bienvenida');
+                    exit;
+                }
+            }
+
+            require $rootPath . '/src/Vistas/perfil.php';
             return;
         }
 

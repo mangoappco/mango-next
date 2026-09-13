@@ -50,8 +50,6 @@ $rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/im
     <main class="rdm--contenedor-toolbar">
         <h1 class="rdm-sys-typography--display-small">Bienvenido a ManGo!</h1>
 
-        <p class="rdm-sys-typography--body-large">Has iniciado sesión correctamente.</p>
-
         <?php if ($mensaje !== null): ?>
             <p class="rdm-sys-typography--body-large">
                 <?= escaparTextoBienvenida((string) $mensaje) ?>
@@ -87,15 +85,15 @@ $rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/im
 
                 <div class="rdm-card--action-left">
                     <p>
-                        <button class="rdm-button--filled" type="button" onclick="window.location.href='index.php?accion=cambiar-contrasena';">
+                        <button class="rdm-button--filled" type="button" onclick="window.location.href='index.php?accion=perfil';">
                             <div class="rdm-button--container">
                                 <div class="rdm-button--media">
                                     <div class="rdm-button--icon">
-                                        <span class="material-symbols-rounded">lock_reset</span>
+                                        <span class="material-symbols-rounded">person_edit</span>
                                     </div>
                                 </div>
                                 <div class="rdm-button--body">
-                                    <span class="rdm-sys-typography--label-large">Cambiar contraseña</span>
+                                    <span class="rdm-sys-typography--label-large">Editar perfil</span>
                                 </div>
                             </div>
                         </button>
