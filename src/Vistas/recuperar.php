@@ -14,10 +14,39 @@ function escaparTextoRecuperacion(string $valor): string
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ManGo! - Recuperar contraseña</title>
+    <link rel="stylesheet" href="recursos/componentes/css/estilos.css">
+    <script src="recursos/componentes/js/topbar_scroll.js"></script>
+    <script src="recursos/componentes/js/theme_toggle.js"></script>
+    <script src="recursos/componentes/js/textfield.js"></script>
 </head>
 <body>
-    <h1>Recuperar contraseña</h1>
+    <header class="rdm-topbar--position">
+        <div class="rdm-topbar--small-container" id="topbar">
+            <div class="rdm-topbar--media">
+                <a href="index.php?accion=login">
+                    <div class="rdm-topbar--leading-navigation-icon"><span class="material-symbols-rounded">arrow_back</span></div>
+                </a>
+            </div>
+            <div class="rdm-topbar--body">
+                <div class="rdm-sys-typography--title-large">
+                    <div class="rdm-topbar--body-headline">
+                        <div class="rdm-topbar--mango-logo" aria-hidden="true"></div>
+                        ManGo! - Next
+                    </div>
+                </div>
+            </div>
+            <div class="rdm-topbar--action">
+                <div class="rdm-topbar--trailing-icon" id="themeToggle" title="Cambiar tema">
+                    <span class="material-symbols-rounded" id="themeToggleIcon">dark_mode</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="rdm--contenedor-toolbar">
+        <h1 class="rdm-sys-typography--display-medium">Recuperar contraseña</h1>
 
     <?php if ($errores !== []): ?>
         <ul>
@@ -31,24 +60,40 @@ function escaparTextoRecuperacion(string $valor): string
         <p><?= escaparTextoRecuperacion($mensajeRecuperacion) ?></p>
     <?php endif; ?>
 
-    <form method="post" action="index.php?accion=recuperar">
-        <input type="hidden" name="token_csrf" value="<?= escaparTextoRecuperacion($tokenCsrf) ?>">
+        <form class="rdm-form--container" method="post" action="index.php?accion=recuperar">
+            <div class="rdm-form--elevated">
+                <div class="rdm-form--body">
+                    <input type="hidden" name="token_csrf" value="<?= escaparTextoRecuperacion($tokenCsrf) ?>">
 
-        <p>
-            <label for="correo">Correo electrónico</label>
-            <input type="email" id="correo" name="correo" value="<?= escaparTextoRecuperacion($correoRecuperacion) ?>" required>
-        </p>
+                    <div class="rdm-textfield--wrapper">
+                        <div class="rdm-textfield--container rdm-textfield--outlined">
+                            <div class="rdm-textfield--control">
+                                <input type="email" id="correo" name="correo" placeholder=" " value="<?= escaparTextoRecuperacion($correoRecuperacion) ?>" autocomplete="email" aria-describedby="correo_support" required>
+                                <label class="rdm-textfield--label" for="correo">Correo electrónico</label>
+                            </div>
+                        </div>
+                        <div class="rdm-textfield--support"><span class="rdm-textfield--support-text" id="correo_support">Usa el correo asociado a tu cuenta.</span></div>
+                    </div>
+                </div>
 
-        <button type="submit">Solicitar recuperación</button>
-    </form>
+                <div class="rdm-form--action-left">
+                    <p>
+                        <button class="rdm-button--filled" type="submit">
+                            <div class="rdm-button--container">
+                                <div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">mail</span></div></div>
+                                <div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Solicitar recuperación</span></div>
+                            </div>
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </form>
 
     <?php if ($enlaceRecuperacion !== null): ?>
         <p>En desarrollo, este sería el enlace enviado por correo:</p>
         <p><a href="<?= escaparTextoRecuperacion($enlaceRecuperacion) ?>">Abrir enlace de recuperación</a></p>
     <?php endif; ?>
 
-    <p>
-        <a href="index.php?accion=login">Volver al login</a>
-    </p>
+    </main>
 </body>
 </html>

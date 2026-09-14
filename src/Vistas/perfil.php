@@ -21,6 +21,7 @@ $rutaImagenPerfil = (string) ($datos['foto_perfil'] ?: 'recursos/img/avatar-defa
     <link rel="stylesheet" href="recursos/componentes/css/estilos.css">
     <script src="recursos/componentes/js/topbar_scroll.js"></script>
     <script src="recursos/componentes/js/theme_toggle.js"></script>
+    <script src="recursos/componentes/js/textfield.js"></script>
 </head>
 <body>
     <header class="rdm-topbar--position">
@@ -44,58 +45,117 @@ $rutaImagenPerfil = (string) ($datos['foto_perfil'] ?: 'recursos/img/avatar-defa
         </ul>
     <?php endif; ?>
 
-    <form method="post" action="index.php?accion=perfil" enctype="multipart/form-data">
-        <input type="hidden" name="token_csrf" value="<?= escaparTextoPerfil($tokenCsrf) ?>">
+    <form class="rdm-form--container rdm-form--stacked" method="post" action="index.php?accion=perfil" enctype="multipart/form-data">
+        <div class="rdm-form--elevated">
+            <div class="rdm-form--body">
+                <input type="hidden" name="token_csrf" value="<?= escaparTextoPerfil($tokenCsrf) ?>">
 
-        <p>
-            <img
-                src="<?= escaparTextoPerfil($rutaImagenPerfil) ?>"
-                alt="Imagen de perfil de <?= escaparTextoPerfil((string) $datos['nombres']) ?>"
-                width="160"
-            >
-        </p>
+                <div class="rdm-textfield--wrapper">
+                    <div class="rdm-textfield--container rdm-textfield--outlined">
+                        <div class="rdm-textfield--control">
+                            <input type="text" id="nombres" name="nombres" placeholder=" " value="<?= escaparTextoPerfil((string) $datos['nombres']) ?>" autocomplete="given-name" aria-describedby="nombres_support" required>
+                            <label class="rdm-textfield--label" for="nombres">Nombres</label>
+                        </div>
+                    </div>
+                    <div class="rdm-textfield--support"><span class="rdm-textfield--support-text" id="nombres_support">Escribe tus nombres.</span></div>
+                </div>
 
-        <p>
-            <label for="correo">Correo electrónico</label>
-            <input type="email" id="correo" name="correo" value="<?= escaparTextoPerfil((string) $datos['correo']) ?>" required>
-        </p>
+                <div class="rdm-textfield--wrapper">
+                    <div class="rdm-textfield--container rdm-textfield--outlined">
+                        <div class="rdm-textfield--control">
+                            <input type="text" id="apellidos" name="apellidos" placeholder=" " value="<?= escaparTextoPerfil((string) $datos['apellidos']) ?>" autocomplete="family-name" aria-describedby="apellidos_support" required>
+                            <label class="rdm-textfield--label" for="apellidos">Apellidos</label>
+                        </div>
+                    </div>
+                    <div class="rdm-textfield--support"><span class="rdm-textfield--support-text" id="apellidos_support">Escribe tus apellidos.</span></div>
+                </div>
 
-        <p>
-            <label for="nombres">Nombres</label>
-            <input type="text" id="nombres" name="nombres" value="<?= escaparTextoPerfil((string) $datos['nombres']) ?>" required>
-        </p>
+                <div class="rdm-textfield--wrapper">
+                    <div class="rdm-textfield--container rdm-textfield--outlined">
+                        <div class="rdm-textfield--control">
+                            <input type="email" id="correo" name="correo" placeholder=" " value="<?= escaparTextoPerfil((string) $datos['correo']) ?>" autocomplete="email" aria-describedby="correo_support" required>
+                            <label class="rdm-textfield--label" for="correo">Correo electrónico</label>
+                        </div>
+                    </div>
+                    <div class="rdm-textfield--support"><span class="rdm-textfield--support-text" id="correo_support">Usa un correo válido.</span></div>
+                </div>
+            </div>
+        </div>
 
-        <p>
-            <label for="apellidos">Apellidos</label>
-            <input type="text" id="apellidos" name="apellidos" value="<?= escaparTextoPerfil((string) $datos['apellidos']) ?>" required>
-        </p>
+        <h2 class="rdm-sys-typography--display-small">Imagen</h2>
 
-        <p>
-            <label for="foto_perfil">Nueva imagen de perfil</label>
-            <input type="file" id="foto_perfil" name="foto_perfil" accept="image/jpeg,image/png">
-        </p>
+        <div class="rdm-form--elevated">
+            <div class="rdm-form--body">
+                <p>
+                    <img src="<?= escaparTextoPerfil($rutaImagenPerfil) ?>" alt="Imagen de perfil de <?= escaparTextoPerfil((string) $datos['nombres']) ?>" width="160">
+                </p>
 
-        <p>Deja el campo vacío para conservar la imagen actual.</p>
+                <input type="file" id="foto_perfil" name="foto_perfil" accept="image/jpeg,image/png" hidden>
 
-        <?php if (!empty($datos['foto_perfil'])): ?>
-            <p>
-                <label>
-                    <input type="checkbox" name="eliminar_foto" value="1">
-                    Eliminar imagen actual
-                </label>
-            </p>
-        <?php endif; ?>
+                <p>
+                    <label class="rdm-button--outlined rdm-file-picker" for="foto_perfil">
+                        <span class="rdm-button--container">
+                            <span class="rdm-button--media"><span class="rdm-button--icon"><span class="material-symbols-rounded">add_a_photo</span></span></span>
+                            <span class="rdm-button--body"><span class="rdm-sys-typography--label-large">Seleccionar imagen</span></span>
+                        </span>
+                    </label>
+                </p>
 
-        <button type="submit">Guardar perfil</button>
+                <?php if (!empty($datos['foto_perfil'])): ?>
+                    <div class="rdm-checkbox--wrapper">
+                        <label class="rdm-checkbox--container">
+                            <input type="checkbox" class="rdm-checkbox--input" name="eliminar_foto" value="1">
+                            <span class="rdm-checkbox--checkmark"></span>
+                            <span class="rdm-checkbox--label">Eliminar imagen actual</span>
+                        </label>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div class="rdm-button--fab-position">
+            <button class="rdm-button--fab" type="submit" title="Guardar cambios" aria-label="Guardar cambios">
+                <div class="rdm-button--container">
+                    <div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">save</span></div></div>
+                    <div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Guardar cambios</span></div>
+                </div>
+            </button>
+        </div>
     </form>
 
-    <p>
-        <a href="index.php?accion=cambiar-contrasena">Cambiar contraseña</a>
-    </p>
+    <h2 class="rdm-sys-typography--display-small">Seguridad</h2>
 
-    <p>
-        <a href="index.php?accion=bienvenida">Volver a la bienvenida</a>
-    </p>
+    <section class="rdm-card--container">
+        <article class="rdm-card--elevated">
+            <div class="rdm-card--body">
+                <h3 class="rdm-sys-typography--title-large">Cambiar contraseña</h3>
+                <p class="rdm-sys-typography--body-large">
+                    Actualiza tu contraseña para mantener protegida tu cuenta.
+                </p>
+            </div>
+
+            <div class="rdm-card--action-left">
+                <p>
+                    <button
+                        class="rdm-button--filled"
+                        type="button"
+                        onclick="window.location.href='index.php?accion=cambiar-contrasena';"
+                    >
+                        <div class="rdm-button--container">
+                            <div class="rdm-button--media">
+                                <div class="rdm-button--icon">
+                                    <span class="material-symbols-rounded">lock_reset</span>
+                                </div>
+                            </div>
+                            <div class="rdm-button--body">
+                                <span class="rdm-sys-typography--label-large">Cambiar contraseña</span>
+                            </div>
+                        </div>
+                    </button>
+                </p>
+            </div>
+        </article>
+    </section>
     </main>
 </body>
 </html>

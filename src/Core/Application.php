@@ -287,6 +287,7 @@ final class Application
         // Permite al usuario autenticado cambiar únicamente su propia contraseña.
         if ($accion === 'cambiar-contrasena') {
             $errores = [];
+            $usuarioAutenticado = $_SESSION['usuario'];
 
             // Procesa el formulario solo cuando llega mediante POST.
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {

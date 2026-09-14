@@ -19,21 +19,20 @@ function escaparTextoContrasena(string $valor): string
     <link rel="stylesheet" href="recursos/componentes/css/estilos.css">
     <script src="recursos/componentes/js/topbar_scroll.js"></script>
     <script src="recursos/componentes/js/theme_toggle.js"></script>
+    <script src="recursos/componentes/js/textfield.js"></script>
 </head>
 <body>
     <header class="rdm-topbar--position">
         <div class="rdm-topbar--small-container" id="topbar">
             <div class="rdm-topbar--media">
-                <a href="index.php?accion=bienvenida"><div class="rdm-topbar--leading-navigation-icon"><span class="material-symbols-rounded">arrow_back</span></div></a>
+                <a href="index.php?accion=perfil"><div class="rdm-topbar--leading-navigation-icon"><span class="material-symbols-rounded">arrow_back</span></div></a>
             </div>
-            <div class="rdm-topbar--body"><div class="rdm-sys-typography--title-large"><div class="rdm-topbar--body-headline">Cambiar contraseña</div></div></div>
+            <div class="rdm-topbar--body"><div class="rdm-sys-typography--title-large"><div class="rdm-topbar--body-headline">Editar perfil</div></div></div>
             <div class="rdm-topbar--action"><div class="rdm-topbar--trailing-icon" id="themeToggle" title="Cambiar tema"><span class="material-symbols-rounded" id="themeToggleIcon">dark_mode</span></div></div>
         </div>
     </header>
 
     <main class="rdm--contenedor-toolbar">
-        <h1 class="rdm-sys-typography--display-medium">Actualizar contraseña</h1>
-
     <?php if ($errores !== []): ?>
         <ul>
             <?php foreach ($errores as $error): ?>
@@ -42,30 +41,70 @@ function escaparTextoContrasena(string $valor): string
         </ul>
     <?php endif; ?>
 
-    <form method="post" action="index.php?accion=cambiar-contrasena">
-        <input type="hidden" name="token_csrf" value="<?= escaparTextoContrasena($tokenCsrf) ?>">
+        <form class="rdm-form--container" method="post" action="index.php?accion=cambiar-contrasena">
+            <div class="rdm-form--elevated">
+                <div class="rdm-form--body">
+                    <h2 class="rdm-sys-typography--display-small">Seguridad</h2>
+                    <h3 class="rdm-sys-typography--title-large">¿Cambiar contraseña?</h3>
+                    <p class="rdm-sys-typography--body-large">
+                        Cambiar contraseña para el usuario
+                        <strong>
+                            <?= escaparTextoContrasena((string) $usuarioAutenticado['nombres']) ?>
+                            <?= escaparTextoContrasena((string) $usuarioAutenticado['apellidos']) ?>
+                        </strong>
+                        (<strong><?= escaparTextoContrasena((string) $usuarioAutenticado['correo']) ?></strong>).
+                    </p>
 
-        <p>
-            <label for="contrasena_actual">Contraseña actual</label>
-            <input type="password" id="contrasena_actual" name="contrasena_actual" required>
-        </p>
+                    <input type="hidden" name="token_csrf" value="<?= escaparTextoContrasena($tokenCsrf) ?>">
 
-        <p>
-            <label for="contrasena_nueva">Nueva contraseña</label>
-            <input type="password" id="contrasena_nueva" name="contrasena_nueva" minlength="8" required>
-        </p>
+                    <div class="rdm-textfield--wrapper">
+                        <div class="rdm-textfield--container rdm-textfield--outlined">
+                            <div class="rdm-textfield--control">
+                                <input type="password" id="contrasena_actual" name="contrasena_actual" placeholder=" " autocomplete="current-password" aria-describedby="contrasena_actual_support" required>
+                                <label class="rdm-textfield--label" for="contrasena_actual">Contraseña actual</label>
+                            </div>
+                        </div>
+                        <div class="rdm-textfield--support"><span class="rdm-textfield--support-text" id="contrasena_actual_support">Confirma tu contraseña actual.</span></div>
+                    </div>
 
-        <p>
-            <label for="contrasena_confirmacion">Confirmar nueva contraseña</label>
-            <input type="password" id="contrasena_confirmacion" name="contrasena_confirmacion" minlength="8" required>
-        </p>
+                    <div class="rdm-textfield--wrapper">
+                        <div class="rdm-textfield--container rdm-textfield--outlined">
+                            <div class="rdm-textfield--control">
+                                <input type="password" id="contrasena_nueva" name="contrasena_nueva" placeholder=" " autocomplete="new-password" aria-describedby="contrasena_nueva_support" minlength="8" required>
+                                <label class="rdm-textfield--label" for="contrasena_nueva">Nueva contraseña</label>
+                            </div>
+                        </div>
+                        <div class="rdm-textfield--support"><span class="rdm-textfield--support-text" id="contrasena_nueva_support">Debe tener al menos 8 caracteres.</span></div>
+                    </div>
 
-        <button type="submit">Guardar nueva contraseña</button>
-    </form>
+                    <div class="rdm-textfield--wrapper">
+                        <div class="rdm-textfield--container rdm-textfield--outlined">
+                            <div class="rdm-textfield--control">
+                                <input type="password" id="contrasena_confirmacion" name="contrasena_confirmacion" placeholder=" " autocomplete="new-password" aria-describedby="contrasena_confirmacion_support" minlength="8" required>
+                                <label class="rdm-textfield--label" for="contrasena_confirmacion">Confirmar nueva contraseña</label>
+                            </div>
+                        </div>
+                        <div class="rdm-textfield--support"><span class="rdm-textfield--support-text" id="contrasena_confirmacion_support">Escribe nuevamente la nueva contraseña.</span></div>
+                    </div>
+                </div>
 
-    <p>
-        <a href="index.php?accion=bienvenida">Volver a la bienvenida</a>
-    </p>
+                <div class="rdm-card--action-left">
+                    <p>
+                        <button class="rdm-button--filled" type="submit">
+                            <div class="rdm-button--container">
+                                <div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">lock_reset</span></div></div>
+                                <div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Confirmar</span></div>
+                            </div>
+                        </button>
+                        <button class="rdm-button--text" type="button" onclick="window.location.href='index.php?accion=perfil';">
+                            <div class="rdm-button--container">
+                                <div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Cancelar</span></div>
+                            </div>
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </form>
     </main>
 </body>
 </html>
