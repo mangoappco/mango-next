@@ -48,10 +48,7 @@ final class Application
             $datos = ['correo' => ''];
 
             // Recupera un mensaje temporal, por ejemplo después de restablecer la contraseña.
-            $mensaje = $_SESSION['mensaje'] ?? null;
-
-            // Elimina el mensaje para mostrarlo una sola vez.
-            unset($_SESSION['mensaje']);
+            $mensaje = $this->obtenerMensaje();
 
             // Carga la vista del formulario de acceso.
             require $rootPath . '/src/Vistas/login.php';
@@ -162,7 +159,7 @@ final class Application
                 }
 
                 if ($errores === []) {
-                    $_SESSION['mensaje'] = 'Contraseña restablecida correctamente.';
+                    $this->establecerMensaje('exito', 'Contraseña restablecida correctamente.');
                     header('Location: index.php?accion=login');
                     exit;
                 }
@@ -198,7 +195,7 @@ final class Application
                     'tipo' => $resultado['usuario']['tipo'],
                     'foto_perfil' => $resultado['usuario']['foto_perfil'],
                 ];
-                $_SESSION['mensaje'] = 'Has iniciado sesión correctamente.';
+                $this->establecerMensaje('exito', 'Has iniciado sesión correctamente.');
                 header('Location: index.php?accion=bienvenida');
                 exit;
             }
@@ -220,10 +217,7 @@ final class Application
             $usuarioAutenticado = $_SESSION['usuario'];
 
             // Recupera el mensaje temporal de una operación anterior.
-            $mensaje = $_SESSION['mensaje'] ?? null;
-
-            // Elimina el mensaje para que se muestre una sola vez.
-            unset($_SESSION['mensaje']);
+            $mensaje = $this->obtenerMensaje();
 
             // Carga la vista de bienvenida.
             require $rootPath . '/src/Vistas/bienvenida.php';
@@ -274,7 +268,7 @@ final class Application
                         $_SESSION['usuario']['foto_perfil'] = $usuarioActualizado['foto_perfil'];
                     }
 
-                    $_SESSION['mensaje'] = 'Perfil actualizado correctamente.';
+                    $this->establecerMensaje('exito', 'Perfil actualizado correctamente.');
                     header('Location: index.php?accion=bienvenida');
                     exit;
                 }
@@ -305,7 +299,7 @@ final class Application
 
                 // Redirige a la bienvenida después de guardar correctamente.
                 if ($errores === []) {
-                    $_SESSION['mensaje'] = 'Contraseña actualizada correctamente.';
+                    $this->establecerMensaje('exito', 'Contraseña actualizada correctamente.');
                     header('Location: index.php?accion=bienvenida');
                     exit;
                 }
@@ -345,7 +339,7 @@ final class Application
                 // Si no hubo errores, vuelve a la lista para mostrar el usuario creado.
                 if ($errores === []) {
                     // Guarda un mensaje temporal que se mostrará después de la redirección.
-                    $_SESSION['mensaje'] = 'Usuario creado correctamente.';
+                    $this->establecerMensaje('exito', 'Usuario creado correctamente.');
 
                     header('Location: index.php');
                     exit;
@@ -371,10 +365,7 @@ final class Application
             }
 
             // Recupera el mensaje temporal de una actualización reciente.
-            $mensaje = $_SESSION['mensaje'] ?? null;
-
-            // Evita que el mensaje vuelva a aparecer al recargar el detalle.
-            unset($_SESSION['mensaje']);
+            $mensaje = $this->obtenerMensaje();
 
             // Carga la vista de detalle y le entrega el usuario encontrado.
             $esAdministrador = $this->esAdministrador();
@@ -439,7 +430,7 @@ final class Application
                     }
 
                     // Guarda un mensaje temporal que se mostrará después de la redirección.
-                    $_SESSION['mensaje'] = 'Cambios guardados';
+                    $this->establecerMensaje('exito', 'Cambios guardados.');
 
                     header('Location: index.php?accion=ver&id=' . $id);
                     exit;
@@ -498,7 +489,7 @@ final class Application
                     );
 
                     // Guarda un mensaje temporal que se mostrará después de la redirección.
-                    $_SESSION['mensaje'] = 'Usuario desactivado correctamente.';
+                    $this->establecerMensaje('exito', 'Usuario desactivado correctamente.');
 
                     header('Location: index.php?accion=ver&id=' . $id);
                     exit;
@@ -556,7 +547,7 @@ final class Application
                     );
 
                     // Informa el resultado y vuelve al detalle actualizado.
-                    $_SESSION['mensaje'] = 'Usuario reactivado correctamente.';
+                    $this->establecerMensaje('exito', 'Usuario reactivado correctamente.');
                     header('Location: index.php?accion=ver&id=' . $id);
                     exit;
                 }
@@ -580,10 +571,7 @@ final class Application
         $usuarios = $controladorUsuarios->index($busqueda);
 
         // Recupera el mensaje temporal creado por una operación anterior.
-        $mensaje = $_SESSION['mensaje'] ?? null;
-
-        // Elimina el mensaje para que solo aparezca una vez.
-        unset($_SESSION['mensaje']);
+        $mensaje = $this->obtenerMensaje();
 
         // Carga la vista y le proporciona los usuarios obtenidos.
         require $rootPath . '/src/Vistas/usuarios/index.php';
@@ -691,5 +679,37 @@ final class Application
 
         // Carga una vista comprensible para el usuario.
         require $rootPath . '/src/Vistas/errores/403.php';
+    }
+
+    // Guarda un mensaje temporal clasificado en la sesión para feedback posterior a redirección.
+    private function establecerMensaje(string $tipo, string $texto): void
+    {
+        $_SESSION['mensaje'] = [
+            'tipo' => $tipo,
+            'texto' => $texto,
+        ];
+    }
+
+    // Recupera y consume el mensaje temporal actual garantizando una estructura uniforme.
+    private function obtenerMensaje(): ?array
+    {
+        $mensaje = $_SESSION['mensaje'] ?? null;
+        unset($_SESSION['mensaje']);
+
+        if (is_array($mensaje) && isset($mensaje['tipo'], $mensaje['texto'])) {
+            return [
+                'tipo' => (string) $mensaje['tipo'],
+                'texto' => (string) $mensaje['texto'],
+            ];
+        }
+
+        if (is_string($mensaje) && $mensaje !== '') {
+            return [
+                'tipo' => 'exito',
+                'texto' => $mensaje,
+            ];
+        }
+
+        return null;
     }
 }

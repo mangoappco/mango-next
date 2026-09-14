@@ -51,7 +51,7 @@ function escaparHtml(string $valor): string
 
     <main class="rdm--contenedor-toolbar">
     <?php if ($mensaje !== null): ?>
-        <p><?= escaparHtml((string) $mensaje) ?></p>
+        <p><?= escaparHtml(is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje) ?></p>
     <?php endif; ?>
 
     <form class="rdm-search--wrapper" method="get" action="index.php">

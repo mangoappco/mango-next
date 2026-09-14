@@ -59,7 +59,7 @@ $rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/im
 
         <?php if ($mensaje !== null): ?>
             <p class="rdm-sys-typography--body-large">
-                <?= escaparTextoBienvenida((string) $mensaje) ?>
+                <?= escaparTextoBienvenida(is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje) ?>
             </p>
         <?php endif; ?>
 

@@ -50,7 +50,7 @@ function escaparTextoLogin(string $valor): string
 
         <?php if ($mensaje !== null): ?>
             <p class="rdm-sys-typography--body-large">
-                <?= escaparTextoLogin((string) $mensaje) ?>
+                <?= escaparTextoLogin(is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje) ?>
             </p>
         <?php endif; ?>
 

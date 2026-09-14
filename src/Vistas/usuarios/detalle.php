@@ -50,7 +50,7 @@ function escaparTextoDetalle(string $valor): string
     <main class="rdm--contenedor-toolbar">
         <?php if ($mensaje !== null): ?>
             <p class="rdm-sys-typography--body-large">
-                <?= escaparTextoDetalle((string) $mensaje) ?>
+                <?= escaparTextoDetalle(is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje) ?>
             </p>
         <?php endif; ?>
 
