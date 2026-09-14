@@ -26,6 +26,7 @@ Autor: Danny Estrada
 @import url(checkbox.css);
 @import url(radiobutton.css);
 @import url(switches.css);
+@import url(alert.css);
 
 
 /* Colores base de ripple por tema */
@@ -60,9 +61,9 @@ body{
 	background-color: var(--md-sys-color-surface);
 	color: var(--md-sys-color-on-surface);
 	font-family: Product Sans;
-	font-size: 16px; 
-	font-weight: normal; 
-	margin: 0; 
+	font-size: 16px;
+	font-weight: normal;
+	margin: 0;
 }
 
 /* Transición global de tema (suaviza el cambio de colores) */

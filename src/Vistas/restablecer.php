@@ -49,11 +49,22 @@ function escaparTextoRestablecer(string $valor): string
         <h1 class="rdm-sys-typography--display-medium">Restablecer contraseña</h1>
 
     <?php if ($errores !== []): ?>
-        <ul>
-            <?php foreach ($errores as $error): ?>
-                <li><?= escaparTextoRestablecer($error) ?></li>
-            <?php endforeach; ?>
-        </ul>
+        <aside class="rdm-alert rdm-alert--error" role="alert" aria-live="assertive">
+            <div class="rdm-alert--icon">
+                <span class="material-symbols-rounded">error</span>
+            </div>
+            <div class="rdm-alert--body">
+                <?php if (count($errores) === 1): ?>
+                    <p class="rdm-sys-typography--body-large"><?= escaparTextoRestablecer($errores[0]) ?></p>
+                <?php else: ?>
+                    <ul class="rdm-sys-typography--body-large">
+                        <?php foreach ($errores as $error): ?>
+                            <li><?= escaparTextoRestablecer($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </div>
+        </aside>
     <?php endif; ?>
 
         <form class="rdm-form--container" method="post" action="index.php?accion=restablecer&amp;token=<?= urlencode($tokenRecuperacion) ?>">

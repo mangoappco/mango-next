@@ -38,11 +38,22 @@ $rutaImagenPerfil = (string) ($datos['foto_perfil'] ?: 'recursos/img/avatar-defa
         <h1 class="rdm-sys-typography--display-medium">Mis datos personales</h1>
 
     <?php if ($errores !== []): ?>
-        <ul>
-            <?php foreach ($errores as $error): ?>
-                <li><?= escaparTextoPerfil($error) ?></li>
-            <?php endforeach; ?>
-        </ul>
+        <aside class="rdm-alert rdm-alert--error" role="alert" aria-live="assertive">
+            <div class="rdm-alert--icon">
+                <span class="material-symbols-rounded">error</span>
+            </div>
+            <div class="rdm-alert--body">
+                <?php if (count($errores) === 1): ?>
+                    <p class="rdm-sys-typography--body-large"><?= escaparTextoPerfil($errores[0]) ?></p>
+                <?php else: ?>
+                    <ul class="rdm-sys-typography--body-large">
+                        <?php foreach ($errores as $error): ?>
+                            <li><?= escaparTextoPerfil($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </div>
+        </aside>
     <?php endif; ?>
 
     <form class="rdm-form--container rdm-form--stacked" method="post" action="index.php?accion=perfil" enctype="multipart/form-data">

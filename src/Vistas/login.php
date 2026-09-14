@@ -49,17 +49,45 @@ function escaparTextoLogin(string $valor): string
         <h1 class="rdm-sys-typography--display-small">Iniciar sesión</h1>
 
         <?php if ($mensaje !== null): ?>
-            <p class="rdm-sys-typography--body-large">
-                <?= escaparTextoLogin(is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje) ?>
-            </p>
+            <?php
+                $tipoMensaje = is_array($mensaje) ? (string) ($mensaje['tipo'] ?? 'exito') : 'exito';
+                $textoMensaje = is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje;
+                $iconoMensaje = match ($tipoMensaje) {
+                    'exito' => 'check_circle',
+                    'error' => 'error',
+                    'advertencia' => 'warning',
+                    default => 'info',
+                };
+            ?>
+            <aside class="rdm-alert rdm-alert--<?= escaparTextoLogin($tipoMensaje) ?>" role="status" aria-live="polite">
+                <div class="rdm-alert--icon">
+                    <span class="material-symbols-rounded"><?= $iconoMensaje ?></span>
+                </div>
+                <div class="rdm-alert--body">
+                    <p class="rdm-sys-typography--body-large">
+                        <?= escaparTextoLogin($textoMensaje) ?>
+                    </p>
+                </div>
+            </aside>
         <?php endif; ?>
 
         <?php if ($errores !== []): ?>
-            <ul class="rdm-sys-typography--body-large">
-                <?php foreach ($errores as $error): ?>
-                    <li><?= escaparTextoLogin($error) ?></li>
-                <?php endforeach; ?>
-            </ul>
+            <aside class="rdm-alert rdm-alert--error" role="alert" aria-live="assertive">
+                <div class="rdm-alert--icon">
+                    <span class="material-symbols-rounded">error</span>
+                </div>
+                <div class="rdm-alert--body">
+                    <?php if (count($errores) === 1): ?>
+                        <p class="rdm-sys-typography--body-large"><?= escaparTextoLogin($errores[0]) ?></p>
+                    <?php else: ?>
+                        <ul class="rdm-sys-typography--body-large">
+                            <?php foreach ($errores as $error): ?>
+                                <li><?= escaparTextoLogin($error) ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+            </aside>
         <?php endif; ?>
 
         <form class="rdm-form--container" method="post" action="index.php?accion=login">

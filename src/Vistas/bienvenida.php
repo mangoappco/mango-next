@@ -58,9 +58,26 @@ $rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/im
         <h1 class="rdm-sys-typography--display-small">Bienvenido a ManGo!</h1>
 
         <?php if ($mensaje !== null): ?>
-            <p class="rdm-sys-typography--body-large">
-                <?= escaparTextoBienvenida(is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje) ?>
-            </p>
+            <?php
+                $tipoMensaje = is_array($mensaje) ? (string) ($mensaje['tipo'] ?? 'exito') : 'exito';
+                $textoMensaje = is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje;
+                $iconoMensaje = match ($tipoMensaje) {
+                    'exito' => 'check_circle',
+                    'error' => 'error',
+                    'advertencia' => 'warning',
+                    default => 'info',
+                };
+            ?>
+            <aside class="rdm-alert rdm-alert--<?= escaparTextoBienvenida($tipoMensaje) ?>" role="status" aria-live="polite">
+                <div class="rdm-alert--icon">
+                    <span class="material-symbols-rounded"><?= $iconoMensaje ?></span>
+                </div>
+                <div class="rdm-alert--body">
+                    <p class="rdm-sys-typography--body-large">
+                        <?= escaparTextoBienvenida($textoMensaje) ?>
+                    </p>
+                </div>
+            </aside>
         <?php endif; ?>
 
         <section class="rdm-card--container">

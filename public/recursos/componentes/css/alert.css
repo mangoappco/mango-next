@@ -1,0 +1,123 @@
+/*
+CSS para ManGoApp
+ALERTS & FLASH MESSAGES (MD3-inspired)
+Autor: Danny Estrada
+*/
+
+/* Base Alert Container */
+.rdm-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75em;
+  padding: 0.875em 1.125em;
+  border-radius: 0.75em;
+  margin: 0 auto 1.25em auto;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+/* Icon */
+.rdm-alert--icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1em;
+}
+
+.rdm-alert--icon .material-symbols-rounded,
+.rdm-alert--icon .material-symbols-outlined {
+  font-size: 1.5em;
+  line-height: 1;
+  font-variation-settings: 'FILL' 1;
+}
+
+/* Body */
+.rdm-alert--body {
+  flex: 1;
+  min-width: 0;
+}
+
+.rdm-alert--body p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.rdm-alert--body ul {
+  margin: 0;
+  padding-left: 1.25em;
+  line-height: 1.45;
+}
+
+.rdm-alert--body li {
+  margin-bottom: 0.25em;
+}
+
+.rdm-alert--body li:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== TIPO: ÉXITO (Success) ===== */
+.rdm-alert--exito {
+  background-color: #e6f4ea;
+  color: #137333;
+  border: 0.0625em solid #ceead6;
+}
+
+.rdm-alert--exito .rdm-alert--icon {
+  color: #137333;
+}
+
+html[data-theme="dark"] .rdm-alert--exito {
+  background-color: #0f291e;
+  color: #81c995;
+  border: 0.0625em solid #1e4632;
+}
+
+html[data-theme="dark"] .rdm-alert--exito .rdm-alert--icon {
+  color: #81c995;
+}
+
+/* ===== TIPO: ERROR (Danger / Error) ===== */
+.rdm-alert--error {
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+  border: 0.0625em solid color-mix(in srgb, var(--md-sys-color-error) 25%, transparent);
+}
+
+.rdm-alert--error .rdm-alert--icon {
+  color: var(--md-sys-color-error);
+}
+
+/* ===== TIPO: ADVERTENCIA (Warning) ===== */
+.rdm-alert--advertencia {
+  background-color: #fef7e0;
+  color: #7a4f01;
+  border: 0.0625em solid #feefc3;
+}
+
+.rdm-alert--advertencia .rdm-alert--icon {
+  color: #b26a00;
+}
+
+html[data-theme="dark"] .rdm-alert--advertencia {
+  background-color: #33230a;
+  color: #fdd663;
+  border: 0.0625em solid #523a12;
+}
+
+html[data-theme="dark"] .rdm-alert--advertencia .rdm-alert--icon {
+  color: #fdd663;
+}
+
+/* ===== TIPO: INFO (Information) ===== */
+.rdm-alert--info {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border: 0.0625em solid color-mix(in srgb, var(--md-sys-color-secondary) 25%, transparent);
+}
+
+.rdm-alert--info .rdm-alert--icon {
+  color: var(--md-sys-color-secondary);
+}
