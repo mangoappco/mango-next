@@ -19,6 +19,7 @@ function escaparTextoDetalle(string $valor): string
     <link rel="stylesheet" href="recursos/componentes/css/estilos.css">
     <script src="recursos/componentes/js/topbar_scroll.js"></script>
     <script src="recursos/componentes/js/theme_toggle.js"></script>
+    <script src="recursos/componentes/js/snackbar.js"></script>
 </head>
 <body>
     <header class="rdm-topbar--position">
@@ -52,23 +53,20 @@ function escaparTextoDetalle(string $valor): string
             <?php
                 $tipoMensaje = is_array($mensaje) ? (string) ($mensaje['tipo'] ?? 'exito') : 'exito';
                 $textoMensaje = is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje;
-                $iconoMensaje = match ($tipoMensaje) {
-                    'exito' => 'check_circle',
-                    'error' => 'error',
-                    'advertencia' => 'warning',
-                    default => 'info',
-                };
             ?>
-            <aside class="rdm-alert rdm-alert--<?= escaparTextoDetalle($tipoMensaje) ?>" role="status" aria-live="polite">
-                <div class="rdm-alert--icon">
-                    <span class="material-symbols-rounded"><?= $iconoMensaje ?></span>
-                </div>
-                <div class="rdm-alert--body">
-                    <p class="rdm-sys-typography--body-large">
-                        <?= escaparTextoDetalle($textoMensaje) ?>
-                    </p>
-                </div>
-            </aside>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    if (typeof window.rdmShowSnackbar === 'function') {
+                        window.rdmShowSnackbar(
+                            <?= json_encode($textoMensaje, JSON_UNESCAPED_UNICODE) ?>,
+                            null,
+                            null,
+                            3200,
+                            <?= json_encode($tipoMensaje, JSON_UNESCAPED_UNICODE) ?>
+                        );
+                    }
+                });
+            </script>
         <?php endif; ?>
 
         <h1 class="rdm-sys-typography--display-medium">Detalle del usuario</h1>
