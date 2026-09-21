@@ -7,8 +7,6 @@ Autor: Danny Estrada
 /* list container */
 .rdm-list--container {
     display: flex;
-    color: inherit;
-    text-decoration: none;
     justify-content: space-between;
     padding: 1em 1em;
     background-color: var(--bg-color1);
@@ -86,16 +84,20 @@ Autor: Danny Estrada
     background-color: var(--bg-color1);
 }
 
+.rdm-list--container:has(> .rdm-list--body > .rdm-sys-typography--body-medium:last-child) {
+    align-items: center;
+}
+
     /* body headline */
     .rdm-list--body-headline {
-        margin: 0.09em 0em ;
+        margin: 0;
         background-color: var(--bg-color2);
 
     }
 
     /* body suporting text */
     .rdm-list--body-suporting-text {
-        margin: 0.04em 0em ;
+        margin: 0;
         color: var(--md-sys-color-on-surface-variant);
         background-color: var(--bg-color2);
 
