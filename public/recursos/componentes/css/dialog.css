@@ -1,0 +1,76 @@
+/*
+CSS para ManGoApp
+DIALOG
+Autor: Danny Estrada
+*/
+
+.rdm-dialog--page {
+	padding-bottom: 2em;
+}
+
+.rdm-dialog--trigger {
+	display: inline-flex;
+	margin-top: 1em;
+}
+
+.rdm-dialog--backdrop {
+	position: fixed;
+	inset: 0;
+	padding: 1.5em;
+	background-color: rgba(0, 0, 0, 0.45);
+	backdrop-filter: blur(4px);
+	touch-action: none;
+	overscroll-behavior: none;
+	z-index: 3000;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.18s ease;
+}
+
+html[data-theme="dark"] .rdm-dialog--backdrop {
+	background-color: rgba(255, 255, 255, 0.06);
+}
+
+html.rdm-dialog-open,
+body.rdm-dialog-open {
+	overscroll-behavior: none;
+}
+
+.rdm-dialog--container {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: min(calc(100vw - 2rem), 28rem);
+	margin: 0;
+	display: block;
+	z-index: 3001;
+}
+
+.rdm-dialog--panel {
+	width: 100%;
+	transform: translateY(0.5rem) scale(0.98);
+	transition: transform 0.18s ease;
+	will-change: transform;
+}
+
+.rdm-dialog--backdrop.is-open {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+
+.rdm-dialog--backdrop.is-open .rdm-dialog--panel {
+	transform: translateY(0) scale(1);
+}
+
+.rdm-dialog--card {
+	width: 100%;
+	margin: 0;
+}
+
+@media (max-width: 480px) {
+	.rdm-dialog--backdrop {
+		padding: 1em;
+	}
+}
