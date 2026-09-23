@@ -20,3 +20,7 @@ Thumbs.db
 # Imágenes de perfil subidas por los usuarios
 /public/uploads/usuarios/*
 !/public/uploads/usuarios/.gitkeep
+
+# Imágenes de locales subidas por administradores
+/public/uploads/locales/*
+!/public/uploads/locales/.gitkeep

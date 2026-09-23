@@ -137,6 +137,9 @@ $rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/im
             <article class="rdm-card--elevated">
                 <div class="rdm-card--body">
                     <h2 class="rdm-sys-typography--display-small">Configuración</h2>
+                    <p class="rdm-sys-typography--body-large">
+                        Accede a los módulos administrativos y a los puntos de operación más importantes.
+                    </p>
                 </div>
 
                 <div class="rdm-card--action-left">
@@ -148,6 +151,21 @@ $rutaImagenPerfil = (string) ($usuarioAutenticado['foto_perfil'] ?: 'recursos/im
                                 </div>
                             </div>
                         </button>
+
+                        <?php if (!empty($esAdministrador)): ?>
+                            <button class="rdm-button--outlined" type="button" onclick="window.location.href='index.php?accion=locales';">
+                                <div class="rdm-button--container">
+                                    <div class="rdm-button--media">
+                                        <div class="rdm-button--icon">
+                                            <span class="material-symbols-rounded">storefront</span>
+                                        </div>
+                                    </div>
+                                    <div class="rdm-button--body">
+                                        <span class="rdm-sys-typography--label-large">Locales</span>
+                                    </div>
+                                </div>
+                            </button>
+                        <?php endif; ?>
                     </p>
                 </div>
             </article>

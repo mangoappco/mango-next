@@ -9,11 +9,17 @@ namespace Mango\Core;
 // Importa el controlador que coordina la consulta de usuarios.
 use Mango\Controladores\ControladorUsuarios;
 
+// Importa el controlador que coordina los locales y puntos de venta.
+use Mango\Controladores\ControladorLocales;
+
 // Importa el controlador que coordina la autenticación.
 use Mango\Controladores\ControladorLogin;
 
 // Importa el modelo que trabaja con la tabla usuarios.
 use Mango\Modelos\ModeloUsuario;
+
+// Importa el modelo que trabaja con la tabla locales.
+use Mango\Modelos\ModeloLocal;
 
 // Representa el punto de coordinación principal de la aplicación.
 final class Application
@@ -75,6 +81,9 @@ final class Application
         // Crea el modelo y le entrega la conexión que necesita.
         $modeloUsuario = new ModeloUsuario($database->connection());
 
+        // Crea el modelo que gestiona los puntos de venta.
+        $modeloLocal = new ModeloLocal($database->connection());
+
         // Crea el servicio que se encargará de guardar imágenes de usuarios.
         $servicioArchivos = new ServicioArchivos();
 
@@ -83,6 +92,9 @@ final class Application
 
         // Crea el controlador y le entrega el modelo correspondiente.
         $controladorUsuarios = new ControladorUsuarios($modeloUsuario, $servicioArchivos);
+
+        // Crea el controlador que gestiona el CRUD de locales.
+        $controladorLocales = new ControladorLocales($modeloLocal, $servicioArchivos);
 
         // Crea el controlador que validará las credenciales del login.
         $controladorLogin = new ControladorLogin($modeloUsuario, $servicioCorreo);
@@ -215,6 +227,7 @@ final class Application
         if ($accion === 'bienvenida') {
             // Obtiene los datos seguros guardados durante el login.
             $usuarioAutenticado = $_SESSION['usuario'];
+            $esAdministrador = $this->esAdministrador();
 
             // Recupera el mensaje temporal de una operación anterior.
             $mensaje = $this->obtenerMensaje();
@@ -555,6 +568,234 @@ final class Application
 
             // Carga la vista de confirmación.
             require $rootPath . '/src/Vistas/usuarios/reactivar.php';
+            return;
+        }
+
+        // Muestra el listado de locales cuando se solicita el módulo correspondiente.
+        if ($accion === 'locales') {
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
+            $busqueda = trim((string) ($_GET['buscar'] ?? ''));
+            $esAdministrador = $this->esAdministrador();
+            $usuarioAutenticado = $_SESSION['usuario'];
+            $mensaje = $this->obtenerMensaje();
+            $locales = $controladorLocales->index($busqueda);
+
+            require $rootPath . '/src/Vistas/locales/index.php';
+            return;
+        }
+
+        // Permite crear un nuevo local únicamente a administradores.
+        if ($accion === 'crear-local') {
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
+            $errores = [];
+            $datos = [];
+            $marcas = $controladorLocales->obtenerMarcas();
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } else {
+                    $resultado = $controladorLocales->guardar(
+                        $_POST,
+                        $_FILES['imagen'] ?? null,
+                        $rootPath
+                    );
+                    $errores = $resultado['errores'];
+                    $datos = $resultado['datos'];
+                }
+
+                if ($errores === []) {
+                    $modeloUsuario->registrarActividad(
+                        (int) $_SESSION['usuario']['id'],
+                        (string) $_SESSION['usuario']['correo'],
+                        'local_creado'
+                    );
+
+                    $this->establecerMensaje('exito', 'Local creado correctamente.');
+                    header('Location: index.php?accion=locales');
+                    exit;
+                }
+            }
+
+            require $rootPath . '/src/Vistas/locales/crear.php';
+            return;
+        }
+
+        // Muestra el detalle de un local concreto.
+        if ($accion === 'ver-local') {
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
+            $id = (int) ($_GET['id'] ?? 0);
+            $local = $controladorLocales->obtener($id);
+
+            if ($local === null) {
+                http_response_code(404);
+                require $rootPath . '/src/Vistas/errores/404.php';
+                return;
+            }
+
+            $mensaje = $this->obtenerMensaje();
+            $esAdministrador = true;
+            $usuarioAutenticado = $_SESSION['usuario'];
+
+            require $rootPath . '/src/Vistas/locales/detalle.php';
+            return;
+        }
+
+        // Permite editar un local únicamente a administradores.
+        if ($accion === 'editar-local') {
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
+            $id = (int) ($_GET['id'] ?? 0);
+            $local = $controladorLocales->obtener($id);
+
+            if ($local === null) {
+                http_response_code(404);
+                require $rootPath . '/src/Vistas/errores/404.php';
+                return;
+            }
+
+            $errores = [];
+            $datos = $local;
+            $marcas = $controladorLocales->obtenerMarcas();
+            $esAdministrador = true;
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } else {
+                    $resultado = $controladorLocales->actualizar(
+                        $id,
+                        $_POST,
+                        $_FILES['imagen'] ?? null,
+                        $rootPath,
+                        isset($datos['imagen']) ? (string) $datos['imagen'] : null,
+                        isset($_POST['eliminar_imagen']) && $_POST['eliminar_imagen'] === '1'
+                    );
+                    $errores = $resultado['errores'];
+                    $datos = array_merge($datos, $resultado['datos']);
+                }
+
+                if ($errores === []) {
+                    $modeloUsuario->registrarActividad(
+                        (int) $_SESSION['usuario']['id'],
+                        (string) $_SESSION['usuario']['correo'],
+                        'local_actualizado'
+                    );
+
+                    $this->establecerMensaje('exito', 'Local actualizado correctamente.');
+                    header('Location: index.php?accion=ver-local&id=' . $id);
+                    exit;
+                }
+            }
+
+            require $rootPath . '/src/Vistas/locales/editar.php';
+            return;
+        }
+
+        // Desactiva un local únicamente cuando la petición utiliza POST.
+        if ($accion === 'desactivar-local') {
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
+            $id = (int) ($_GET['id'] ?? 0);
+            $local = $controladorLocales->obtener($id);
+
+            if ($local === null) {
+                http_response_code(404);
+                require $rootPath . '/src/Vistas/errores/404.php';
+                return;
+            }
+
+            $errores = [];
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } elseif (!$controladorLogin->verificarContrasenaActual(
+                    (int) $_SESSION['usuario']['id'],
+                    (string) ($_POST['contrasena_actual'] ?? '')
+                )) {
+                    $errores[] = 'La contraseña actual no es correcta.';
+                }
+
+                if ($errores === []) {
+                    $controladorLocales->desactivar($id);
+                    $modeloUsuario->registrarActividad(
+                        (int) $_SESSION['usuario']['id'],
+                        (string) $_SESSION['usuario']['correo'],
+                        'local_desactivado'
+                    );
+
+                    $this->establecerMensaje('exito', 'Local desactivado correctamente.');
+                    header('Location: index.php?accion=ver-local&id=' . $id);
+                    exit;
+                }
+            }
+
+            require $rootPath . '/src/Vistas/locales/eliminar.php';
+            return;
+        }
+
+        // Reactiva un local únicamente cuando la petición utiliza POST.
+        if ($accion === 'reactivar-local') {
+            if (!$this->esAdministrador()) {
+                $this->mostrarAccesoDenegado($rootPath);
+                return;
+            }
+
+            $id = (int) ($_GET['id'] ?? 0);
+            $local = $controladorLocales->obtener($id);
+
+            if ($local === null) {
+                http_response_code(404);
+                require $rootPath . '/src/Vistas/errores/404.php';
+                return;
+            }
+
+            $errores = [];
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (!$this->tokenCsrfValido($_POST['token_csrf'] ?? null)) {
+                    $errores[] = 'La solicitud no es válida. Recarga el formulario e inténtalo de nuevo.';
+                } elseif (!$controladorLogin->verificarContrasenaActual(
+                    (int) $_SESSION['usuario']['id'],
+                    (string) ($_POST['contrasena_actual'] ?? '')
+                )) {
+                    $errores[] = 'La contraseña actual no es correcta.';
+                }
+
+                if ($errores === []) {
+                    $controladorLocales->reactivar($id);
+                    $modeloUsuario->registrarActividad(
+                        (int) $_SESSION['usuario']['id'],
+                        (string) $_SESSION['usuario']['correo'],
+                        'local_reactivado'
+                    );
+
+                    $this->establecerMensaje('exito', 'Local reactivado correctamente.');
+                    header('Location: index.php?accion=ver-local&id=' . $id);
+                    exit;
+                }
+            }
+
+            require $rootPath . '/src/Vistas/locales/reactivar.php';
             return;
         }
 
