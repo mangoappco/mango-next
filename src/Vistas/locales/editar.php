@@ -28,6 +28,7 @@ function formatearHoraLocalesEditar(?string $valor): string
     <script src="recursos/componentes/js/topbar_scroll.js"></script>
     <script src="recursos/componentes/js/theme_toggle.js"></script>
     <script src="recursos/componentes/js/textfield.js"></script>
+    <script src="recursos/componentes/js/fileinput.js"></script>
 </head>
 <body>
     <header class="rdm-topbar--position"><div class="rdm-topbar--small-container" id="topbar"><div class="rdm-topbar--media"><a href="index.php?accion=ver-local&id=<?= (int) $datos['id'] ?>"><div class="rdm-topbar--leading-navigation-icon"><span class="material-symbols-rounded">arrow_back</span></div></a></div><div class="rdm-topbar--body"><div class="rdm-sys-typography--title-large"><div class="rdm-topbar--body-headline">Locales</div></div></div><div class="rdm-topbar--action"><div class="rdm-topbar--trailing-icon" id="themeToggle" title="Cambiar tema"><span class="material-symbols-rounded" id="themeToggleIcon">dark_mode</span></div></div></div></header>
@@ -64,15 +65,24 @@ function formatearHoraLocalesEditar(?string $valor): string
             <h2 class="rdm-sys-typography--display-small">Imagen</h2>
             <div class="rdm-form--elevated"><div class="rdm-form--body">
                 <p><img src="<?= escaparTextoLocalesEditar((string) ($datos['imagen'] ?: 'recursos/img/avatar-default.svg')) ?>" alt="Imagen del local <?= escaparTextoLocalesEditar((string) $datos['nombre']) ?>" width="160"></p>
-                <p>
-                    <label class="rdm-button--outlined rdm-file-picker" for="imagen">
-                        <input type="file" id="imagen" name="imagen" class="rdm-file-picker-input" accept="image/jpeg,image/png">
-                        <span class="rdm-button--container">
-                            <span class="rdm-button--media"><span class="rdm-button--icon"><span class="material-symbols-rounded">add_a_photo</span></span></span>
-                            <span class="rdm-button--body"><span class="rdm-sys-typography--label-large">Seleccionar imagen</span></span>
-                        </span>
-                    </label>
-                </p>
+                <div class="rdm-fileinput--wrapper" data-fileinput id="fi_imagen">
+                    <div class="rdm-fileinput--container rdm-fileinput--outlined">
+                        <div class="rdm-fileinput--control">
+                            <div class="rdm-fileinput--leading-icon"><span class="material-symbols-rounded">image</span></div>
+                            <input class="rdm-fileinput--field" type="text" readonly placeholder=" " id="fi_imagen_display" aria-describedby="fi_imagen_help">
+                            <label class="rdm-fileinput--label" for="fi_imagen_display">Imagen del local</label>
+                            <button type="button" class="rdm-fileinput--trailing-icon" data-file-trigger aria-label="Subir archivo"><span class="material-symbols-rounded">cloud_upload</span></button>
+                            <button type="button" class="rdm-fileinput--trailing-icon" data-file-clear aria-label="Quitar archivo"><span class="material-symbols-rounded">close</span></button>
+                        </div>
+                    </div>
+                    <div class="rdm-fileinput--support">
+                        <span class="rdm-fileinput--support-text" id="fi_imagen_help">JPG o PNG, máx. 2 MB.</span>
+                        <span class="rdm-fileinput--support-counter"></span>
+                    </div>
+                    <input type="file" class="rdm-fileinput--hidden" id="fi_imagen_native" name="imagen" accept="image/jpeg,image/png" data-max-size="2097152">
+                    <div class="rdm-fileinput--preview"></div>
+                    <img class="rdm-fileinput--image-preview" alt="Vista previa">
+                </div>
                 <?php if (!empty($datos['imagen'])): ?><div class="rdm-checkbox--wrapper"><label class="rdm-checkbox--container"><input type="checkbox" class="rdm-checkbox--input" name="eliminar_imagen" value="1"><span class="rdm-checkbox--checkmark"></span><span class="rdm-checkbox--label">Eliminar imagen actual</span></label></div><?php endif; ?>
             </div></div>
 

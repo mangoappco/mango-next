@@ -20,6 +20,7 @@ function escaparTextoEdicion(string $valor): string
     <script src="recursos/componentes/js/topbar_scroll.js"></script>
     <script src="recursos/componentes/js/theme_toggle.js"></script>
     <script src="recursos/componentes/js/textfield.js"></script>
+    <script src="recursos/componentes/js/fileinput.js"></script>
 </head>
 <body>
     <header class="rdm-topbar--position">
@@ -183,28 +184,24 @@ function escaparTextoEdicion(string $valor): string
                     >
                 </p>
 
-                <input
-                    type="file"
-                    id="foto_perfil"
-                    name="foto_perfil"
-                    accept="image/jpeg,image/png"
-                    hidden
-                >
-
-                <p>
-                    <label class="rdm-button--outlined rdm-file-picker" for="foto_perfil">
-                        <span class="rdm-button--container">
-                            <span class="rdm-button--media">
-                                <span class="rdm-button--icon">
-                                    <span class="material-symbols-rounded">add_a_photo</span>
-                                </span>
-                            </span>
-                            <span class="rdm-button--body">
-                                <span class="rdm-sys-typography--label-large">Seleccionar imagen</span>
-                            </span>
-                        </span>
-                    </label>
-                </p>
+                <div class="rdm-fileinput--wrapper" data-fileinput id="fi_foto_perfil">
+                    <div class="rdm-fileinput--container rdm-fileinput--outlined">
+                        <div class="rdm-fileinput--control">
+                            <div class="rdm-fileinput--leading-icon"><span class="material-symbols-rounded">image</span></div>
+                            <input class="rdm-fileinput--field" type="text" readonly placeholder=" " id="fi_foto_perfil_display" aria-describedby="fi_foto_perfil_help">
+                            <label class="rdm-fileinput--label" for="fi_foto_perfil_display">Imagen de perfil</label>
+                            <button type="button" class="rdm-fileinput--trailing-icon" data-file-trigger aria-label="Subir archivo"><span class="material-symbols-rounded">cloud_upload</span></button>
+                            <button type="button" class="rdm-fileinput--trailing-icon" data-file-clear aria-label="Quitar archivo"><span class="material-symbols-rounded">close</span></button>
+                        </div>
+                    </div>
+                    <div class="rdm-fileinput--support">
+                        <span class="rdm-fileinput--support-text" id="fi_foto_perfil_help">JPG o PNG, máx. 2 MB.</span>
+                        <span class="rdm-fileinput--support-counter"></span>
+                    </div>
+                    <input type="file" class="rdm-fileinput--hidden" id="fi_foto_perfil_native" name="foto_perfil" accept="image/jpeg,image/png" data-max-size="2097152">
+                    <div class="rdm-fileinput--preview"></div>
+                    <img class="rdm-fileinput--image-preview" alt="Vista previa">
+                </div>
 
                 <?php if (!empty($datos['foto_perfil'])): ?>
                     <div class="rdm-checkbox--wrapper">
@@ -309,7 +306,6 @@ function escaparTextoEdicion(string $valor): string
             </button>
         </div>
     </form>
-
     </main>
 </body>
 </html>

@@ -28,6 +28,7 @@ Autor: Danny Estrada
 @import url(switches.css);
 @import url(dialog.css);
 @import url(snackbar.css);
+@import url(fileinput.css);
 
 
 /* Colores base de ripple por tema */

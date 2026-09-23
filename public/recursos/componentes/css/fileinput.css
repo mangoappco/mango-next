@@ -1,0 +1,340 @@
+/*
+CSS para ManGoApp
+FILE INPUT (MD3-inspired)
+Autor: Danny Estrada
+Adaptado de TextField + Material Design 3
+No existe File Input nativo en MD3: se compone de TextField readonly + Button + DropZone
+*/
+
+.rdm-fileinput--wrapper {
+  display: block;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.rdm-fileinput--container {
+  display: block;
+  width: 100%;
+}
+
+/* Outlined - mismo shape que textfield */
+.rdm-fileinput--outlined {
+  position: relative;
+  border-radius: 0.25em;
+  background-color: transparent;
+  border: 0.0625em solid var(--md-sys-color-outline);
+  color: var(--md-sys-color-on-surface);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+/* Hover */
+.rdm-fileinput--outlined:hover:not(:focus-within):not(.is-disabled) {
+  border-color: var(--md-sys-color-on-surface);
+}
+
+/* Control */
+.rdm-fileinput--control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  min-height: 3.5em;
+  padding: 0 0.75em;
+}
+
+.rdm-fileinput--control:has(.rdm-fileinput--leading-icon) {
+  padding-left: 0.75em;
+}
+.rdm-fileinput--control:has(.rdm-fileinput--trailing-icon) {
+  padding-right: 0.75em;
+}
+
+/* Leading / Trailing icons */
+.rdm-fileinput--leading-icon,
+.rdm-fileinput--trailing-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-sys-color-on-surface-variant);
+  flex-shrink: 0;
+  width: 1.5em;
+  height: 1.5em;
+  cursor: pointer;
+  transition: color 160ms ease;
+  border: none;
+  background: transparent;
+  padding: 0;
+  outline: none !important;
+}
+
+.rdm-fileinput--trailing-icon:hover,
+.rdm-fileinput--leading-icon:hover {
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Igual que textfield Enabled (empty): sin borde/sombra de button.css */
+.rdm-fileinput--trailing-icon,
+.rdm-fileinput--trailing-icon:hover,
+.rdm-fileinput--trailing-icon:active,
+.rdm-fileinput--trailing-icon:focus,
+.rdm-fileinput--trailing-icon:focus-visible,
+.rdm-fileinput--leading-icon,
+.rdm-fileinput--leading-icon:hover,
+.rdm-fileinput--leading-icon:active {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  outline: none !important;
+  border: none !important;
+}
+
+/* Upload siempre visible cuando no hay archivo, clear solo con contenido */
+.rdm-fileinput--trailing-icon[data-file-trigger] {
+  display: flex;
+}
+.rdm-fileinput--trailing-icon[data-file-clear] {
+  display: none;
+}
+.rdm-fileinput--trailing-icon[data-file-clear].show {
+  display: flex;
+}
+/* Cuando hay archivo, ocultar upload y mostrar clear */
+.rdm-fileinput--wrapper.has-file .rdm-fileinput--trailing-icon[data-file-trigger] {
+  display: none;
+}
+.rdm-fileinput--wrapper.has-file .rdm-fileinput--trailing-icon[data-file-clear].show {
+  display: flex;
+}
+
+/* Field readonly que muestra nombre */
+.rdm-fileinput--field {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  outline: none !important;
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font: inherit;
+  padding: 0;
+  line-height: 1.5em;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+  caret-color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rdm-fileinput--field::placeholder {
+  color: transparent;
+}
+
+/* Label siempre flotante (minimalista, sin transición de placeholder) */
+.rdm-fileinput--label {
+  position: absolute;
+  left: 1em;
+  top: -0.8em;
+  transform: scale(0.85);
+  transform-origin: left top;
+  transition: color 160ms ease, background-color 160ms ease;
+  color: var(--md-sys-color-on-surface-variant);
+  pointer-events: none;
+  background-color: var(--md-sys-color-surface);
+  padding: 0.25em 0.25em;
+  z-index: 0;
+}
+.rdm-fileinput--control:has(.rdm-fileinput--leading-icon) .rdm-fileinput--label {
+  left: 1em;
+}
+
+/* Focus: solo cambia color del label */
+.rdm-fileinput--wrapper:focus-within .rdm-fileinput--label {
+  color: var(--md-sys-color-primary);
+}
+.rdm-fileinput--outlined:focus-within {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: inset 0 0 0 0.0625em var(--md-sys-color-primary);
+}
+
+/* Soporte */
+.rdm-fileinput--support {
+  padding: 0.25em 1em 0;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.875em;
+  margin-top: 0.25em;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+.rdm-fileinput--support-text {
+  flex: 1;
+}
+.rdm-fileinput--support-counter {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Error */
+.rdm-fileinput--wrapper.is-error .rdm-fileinput--label,
+.rdm-fileinput--wrapper.is-error .rdm-fileinput--support {
+  color: var(--md-sys-color-error);
+}
+.rdm-fileinput--wrapper.is-error .rdm-fileinput--outlined {
+  border-color: var(--md-sys-color-error);
+}
+.rdm-fileinput--wrapper.is-error .rdm-fileinput--outlined:focus-within {
+  box-shadow: inset 0 0 0 0.0625em var(--md-sys-color-error);
+}
+
+/* Disabled */
+.rdm-fileinput--wrapper.is-disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+.rdm-fileinput--wrapper.is-disabled .rdm-fileinput--outlined {
+  opacity: 0.65;
+}
+.rdm-fileinput--field:disabled {
+  cursor: not-allowed;
+}
+
+/* Hidden native input */
+.rdm-fileinput--hidden {
+  display: none !important;
+}
+
+/* Preview mini chips / list */
+.rdm-fileinput--preview {
+  margin-top: 0.75em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+.rdm-fileinput--chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  border-radius: 2em;
+  padding: 0.35em 0.75em 0.35em 0.5em;
+  font-size: 0.875em;
+  max-width: 100%;
+}
+.rdm-fileinput--chip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  flex-shrink: 0;
+}
+.rdm-fileinput--chip-icon .material-symbols-rounded {
+  font-size: 1em;
+}
+.rdm-fileinput--chip-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 14em;
+}
+.rdm-fileinput--chip-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25em;
+  height: 1.25em;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  padding: 0;
+}
+.rdm-fileinput--chip-remove:hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Preview imagen grande (dropzone o single image) */
+.rdm-fileinput--image-preview {
+  margin-top: 0.75em;
+  width: 100%;
+  max-height: 14em;
+  border-radius: 0.75em;
+  object-fit: cover;
+  display: none;
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+.rdm-fileinput--image-preview.show {
+  display: block;
+}
+
+/* DROP ZONE */
+.rdm-fileinput--dropzone {
+  position: relative;
+  border-radius: 0.75em;
+  border: 1.5px dashed var(--md-sys-color-outline);
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 2em 1.25em;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75em;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+  min-height: 10em;
+  box-sizing: border-box;
+}
+.rdm-fileinput--dropzone:hover {
+  border-color: var(--md-sys-color-primary);
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 4%, transparent);
+  color: var(--md-sys-color-on-surface);
+}
+.rdm-fileinput--dropzone.is-dragover {
+  border-color: var(--md-sys-color-primary);
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface));
+  color: var(--md-sys-color-primary);
+  border-style: solid;
+}
+.rdm-fileinput--dropzone.is-disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+.rdm-fileinput--dropzone.is-error {
+  border-color: var(--md-sys-color-error);
+  color: var(--md-sys-color-error);
+  background-color: color-mix(in srgb, var(--md-sys-color-error) 6%, transparent);
+}
+.rdm-fileinput--dropzone-icon {
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rdm-fileinput--dropzone-icon .material-symbols-rounded {
+  font-size: 1.75em;
+}
+.rdm-fileinput--dropzone-title {
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+}
+.rdm-fileinput--dropzone-subtitle {
+  font-size: 0.875em;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.rdm-fileinput--dropzone.has-preview {
+  padding-bottom: 1em;
+}
