@@ -17,6 +17,7 @@ function escaparTextoLocales(string $valor): string
     <script src="recursos/componentes/js/topbar_scroll.js"></script>
     <script src="recursos/componentes/js/theme_toggle.js"></script>
     <script src="recursos/componentes/js/search.js"></script>
+    <script src="recursos/componentes/js/locales_search.js"></script>
     <script src="recursos/componentes/js/snackbar.js"></script>
 </head>
 <body>
