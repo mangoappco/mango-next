@@ -23,8 +23,8 @@ function escaparTextoLocalesDetalle(string $valor): string
 
     <main class="rdm--contenedor-toolbar">
         <?php if ($mensaje !== null): ?>
-            <?php $tipoMensaje = is_array($mensaje) ? (string) ($mensaje['tipo'] ?? 'exito') : 'exito'; $textoMensaje = is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje; ?>
-            <script>document.addEventListener('DOMContentLoaded', function () { if (typeof window.rdmShowSnackbar === 'function') { window.rdmShowSnackbar(<?= json_encode($textoMensaje, JSON_UNESCAPED_UNICODE) ?>, null, null, 3200, <?= json_encode($tipoMensaje, JSON_UNESCAPED_UNICODE) ?>); } });</script>
+            <?php $tipoMensaje = is_array($mensaje) ? (string) ($mensaje['tipo'] ?? 'exito') : 'exito'; $textoMensaje = is_array($mensaje) ? (string) ($mensaje['texto'] ?? '') : (string) $mensaje; $mapaTipos = ['exito' => 'success', 'error' => 'error', 'advertencia' => 'warning', 'info' => 'info', 'success' => 'success', 'warning' => 'warning', 'neutral' => 'neutral']; $tipoSnackbar = $mapaTipos[$tipoMensaje] ?? 'neutral'; ?>
+            <script>document.addEventListener('DOMContentLoaded', function () { if (window.RDM && RDM.snackbar && typeof RDM.snackbar.show === 'function') { RDM.snackbar.show({message: <?= json_encode($textoMensaje, JSON_UNESCAPED_UNICODE) ?>, type: <?= json_encode($tipoSnackbar, JSON_UNESCAPED_UNICODE) ?>, duration: 4000}); } });</script>
         <?php endif; ?>
 
         <h1 class="rdm-sys-typography--display-medium">Detalle del local</h1>
