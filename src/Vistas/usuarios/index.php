@@ -161,7 +161,7 @@ function escaparHtml(string $valor): string
                 <div class="rdm-button--container">
                     <div class="rdm-button--media">
                         <div class="rdm-button--icon">
-                            <span class="material-symbols-rounded">person_add</span>
+                            <span class="material-symbols-rounded">add</span>
                         </div>
                     </div>
                     <div class="rdm-button--body">

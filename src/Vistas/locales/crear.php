@@ -133,7 +133,7 @@ function escaparTextoLocalesCrear(string $valor): string
                 </div>
             </div>
 
-            <div class="rdm-button--fab-position"><button class="rdm-button--fab" type="submit" title="Guardar local" aria-label="Guardar local"><div class="rdm-button--container"><div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">save</span></div></div><div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Guardar local</span></div></div></button></div>
+            <div class="rdm-button--fab-position"><button class="rdm-button--fab" type="submit" title="Guardar local" aria-label="Guardar local"><div class="rdm-button--container"><div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">check</span></div></div><div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Guardar local</span></div></div></button></div>
         </form>
     </main>
 </body>

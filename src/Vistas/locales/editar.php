@@ -84,7 +84,7 @@ function formatearHoraLocalesEditar(?string $valor): string
                 <div class="rdm-form--elevated"><div class="rdm-form--body"><h3 class="rdm-sys-typography--title-large">Local inactivo</h3><p class="rdm-sys-typography--body-large">El local podrá volver a aparecer en operación después de reactivarlo.</p></div><div class="rdm-form--action-left"><p><button class="rdm-button--filled" type="button" onclick="window.location.href='index.php?accion=reactivar-local&id=<?= (int) $datos['id'] ?>';"><div class="rdm-button--container"><div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">store</span></div></div><div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Reactivar</span></div></div></button></p></div></div>
             <?php endif; ?>
 
-            <div class="rdm-button--fab-position"><button class="rdm-button--fab" type="submit" title="Guardar cambios" aria-label="Guardar cambios"><div class="rdm-button--container"><div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">save</span></div></div><div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Guardar cambios</span></div></div></button></div>
+            <div class="rdm-button--fab-position"><button class="rdm-button--fab" type="submit" title="Guardar cambios" aria-label="Guardar cambios"><div class="rdm-button--container"><div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">check</span></div></div><div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Guardar cambios</span></div></div></button></div>
         </form>
     </main>
 </body>

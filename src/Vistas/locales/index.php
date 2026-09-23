@@ -103,7 +103,7 @@ function escaparTextoLocales(string $valor): string
             <div class="rdm-button--fab-position">
                 <button class="rdm-button--fab" type="button" title="Crear local" aria-label="Crear local" onclick="window.location.href='index.php?accion=crear-local';">
                     <div class="rdm-button--container">
-                        <div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">storefront</span></div></div>
+                        <div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">add</span></div></div>
                         <div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Crear local</span></div>
                     </div>
                 </button>
