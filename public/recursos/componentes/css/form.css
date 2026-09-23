@@ -65,6 +65,19 @@ Autor: Danny Estrada
   margin-right: 0;
 }
 
+/* Modificador para apilar múltiples cards dentro del mismo form */
+.rdm-form--stacked {
+  flex-direction: column;
+  gap: 1em;
+}
+
+.rdm-form--stacked .rdm-form--elevated,
+.rdm-form--stacked .rdm-form--filled,
+.rdm-form--stacked .rdm-form--outlined,
+.rdm-form--stacked .rdm-form--flat {
+  margin-right: 0;
+}
+
 /* Anatomy */
 
 /* Media */
