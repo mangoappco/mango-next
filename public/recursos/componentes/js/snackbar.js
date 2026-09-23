@@ -174,6 +174,29 @@
     dismiss: dismiss
   };
 
+  // Compatibilidad legacy: window.rdmShowSnackbar(msg, actionText, onAction, duration, tipo)
+  // Mapea tipos viejos (exito) a nuevos (success) y delega a show().
+  window.rdmShowSnackbar = function (message, actionText, onAction, duration, tipo) {
+    const mapaTipos = {
+      exito: 'success',
+      success: 'success',
+      error: 'error',
+      advertencia: 'warning',
+      warning: 'warning',
+      info: 'info',
+      neutral: 'neutral'
+    };
+    const type = mapaTipos[tipo] || 'neutral';
+    const dur = typeof duration === 'number' && duration > 0 ? duration : 4000;
+    show({
+      message: message || '',
+      type: type,
+      duration: dur,
+      actionText: actionText || null,
+      onAction: typeof onAction === 'function' ? onAction : null
+    });
+  };
+
   // Soporte para disparadores declarativos mediante data-snackbar-*
   function initDeclarativeTriggers() {
     document.addEventListener('click', function (event) {
