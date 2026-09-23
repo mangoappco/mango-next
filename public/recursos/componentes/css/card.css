@@ -12,10 +12,10 @@ Autor: Danny Estrada
     margin-bottom: 1em;
     box-sizing: border-box;
   }
-  
+
 /* Elevation Base */
 .rdm-card--elevated,
-.rdm-card--filled, 
+.rdm-card--filled,
 .rdm-card--outlined,
 .rdm-card--flat {
   border-radius: 0.75em;
@@ -30,14 +30,14 @@ Autor: Danny Estrada
   background-color: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
   border: solid 0.0625em rgba(0, 0, 0, 0);
-  box-shadow: 
+  box-shadow:
     0px 3px 1px -2px rgba(0, 0, 0, 0.2),
     0px 2px 2px 0px rgba(0, 0, 0, 0.14),
     0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 }
 
 /* Filled Card */
-.rdm-card--filled {  
+.rdm-card--filled {
   background-color: var(--md-sys-color-surface-variant);
   color: var(--md-sys-color-on-surface-variant);
   border: solid 0.0625em rgba(0, 0, 0, 0);
@@ -76,7 +76,7 @@ Autor: Danny Estrada
   width: 100%;
   min-height: 15em;
   border-radius: 0.75em;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   padding: 0em 1em;
   background-position: center;
   background-repeat: no-repeat;
@@ -95,20 +95,25 @@ Autor: Danny Estrada
 }
 
 /*Action*/
-.rdm-card--action-left, 
-.rdm-card--action-center, 
-.rdm-card--action-right { 
+.rdm-card--action-left,
+.rdm-card--action-center,
+.rdm-card--action-right {
   padding: 0em 1em;
   text-align: left;
   box-sizing: border-box;
 }
 
-.rdm-card--action-center {   
+.rdm-card--action-center {
   text-align: center;
 }
 
-.rdm-card--action-right {   
+.rdm-card--action-right {
   text-align: right;
 }
 
-
+/* Espaciado si el botón no está contenido en <p> */
+.rdm-card--action-left > button,
+.rdm-card--action-center > button,
+.rdm-card--action-right > button {
+  margin-bottom: 1em;
+}

@@ -7,9 +7,9 @@ Autor: Danny Estrada
 /*Button styles*/
 button{
     border-radius: 20em;
-    border: none;
+    border: none; 
     display: inline-block;
-    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; 
     vertical-align: middle;
     cursor: pointer;
     user-select: none;
@@ -25,7 +25,7 @@ button{
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    padding: 0.7em 1.5em;
+    padding: 0.7em 1.5em;    
 }
 
 /*Media elements*/
@@ -35,7 +35,7 @@ button{
     flex-grow: 0;
     margin-right: 0.5em;
     margin-left: -0.5em;
-    background-color: var(--bg-color1);
+    background-color: var(--bg-color1);    
 }
 
 /*Media FAB elements*/
@@ -45,7 +45,7 @@ button{
     flex-grow: 0;
     margin-right: -1em;
     margin-left: -1em;
-    background-color: var(--bg-color1);
+    background-color: var(--bg-color1);    
 }
 
 /*Button icon*/
@@ -63,7 +63,7 @@ button{
     }
 
 /* Cuerpo de la lista */
-.rdm-button--body {
+.rdm-button--body {   
     flex-grow: 0;
     align-self: center;
     background-color: var(--bg-color1);
@@ -83,7 +83,7 @@ button{
 
 
 /*FAB position*/
-.rdm-button--fab-position{
+.rdm-button--fab-position{    
     bottom: 1.5em;
     margin: 0;
     position: fixed;
@@ -116,8 +116,8 @@ button{
     border-radius: 0.75em;
 }
 
-.rdm-button--fab-small .rdm-button--container {
-    padding: 0;
+.rdm-button--fab-small .rdm-button--container {    
+    padding: 0;    
 }
     /* material design icons */
     .rdm-button--fab-small .material-symbols-rounded, .rdm-button--fab-small .material-symbols-outlined {
@@ -163,68 +163,6 @@ button{
     background-color: transparent;
     color: var(--md-sys-color-primary);
     border: none;
-}
-
-/*File picker labels*/
-.rdm-file-picker {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    width: fit-content;
-    min-height: 3.5em;
-    box-sizing: border-box;
-    text-decoration: none;
-    cursor: pointer;
-    border-radius: 0.25em;
-    background-color: transparent;
-    color: var(--md-sys-color-on-surface);
-    border: 0.0625em solid var(--md-sys-color-outline);
-    transition: border-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
-    overflow: hidden;
-}
-
-.rdm-file-picker .rdm-button--container {
-    width: 100%;
-    padding: 0.5em 0.75em;
-    gap: 1em;
-}
-
-.rdm-file-picker .rdm-button--media,
-.rdm-file-picker .rdm-button--body,
-.rdm-file-picker .rdm-button--icon {
-    background-color: transparent;
-}
-
-.rdm-file-picker .rdm-button--media {
-    margin-left: 0;
-    margin-right: 0.5em;
-}
-
-.rdm-file-picker .rdm-button--icon {
-    align-items: center;
-}
-
-.rdm-file-picker-input {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.rdm-file-picker:hover {
-    border-color: var(--md-sys-color-on-surface);
-}
-
-.rdm-file-picker:focus-within {
-    border-color: var(--md-sys-color-primary);
-    box-shadow: inset 0 0 0 0.0625em var(--md-sys-color-primary);
-}
-
-.rdm-file-picker:active {
-    border-color: var(--md-sys-color-primary);
-    box-shadow: inset 0 0 0 0.0625em var(--md-sys-color-primary);
 }
 
 
@@ -312,3 +250,4 @@ html[data-theme="light"] .rdm-button--fab-small:hover::after { background-color:
 html[data-theme="light"] .rdm-button--fab-small:active::after { background-color: rgba(0,0,0,0.10); opacity: 1; }
 html[data-theme="dark"]  .rdm-button--fab-small:hover::after { background-color: rgba(255,255,255,0.10); opacity: 1; }
 html[data-theme="dark"]  .rdm-button--fab-small:active::after { background-color: rgba(255,255,255,0.14); opacity: 1; }
+

@@ -26,18 +26,31 @@ Autor: Danny Estrada
 @import url(checkbox.css);
 @import url(radiobutton.css);
 @import url(switches.css);
-@import url(snackbar.css);
 @import url(dialog.css);
+@import url(snackbar.css);
+
 
 /* Colores base de ripple por tema */
 :root {
 	--rdm-ripple-color: rgba(0, 0, 0, 0.14);
+	--md-sys-color-surface-container-low: #F7F2FA;
+	--md-sys-color-surface-container: #F3EDF7;
+	--md-sys-color-surface-container-high: #ECE6F0;
+	--md-sys-color-surface-container-highest: #E6E0E9;
 }
 html[data-theme="light"] {
 	--rdm-ripple-color: rgba(0, 0, 0, 0.14);
+	--md-sys-color-surface-container-low: #F7F2FA;
+	--md-sys-color-surface-container: #F3EDF7;
+	--md-sys-color-surface-container-high: #ECE6F0;
+	--md-sys-color-surface-container-highest: #E6E0E9;
 }
 html[data-theme="dark"] {
 	--rdm-ripple-color: rgba(255, 255, 255, 0.20);
+	--md-sys-color-surface-container-low: #1D1B20;
+	--md-sys-color-surface-container: #211F26;
+	--md-sys-color-surface-container-high: #2B2930;
+	--md-sys-color-surface-container-highest: #36343B;
 }
 
 :root {
@@ -87,7 +100,8 @@ html.theme-transition, body.theme-transition {
 .theme-transition .rdm-button--fab,
 .theme-transition .rdm-button--fab-small,
 .theme-transition .rdm-switch--track,
-.theme-transition .rdm-switch--handle {
+.theme-transition .rdm-switch--handle,
+.theme-transition .rdm-dialog--container {
 	transition: background-color 400ms ease, color 400ms ease, border-color 400ms ease, box-shadow 400ms ease;
 }
 

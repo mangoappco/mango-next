@@ -1,124 +1,67 @@
-(function(){
-	let openerButton = null;
-	let activeDialog = null;
-	let closeTimer = null;
-	let previousHtmlOverflow = '';
-	let previousBodyOverflow = '';
+/**
+ * JavaScript para ManGoApp
+ * DIALOG COMPONENT (MD3)
+ * Autor: Danny Estrada
+ */
 
-	function getFocusableElements(container) {
-		return Array.from(container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
-			.filter(element => !element.hasAttribute('disabled') && element.offsetParent !== null);
-	}
+(function () {
+  'use strict';
 
-	function lockScroll() {
-		previousHtmlOverflow = document.documentElement.style.overflow;
-		previousBodyOverflow = document.body.style.overflow;
-		document.documentElement.style.overflow = 'hidden';
-		document.body.style.overflow = 'hidden';
-		document.documentElement.classList.add('rdm-dialog-open');
-		document.body.classList.add('rdm-dialog-open');
-	}
+  function initDialogs() {
+    // Abrir diálogo mediante data-dialog-target
+    document.addEventListener('click', function (event) {
+      const trigger = event.target.closest('[data-dialog-target]');
+      if (!trigger) return;
 
-	function unlockScroll() {
-		document.documentElement.style.overflow = previousHtmlOverflow;
-		document.body.style.overflow = previousBodyOverflow;
-		document.documentElement.classList.remove('rdm-dialog-open');
-		document.body.classList.remove('rdm-dialog-open');
-	}
+      event.preventDefault();
+      const targetSelector = trigger.getAttribute('data-dialog-target');
+      const dialog = document.querySelector(
+        targetSelector.startsWith('#') ? targetSelector : '#' + targetSelector
+      );
 
-	function openDialog(dialog) {
-		if (!dialog) {
-			return;
-		}
+      if (dialog && typeof dialog.showModal === 'function') {
+        dialog.showModal();
+        dialog.dispatchEvent(new CustomEvent('dialog-open', { bubbles: true, detail: { trigger } }));
+      }
+    });
 
-		activeDialog = dialog;
-		openerButton = document.activeElement;
-		lockScroll();
-		dialog.hidden = false;
-		dialog.setAttribute('aria-hidden', 'false');
-		requestAnimationFrame(() => dialog.classList.add('is-open'));
+    // Cerrar diálogo mediante data-dialog-close
+    document.addEventListener('click', function (event) {
+      const closeBtn = event.target.closest('[data-dialog-close]');
+      if (!closeBtn) return;
 
-		const focusableElements = getFocusableElements(dialog);
-		const initialFocus = dialog.querySelector('[data-dialog-initial-focus]') || focusableElements[0];
-		if (initialFocus) {
-			initialFocus.focus();
-		}
-	}
+      const dialog = closeBtn.closest('dialog') || (closeBtn.dataset.dialogClose ? document.querySelector(closeBtn.dataset.dialogClose) : null);
+      if (dialog && typeof dialog.close === 'function' && dialog.open) {
+        dialog.close();
+        dialog.dispatchEvent(new CustomEvent('dialog-close', { bubbles: true, detail: { button: closeBtn } }));
+      }
+    });
 
-	function closeDialog(dialog) {
-		if (!dialog) {
-			return;
-		}
+    // Cerrar diálogo al hacer clic en el backdrop / scrim (fuera del contenedor)
+    document.addEventListener('click', function (event) {
+      const dialog = event.target;
+      if (dialog && dialog.tagName === 'DIALOG' && dialog.classList.contains('rdm-dialog') && dialog.open) {
+        const container = dialog.querySelector('.rdm-dialog--container');
+        if (container) {
+          const rect = container.getBoundingClientRect();
+          const isInDialog = (
+            event.clientX >= rect.left &&
+            event.clientX <= rect.right &&
+            event.clientY >= rect.top &&
+            event.clientY <= rect.bottom
+          );
+          if (!isInDialog) {
+            dialog.close();
+            dialog.dispatchEvent(new CustomEvent('dialog-close', { bubbles: true, detail: { reason: 'backdrop-click' } }));
+          }
+        }
+      }
+    });
+  }
 
-		dialog.classList.remove('is-open');
-		dialog.setAttribute('aria-hidden', 'true');
-		if (closeTimer) {
-			clearTimeout(closeTimer);
-		}
-		closeTimer = setTimeout(() => {
-			dialog.hidden = true;
-			unlockScroll();
-			if (openerButton && typeof openerButton.focus === 'function') {
-				openerButton.focus();
-			}
-			activeDialog = null;
-		}, 180);
-	}
-
-	function handleKeydown(event) {
-		if (!activeDialog || activeDialog.hidden) {
-			return;
-		}
-
-		if (event.key === 'Escape') {
-			event.preventDefault();
-			closeDialog(activeDialog);
-			return;
-		}
-
-		if (event.key !== 'Tab') {
-			return;
-		}
-
-		const focusableElements = getFocusableElements(activeDialog);
-		if (!focusableElements.length) {
-			event.preventDefault();
-			return;
-		}
-
-		const firstElement = focusableElements[0];
-		const lastElement = focusableElements[focusableElements.length - 1];
-		const currentElement = document.activeElement;
-
-		if (event.shiftKey && currentElement === firstElement) {
-			event.preventDefault();
-			lastElement.focus();
-		} else if (!event.shiftKey && currentElement === lastElement) {
-			event.preventDefault();
-			firstElement.focus();
-		}
-	}
-
-	document.addEventListener('click', function(event) {
-		const openTrigger = event.target.closest('[data-dialog-open]');
-		if (openTrigger) {
-			const dialogId = openTrigger.getAttribute('data-dialog-open');
-			openDialog(document.getElementById(dialogId));
-			return;
-		}
-
-		const closeTrigger = event.target.closest('[data-dialog-close]');
-		if (closeTrigger) {
-			const dialog = closeTrigger.closest('.rdm-dialog--backdrop');
-			closeDialog(dialog);
-			return;
-		}
-
-		const backdrop = event.target.closest('.rdm-dialog--backdrop');
-		if (backdrop && event.target === backdrop) {
-			closeDialog(backdrop);
-		}
-	});
-
-	document.addEventListener('keydown', handleKeydown);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDialogs);
+  } else {
+    initDialogs();
+  }
 })();
