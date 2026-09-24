@@ -1,0 +1,126 @@
+/*
+CSS para ManGoApp
+ELEMENTOS COMUNES
+Autor: Danny Estrada
+*/
+
+/* Navbar container */
+.rdm-navbar--container { 
+    width: 100%;
+    left: 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1;   
+    background-color: var(--md-sys-color-surface);
+}
+
+/* Navbar body */ 
+.rdm-navbar--body {
+    display: flex;
+    justify-content: space-around;
+    margin: 0.75em 0em 1em 0em;
+    background-color: var(--bg-color1);
+}
+
+    /* Navbar destination */ 
+    .rdm-navbar--destination {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg-color1);
+        cursor: pointer;
+        user-select: none;
+    }
+
+        /* Navbar destination media */ 
+        .rdm-navbar--destination-media {
+            display: flex;
+            margin-bottom: 0.25em;
+        }
+
+        .rdm-navbar--destination:hover {
+            font-weight: bold;
+        }
+
+        .rdm-navbar--destination:hover .rdm-navbar--destination-media-indicator {
+            background-color: var(--md-sys-color-secondary-container);
+        }
+
+        .rdm-navbar--destination:hover .material-symbols-outlined, 
+        .rdm-navbar--destination:hover .material-symbols-rounded { 
+            font-variation-settings:
+            'FILL' 1
+            }
+
+            /* Navbar destination media indicator */ 
+            .rdm-navbar--destination-media-indicator {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 1em;
+                height: 2em;
+                width: 4em;
+            }
+
+                /* Navbar destination media indicator icon */ 
+                .rdm-navbar--destination-media-indicator-icon {                
+                    background-color: var(--bg-color2);
+                }
+
+                /* material design icons */
+                .rdm-navbar--destination-media-indicator-icon .material-symbols-rounded, 
+                .rdm-navbar--destination-media-indicator-icon .material-symbols-outlined {
+                    font-size: 1.5em;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                /* State layer sobre el icono */
+                .rdm-navbar--destination-media-indicator-icon .material-symbols-rounded::after,
+                .rdm-navbar--destination-media-indicator-icon .material-symbols-outlined::after {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    border-radius: inherit;
+                    pointer-events: none;
+                    opacity: 0;
+                    transition: opacity 0.18s ease, background-color 0.18s ease;
+                }
+
+                html[data-theme="light"] .rdm-navbar--destination:hover .rdm-navbar--destination-media-indicator-icon .material-symbols-rounded::after,
+                html[data-theme="light"] .rdm-navbar--destination:hover .rdm-navbar--destination-media-indicator-icon .material-symbols-outlined::after {
+                    background-color: rgba(0, 0, 0, 0.08);
+                    opacity: 1;
+                }
+
+                html[data-theme="light"] .rdm-navbar--destination:active .rdm-navbar--destination-media-indicator-icon .material-symbols-rounded::after,
+                html[data-theme="light"] .rdm-navbar--destination:active .rdm-navbar--destination-media-indicator-icon .material-symbols-outlined::after {
+                    background-color: rgba(0, 0, 0, 0.14);
+                    opacity: 1;
+                }
+
+                html[data-theme="dark"] .rdm-navbar--destination:hover .rdm-navbar--destination-media-indicator-icon .material-symbols-rounded::after,
+                html[data-theme="dark"] .rdm-navbar--destination:hover .rdm-navbar--destination-media-indicator-icon .material-symbols-outlined::after {
+                    background-color: rgba(255, 255, 255, 0.12);
+                    opacity: 1;
+                }
+
+                html[data-theme="dark"] .rdm-navbar--destination:active .rdm-navbar--destination-media-indicator-icon .material-symbols-rounded::after,
+                html[data-theme="dark"] .rdm-navbar--destination:active .rdm-navbar--destination-media-indicator-icon .material-symbols-outlined::after {
+                    background-color: rgba(255, 255, 255, 0.18);
+                    opacity: 1;
+                }
+
+
+        /* Navbar destination body */ 
+        .rdm-navbar--destination-body {            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rdm-navbar--destination-body-label-text {            
+            margin: 0.04em 0em ;
+        }
+
+ 

@@ -1,0 +1,159 @@
+/*
+CSS para ManGoApp
+ELEMENTOS COMUNES
+Autor: Danny Estrada
+*/
+
+/* navdraw container */
+.rdm-navdraw--container { 
+    width: 100%;
+    left: 0;
+    top: 4em;
+    position: fixed;
+    height: 100%;
+    width: 22.5em;
+    z-index: 1;   
+    background-color: var(--md-sys-color-surface);
+    background-color: var(--bg-color3);
+    border-radius: 0em 1em 0em 0em;
+}
+
+/* navdraw body */ 
+.rdm-navdraw--body {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    margin: 1em 1.75em 0em 1.75em;
+    background-color: var(--bg-color1);
+}
+
+
+
+/* navdraw destination media indicator */ 
+.rdm-navdraw--destination-media-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.75em;
+    width: 100%;
+    height: 3.5em;
+    width: 21em;      
+    padding-left: 1em;
+    margin-left: -1em;
+    padding-right: 1.5em;
+    margin-right: -1em;
+    background-color: var(--bg-color1);
+    
+}
+
+    .rdm-navdraw--destination-media-indicator:hover {
+        background-color: var(--md-sys-color-secondary-container);        
+    }
+
+    .rdm-navdraw--destination:hover {
+        font-weight: bold;
+    }
+
+    .rdm-navdraw--destination:hover .material-symbols-outlined, 
+    .rdm-navdraw--destination:hover .material-symbols-rounded { 
+        font-variation-settings:
+        'FILL' 1
+        }
+
+    /* navdraw destination media indicator icon */ 
+    .rdm-navdraw--destination-media-indicator-icon {                
+        background-color: var(--bg-color2);
+    }
+
+    /* material design icons */
+    .rdm-navdraw--destination-media-indicator-icon .material-symbols-rounded, 
+    .rdm-navdraw--destination-media-indicator-icon .material-symbols-outlined {
+        font-size: 1.5em;
+        color: var(--md-sys-color-on-secondary-container);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* State layer sobre el icono */
+    .rdm-navdraw--destination-media-indicator-icon .material-symbols-rounded::after,
+    .rdm-navdraw--destination-media-indicator-icon .material-symbols-outlined::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.18s ease, background-color 0.18s ease;
+    }
+
+    html[data-theme="light"] .rdm-navdraw--destination:hover .rdm-navdraw--destination-media-indicator-icon .material-symbols-rounded::after,
+    html[data-theme="light"] .rdm-navdraw--destination:hover .rdm-navdraw--destination-media-indicator-icon .material-symbols-outlined::after {
+        background-color: rgba(0, 0, 0, 0.08);
+        opacity: 1;
+    }
+
+    html[data-theme="light"] .rdm-navdraw--destination:active .rdm-navdraw--destination-media-indicator-icon .material-symbols-rounded::after,
+    html[data-theme="light"] .rdm-navdraw--destination:active .rdm-navdraw--destination-media-indicator-icon .material-symbols-outlined::after {
+        background-color: rgba(0, 0, 0, 0.14);
+        opacity: 1;
+    }
+
+    html[data-theme="dark"] .rdm-navdraw--destination:hover .rdm-navdraw--destination-media-indicator-icon .material-symbols-rounded::after,
+    html[data-theme="dark"] .rdm-navdraw--destination:hover .rdm-navdraw--destination-media-indicator-icon .material-symbols-outlined::after {
+        background-color: rgba(255, 255, 255, 0.12);
+        opacity: 1;
+    }
+
+    html[data-theme="dark"] .rdm-navdraw--destination:active .rdm-navdraw--destination-media-indicator-icon .material-symbols-rounded::after,
+    html[data-theme="dark"] .rdm-navdraw--destination:active .rdm-navdraw--destination-media-indicator-icon .material-symbols-outlined::after {
+        background-color: rgba(255, 255, 255, 0.18);
+        opacity: 1;
+    }
+
+
+
+
+    /* navdraw destination */ 
+    .rdm-navdraw--destination {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        cursor: pointer;
+        user-select: none;
+        background-color: var(--bg-color1);
+    }
+
+        /* navdraw destination media */ 
+        .rdm-navdraw--destination-media {
+            display: flex;
+            margin-right: 0.75em;
+            flex-grow: 0;
+            background-color: var(--bg-color1);
+        }
+
+
+        /* navdraw destination body */ 
+        .rdm-navdraw--destination-body {            
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-grow: 1;
+            margin-right: 0.75em;
+            background-color: var(--bg-color1);
+        }
+
+        .rdm-navdraw--destination-body-label-text {            
+            margin: 0.04em 0em;
+            color: var(--md-sys-color-on-secondary-container);
+        }
+
+        /* navdraw destination action */ 
+        .rdm-navdraw--destination-action {            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 0;
+            background-color: var(--bg-color1);
+        }
+
+ 

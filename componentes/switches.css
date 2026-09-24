@@ -1,0 +1,198 @@
+/*
+CSS para ManGoApp
+SWITCH (MD3)
+Autor: Danny Estrada
+*/
+
+/* Wrapper: contenedor general del switch + label */
+.rdm-switch--wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    margin: 1em 0;
+    position: relative;
+}
+
+/* Container: agrupa input + track + handle */
+.rdm-switch--container {
+    position: relative;
+    display: inline-block;
+    width: 3.25em; /* 52px */
+    height: 2em; /* 32px */
+    flex-shrink: 0;
+}
+
+/* Input oculto (checkbox nativo) */
+.rdm-switch--input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+    margin: 0;
+}
+
+/* Track: pista del switch */
+.rdm-switch--track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--md-sys-color-surface-container-highest);
+    border: 0.125em solid var(--md-sys-color-outline); /* 2px */
+    border-radius: 1em; /* cápsula completa */
+    cursor: pointer;
+    transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+/* Track: estado ON */
+.rdm-switch--input:checked + .rdm-switch--track {
+    background-color: var(--md-sys-color-primary);
+    border-color: var(--md-sys-color-primary);
+}
+
+/* Handle: círculo móvil dentro del track */
+.rdm-switch--handle {
+    position: absolute;
+    top: 50%;
+    left: 0.25em; /* 4px desde borde */
+    width: 1em; /* 16px OFF sin icono */
+    height: 1em;
+    background-color: var(--md-sys-color-outline);
+    border-radius: 50%;
+    transform: translateY(-50%);
+    transition: left 200ms ease, width 200ms ease, height 200ms ease, background-color 200ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Handle: estado ON (mueve a la derecha y crece) */
+.rdm-switch--input:checked + .rdm-switch--track .rdm-switch--handle {
+    left: calc(100% - 1.75em); /* 52px - 28px = 24px desde borde */
+    width: 1.5em; /* 24px */
+    height: 1.5em;
+    background-color: var(--md-sys-color-on-primary);
+}
+
+/* Handle: con icono (siempre 24px) */
+.rdm-switch--container.with-icon .rdm-switch--handle {
+    width: 1.5em; /* 24px */
+    height: 1.5em;
+}
+
+.rdm-switch--container.with-icon .rdm-switch--input:checked + .rdm-switch--track .rdm-switch--handle {
+    left: calc(100% - 1.75em);
+}
+
+/* Icono dentro del handle */
+.rdm-switch--icon {
+    display: none;
+    font-size: 1em; /* 16px */
+    color: var(--md-sys-color-on-primary-container);
+    transition: opacity 200ms ease;
+}
+
+/* Icono visible en ON */
+.rdm-switch--input:checked + .rdm-switch--track .rdm-switch--icon {
+    display: block;
+}
+
+/* Configuración: icono en ambos estados */
+.rdm-switch--container.icon-both .rdm-switch--handle .rdm-switch--icon {
+    display: block;
+}
+
+.rdm-switch--container.icon-both .rdm-switch--input:not(:checked) + .rdm-switch--track .rdm-switch--icon {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+/* State layer (hover/focus/pressed) */
+.rdm-switch--state-layer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.5em; /* 40px */
+    height: 2.5em;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: background-color 200ms ease;
+}
+
+/* Hover */
+.rdm-switch--container:hover .rdm-switch--track {
+    border-color: var(--md-sys-color-on-surface);
+}
+
+.rdm-switch--container:hover .rdm-switch--input:checked + .rdm-switch--track {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 92%, white);
+}
+
+.rdm-switch--container:hover .rdm-switch--state-layer {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+.rdm-switch--container:hover .rdm-switch--input:checked + .rdm-switch--track .rdm-switch--state-layer {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+}
+
+/* Focus */
+.rdm-switch--input:focus + .rdm-switch--track {
+    outline: 0.125em solid var(--md-sys-color-primary);
+    outline-offset: 0.125em;
+}
+
+/* Pressed */
+.rdm-switch--input:active + .rdm-switch--track .rdm-switch--handle {
+    width: 1.75em; /* 28px */
+    height: 1.75em;
+}
+
+/* Disabled */
+.rdm-switch--input:disabled + .rdm-switch--track {
+    opacity: 0.38;
+    cursor: not-allowed;
+    border-color: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+    background-color: color-mix(in srgb, var(--md-sys-color-surface-variant) 12%, transparent);
+}
+
+.rdm-switch--input:disabled + .rdm-switch--track .rdm-switch--handle {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 38%, transparent);
+}
+
+.rdm-switch--input:disabled:checked + .rdm-switch--track {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+}
+
+.rdm-switch--input:disabled:checked + .rdm-switch--track .rdm-switch--handle {
+    background-color: var(--md-sys-color-surface);
+}
+
+/* Label del switch */
+.rdm-switch--label {
+    flex: 1;
+    color: var(--md-sys-color-on-surface);
+    cursor: pointer;
+    user-select: none;
+}
+
+.rdm-switch--label-text {
+    display: block;
+}
+
+.rdm-switch--support-text {
+    display: block;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-top: 0.25em;
+}
+
+/* Disabled: label con opacidad reducida */
+.rdm-switch--input:disabled ~ .rdm-switch--label {
+    opacity: 0.38;
+    cursor: not-allowed;
+}

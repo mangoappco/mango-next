@@ -1,0 +1,253 @@
+/*
+CSS para ManGoApp
+BOTONES
+Autor: Danny Estrada
+*/
+
+/*Button styles*/
+button{
+    border-radius: 20em;
+    border: none; 
+    display: inline-block;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; 
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    position: relative; /* para overlay */
+    overflow: hidden;   /* recorta overlay con el borde redondeado */
+}
+
+/*Button container*/
+.rdm-button--container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0.7em 1.5em;    
+}
+
+/*Media elements*/
+.rdm-button--media {
+    display: flex;
+    justify-content: center;
+    flex-grow: 0;
+    margin-right: 0.5em;
+    margin-left: -0.5em;
+    background-color: var(--bg-color1);    
+}
+
+/*Media FAB elements*/
+.rdm-button--fab-media {
+    display: flex;
+    justify-content: center;
+    flex-grow: 0;
+    margin-right: -1em;
+    margin-left: -1em;
+    background-color: var(--bg-color1);    
+}
+
+/*Button icon*/
+.rdm-button--icon {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: var(--bg-color2);
+}
+
+    /* material design icons */
+    .rdm-button--icon .material-symbols-rounded, .rdm-list--leading-icon .material-symbols-outlined {
+        font-size: 1.125em;
+        align-self: center;
+    }
+
+/* Cuerpo de la lista */
+.rdm-button--body {   
+    flex-grow: 0;
+    align-self: center;
+    background-color: var(--bg-color1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*FAB position*/
+.rdm-button--fab-position{    
+    bottom: 1.5em;
+    margin: 0;
+    position: fixed;
+    right: 1.5em;
+    z-index: 200;
+}
+
+/*FAB*/
+.rdm-button--fab{
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    height: 3.5em;
+    border-radius: 1em;
+}
+    /* material design icons */
+    .rdm-button--fab .material-symbols-rounded, .rdm-button--fab .material-symbols-outlined {
+        font-size: 1.5em;
+        align-self: center;
+    }
+
+
+/*FAB small*/
+.rdm-button--fab-small{
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 0.75em;
+}
+
+.rdm-button--fab-small .rdm-button--container {    
+    padding: 0;    
+}
+    /* material design icons */
+    .rdm-button--fab-small .material-symbols-rounded, .rdm-button--fab-small .material-symbols-outlined {
+        font-size: 1.5em;
+        align-self: center;
+    }
+
+
+
+
+
+
+
+
+/*Elevated*/
+.rdm-button--elevated{
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-primary);
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+}
+
+/*Filled*/
+.rdm-button--filled{
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+}
+
+/*Tonal*/
+.rdm-button--tonal{
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-primary);
+}
+
+/*Outlined*/
+.rdm-button--outlined{
+    background-color: transparent;
+    color: var(--md-sys-color-primary);
+    border: solid 0.0625em var(--md-sys-color-outline);
+}
+
+/*Text*/
+.rdm-button--text{
+    background-color: transparent;
+    color: var(--md-sys-color-primary);
+    border: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*Button states*/
+button:hover {
+    box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+}
+
+button:active {
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+}
+
+/* Overlay de estado con pseudo-elemento siguiendo la forma del botón */
+.rdm-button--filled::after,
+.rdm-button--tonal::after,
+.rdm-button--elevated::after,
+.rdm-button--outlined::after,
+.rdm-button--text::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+/* Filled */
+html[data-theme="light"] .rdm-button--filled:hover::after { background-color: rgba(0,0,0,0.12); opacity: 1; }
+html[data-theme="light"] .rdm-button--filled:active::after { background-color: rgba(0,0,0,0.18); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--filled:hover::after { background-color: rgba(255,255,255,0.18); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--filled:active::after { background-color: rgba(255,255,255,0.24); opacity: 1; }
+
+/* Tonal */
+html[data-theme="light"] .rdm-button--tonal:hover::after { background-color: rgba(0,0,0,0.06); opacity: 1; }
+html[data-theme="light"] .rdm-button--tonal:active::after { background-color: rgba(0,0,0,0.10); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--tonal:hover::after { background-color: rgba(255,255,255,0.10); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--tonal:active::after { background-color: rgba(255,255,255,0.14); opacity: 1; }
+
+/* Elevated */
+html[data-theme="light"] .rdm-button--elevated:hover::after { background-color: rgba(0,0,0,0.06); opacity: 1; }
+html[data-theme="light"] .rdm-button--elevated:active::after { background-color: rgba(0,0,0,0.10); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--elevated:hover::after { background-color: rgba(255,255,255,0.10); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--elevated:active::after { background-color: rgba(255,255,255,0.14); opacity: 1; }
+
+/* Outlined */
+html[data-theme="light"] .rdm-button--outlined:hover::after { background-color: rgba(0,0,0,0.05); opacity: 1; }
+html[data-theme="light"] .rdm-button--outlined:active::after { background-color: rgba(0,0,0,0.09); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--outlined:hover::after { background-color: rgba(255,255,255,0.09); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--outlined:active::after { background-color: rgba(255,255,255,0.13); opacity: 1; }
+
+/* Text */
+html[data-theme="light"] .rdm-button--text:hover::after { background-color: rgba(0,0,0,0.05); opacity: 1; }
+html[data-theme="light"] .rdm-button--text:active::after { background-color: rgba(0,0,0,0.09); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--text:hover::after { background-color: rgba(255,255,255,0.09); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--text:active::after { background-color: rgba(255,255,255,0.13); opacity: 1; }
+
+/* FAB overlays */
+.rdm-button--fab::after,
+.rdm-button--fab-small::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+html[data-theme="light"] .rdm-button--fab:hover::after { background-color: rgba(0,0,0,0.06); opacity: 1; }
+html[data-theme="light"] .rdm-button--fab:active::after { background-color: rgba(0,0,0,0.10); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--fab:hover::after { background-color: rgba(255,255,255,0.10); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--fab:active::after { background-color: rgba(255,255,255,0.14); opacity: 1; }
+
+html[data-theme="light"] .rdm-button--fab-small:hover::after { background-color: rgba(0,0,0,0.06); opacity: 1; }
+html[data-theme="light"] .rdm-button--fab-small:active::after { background-color: rgba(0,0,0,0.10); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--fab-small:hover::after { background-color: rgba(255,255,255,0.10); opacity: 1; }
+html[data-theme="dark"]  .rdm-button--fab-small:active::after { background-color: rgba(255,255,255,0.14); opacity: 1; }
+

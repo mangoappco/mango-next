@@ -1,0 +1,220 @@
+/*
+CSS para ManGoApp
+Radio Button Component - Material Design 3
+Autor: Danny Estrada
+Especificaciones MD3:
+- Radio size: 20dp (1.25em)
+- Icon size: 10dp cuando selected
+- States: enabled, hover, focused, pressed, disabled
+- Colors: primary (selected), on-surface-variant (unselected)
+*/
+
+/* Fieldset reset: elimina estilos por defecto del navegador */
+.rdm-radio--fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.rdm-radio--fieldset legend {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 0.5em;
+}
+
+/* Wrapper del radio button */
+.rdm-radio--wrapper {
+    display: block;
+    margin: 1em 0;
+}
+
+/* Container del radio button */
+.rdm-radio--container {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75em;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    min-height: 3em;
+}
+
+/* Input nativo (oculto pero funcional) */
+.rdm-radio--input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 3em;
+    height: 3em;
+    margin: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Icon container */
+.rdm-radio--icon {
+    width: 1.25em;
+    height: 1.25em;
+    border: 0.125em solid var(--md-sys-color-on-surface-variant);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* State layer (hover/focus) - ahora sobre el icon */
+.rdm-radio--icon::before {
+    content: '';
+    position: absolute;
+    width: 2.5em;
+    height: 2.5em;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+    pointer-events: none;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Inner circle (cuando está seleccionado) */
+.rdm-radio--icon::after {
+    content: '';
+    width: 0.625em;
+    height: 0.625em;
+    border-radius: 50%;
+    background-color: var(--md-sys-color-primary);
+    transform: scale(0);
+    transition: transform 0.2s ease;
+}
+
+/* Label */
+.rdm-radio--label {
+    user-select: none;
+    cursor: pointer;
+    color: var(--md-sys-color-on-surface);
+    font: inherit;
+}
+
+/* Support text para mensajes de error/ayuda */
+.rdm-radio--support {
+    display: block;
+    font-size: 0.875em;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-top: 0.5em;
+    padding-left: 1.875em;
+}
+
+.rdm-radio--wrapper.has-error .rdm-radio--support {
+    color: var(--md-sys-color-error);
+}
+
+/* Estado checked */
+.rdm-radio--input:checked ~ .rdm-radio--icon {
+    border-color: var(--md-sys-color-primary);
+}
+
+.rdm-radio--input:checked ~ .rdm-radio--icon::after {
+    transform: scale(1);
+}
+
+/* Hover state - unselected */
+.rdm-radio--container:hover .rdm-radio--icon::before {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+/* Hover state - selected */
+.rdm-radio--container:has(.rdm-radio--input:checked):hover .rdm-radio--icon::before {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+}
+
+/* Focus state */
+.rdm-radio--input:focus-visible ~ .rdm-radio--icon {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+}
+
+/* Focus state layer - unselected */
+.rdm-radio--container:has(.rdm-radio--input:focus-visible) .rdm-radio--icon::before {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+}
+
+/* Focus state layer - selected */
+.rdm-radio--container:has(.rdm-radio--input:checked:focus-visible) .rdm-radio--icon::before {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent);
+}
+
+/* Pressed state - unselected */
+.rdm-radio--container:active .rdm-radio--icon::before {
+    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+}
+
+/* Pressed state - selected */
+.rdm-radio--container:has(.rdm-radio--input:checked):active .rdm-radio--icon::before {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+}
+
+/* Disabled state */
+.rdm-radio--input:disabled ~ .rdm-radio--icon {
+    border-color: var(--md-sys-color-on-surface);
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.rdm-radio--input:disabled:checked ~ .rdm-radio--icon::after {
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0.38;
+}
+
+.rdm-radio--input:disabled ~ .rdm-radio--label {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.rdm-radio--container:has(.rdm-radio--input:disabled) {
+    cursor: not-allowed;
+}
+
+/* Disabled: sin state layer */
+.rdm-radio--container:has(.rdm-radio--input:disabled):hover .rdm-radio--icon::before,
+.rdm-radio--container:has(.rdm-radio--input:disabled):active .rdm-radio--icon::before {
+    background-color: transparent;
+}
+
+/* Error state */
+.rdm-radio--wrapper.has-error .rdm-radio--icon {
+    border-color: var(--md-sys-color-error);
+}
+
+.rdm-radio--wrapper.has-error .rdm-radio--input:checked ~ .rdm-radio--icon,
+.rdm-radio--wrapper.has-error .rdm-radio--input:indeterminate ~ .rdm-radio--icon {
+    background-color: var(--md-sys-color-error);
+    border-color: var(--md-sys-color-error);
+}
+
+.rdm-radio--wrapper.has-error .rdm-radio--label {
+    color: var(--md-sys-color-error);
+}
+
+/* Error hover state layer */
+.rdm-radio--wrapper.has-error .rdm-radio--container:hover .rdm-radio--icon::before {
+    background-color: color-mix(in srgb, var(--md-sys-color-error) 8%, transparent);
+}
+
+/* Error focus state layer */
+.rdm-radio--wrapper.has-error .rdm-radio--container:has(.rdm-radio--input:focus-visible) .rdm-radio--icon::before {
+    background-color: color-mix(in srgb, var(--md-sys-color-error) 20%, transparent);
+}
+
+/* Error pressed state layer */
+.rdm-radio--wrapper.has-error .rdm-radio--container:active .rdm-radio--icon::before {
+    background-color: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent);
+}

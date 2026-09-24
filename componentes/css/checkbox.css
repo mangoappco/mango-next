@@ -1,0 +1,217 @@
+/*
+CSS para ManGoApp
+CHECKBOXES (MD3-inspired)
+Autor: Danny Estrada / Ajustado por Copilot
+*/
+
+.rdm-checkbox--wrapper {
+  display: block;
+  margin: 1em 0;
+}
+
+/* Fieldset reset: elimina estilos por defecto del navegador */
+.rdm-checkbox--fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rdm-checkbox--fieldset legend {
+  padding: 0;
+  margin: 0;
+}
+
+/* Support text para mensajes de error/ayuda */
+.rdm-checkbox--support {
+  display: block;
+  font-size: 0.875em; /* 14px aproximadamente */
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 0.5em; /* separación desde el checkbox */
+  padding-left: 1.875em; /* alineado con el label del checkbox */
+}
+
+.rdm-checkbox--wrapper.has-error .rdm-checkbox--support {
+  color: var(--md-sys-color-error);
+}
+
+.rdm-checkbox--container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em; /* 12px entre checkbox y label */
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  min-height: 3em; /* 48px área de toque según MD3 */
+}
+
+/* Ocultar checkbox nativo */
+.rdm-checkbox--input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  width: 0;
+  height: 0;
+}
+
+/* State layer (círculo de fondo para focus/hover/pressed) - anclado al checkmark */
+.rdm-checkbox--checkmark::before {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 2.5em; /* 40px según MD3 specs */
+  height: 2.5em; /* 40px según MD3 specs */
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 160ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Checkbox custom */
+.rdm-checkbox--checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125em; /* 18px según MD3 specs */
+  height: 1.125em; /* 18px según MD3 specs */
+  border: 0.125em solid var(--md-sys-color-on-surface-variant);
+  border-radius: 0.125em; /* 2px - extra-small */
+  background-color: transparent;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 0;
+  isolation: isolate; /* Confina el stacking context del state layer */
+}
+
+/* Checkmark icon usando Material Symbols */
+.rdm-checkbox--checkmark::after {
+  position: absolute;
+  font-family: 'Material Symbols Rounded';
+  font-size: 1.125em; /* 18px, escala con el sistema */
+  line-height: 1;
+  color: transparent;
+  transition: color 160ms ease;
+}
+
+/* Label del checkbox */
+.rdm-checkbox--label {
+  color: var(--md-sys-color-on-surface);
+  font: inherit;
+}
+
+/* Hover state layer */
+.rdm-checkbox--container:hover .rdm-checkbox--checkmark::before {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent); /* MD3: 8% */
+}
+
+/* Hover border */
+.rdm-checkbox--container:hover .rdm-checkbox--checkmark {
+  border-color: var(--md-sys-color-on-surface);
+}
+
+/* Focus state layer */
+.rdm-checkbox--container:has(.rdm-checkbox--input:focus-visible) .rdm-checkbox--checkmark::before {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent); /* MD3: 12% */
+}
+
+/* Pressed/Active state layer */
+.rdm-checkbox--container:active .rdm-checkbox--checkmark::before {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent); /* MD3: 12% */
+}
+
+/* Checked */
+.rdm-checkbox--input:checked ~ .rdm-checkbox--checkmark {
+  background-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+.rdm-checkbox--input:checked ~ .rdm-checkbox--checkmark::after {
+  content: 'check';
+  color: var(--md-sys-color-on-primary);
+}
+
+/* Checked hover state layer */
+.rdm-checkbox--container:has(.rdm-checkbox--input:checked):hover .rdm-checkbox--checkmark::before {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent); /* MD3: 8% */
+}
+
+/* Checked focus state layer - Selected state (más visible) */
+.rdm-checkbox--container:has(.rdm-checkbox--input:checked:focus-visible) .rdm-checkbox--checkmark::before {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent); /* MD3: Selected state más prominente */
+}
+
+/* Checked pressed state layer */
+.rdm-checkbox--container:has(.rdm-checkbox--input:checked):active .rdm-checkbox--checkmark::before {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent); /* MD3: 12% */
+}
+
+/* Indeterminate state */
+.rdm-checkbox--input:indeterminate ~ .rdm-checkbox--checkmark {
+  background-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+.rdm-checkbox--input:indeterminate ~ .rdm-checkbox--checkmark::after {
+  content: 'remove';
+  color: var(--md-sys-color-on-primary);
+}
+
+/* Error state */
+.rdm-checkbox--wrapper.has-error .rdm-checkbox--checkmark {
+  border-color: var(--md-sys-color-error);
+}
+
+.rdm-checkbox--wrapper.has-error .rdm-checkbox--input:checked ~ .rdm-checkbox--checkmark,
+.rdm-checkbox--wrapper.has-error .rdm-checkbox--input:indeterminate ~ .rdm-checkbox--checkmark {
+  background-color: var(--md-sys-color-error);
+  border-color: var(--md-sys-color-error);
+}
+
+.rdm-checkbox--wrapper.has-error .rdm-checkbox--label {
+  color: var(--md-sys-color-error);
+}
+
+/* Error hover state layer */
+.rdm-checkbox--wrapper.has-error .rdm-checkbox--container:hover .rdm-checkbox--checkmark::before {
+  background-color: color-mix(in srgb, var(--md-sys-color-error) 8%, transparent); /* MD3: 8% */
+}
+
+/* Error focus state layer - Selected error state (más visible) */
+.rdm-checkbox--wrapper.has-error .rdm-checkbox--container:has(.rdm-checkbox--input:focus-visible) .rdm-checkbox--checkmark::before {
+  background-color: color-mix(in srgb, var(--md-sys-color-error) 20%, transparent); /* MD3: Selected state más prominente */
+}
+
+/* Error pressed state layer */
+.rdm-checkbox--wrapper.has-error .rdm-checkbox--container:active .rdm-checkbox--checkmark::before {
+  background-color: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent); /* MD3: 12% */
+}
+
+/* Disabled */
+.rdm-checkbox--input:disabled ~ .rdm-checkbox--checkmark {
+  opacity: 0.38;
+  cursor: not-allowed;
+  border-color: var(--md-sys-color-on-surface);
+}
+
+.rdm-checkbox--input:disabled:checked ~ .rdm-checkbox--checkmark,
+.rdm-checkbox--input:disabled:indeterminate ~ .rdm-checkbox--checkmark {
+  background-color: var(--md-sys-color-on-surface);
+  opacity: 0.38;
+}
+
+.rdm-checkbox--input:disabled ~ .rdm-checkbox--label {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.rdm-checkbox--container:has(input:disabled) {
+  cursor: not-allowed;
+}
+
+/* Disabled: sin state layer */
+.rdm-checkbox--container:has(input:disabled):hover .rdm-checkbox--checkmark::before,
+.rdm-checkbox--container:has(input:disabled):active .rdm-checkbox--checkmark::before {
+  background-color: transparent;
+}

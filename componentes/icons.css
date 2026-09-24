@@ -1,0 +1,30 @@
+/*
+CSS para ManGoApp
+ELEMENTOS COMUNES
+Autor: Danny Estrada
+
+/*fuente de iconos*/
+
+/*outlined icons*/
+@import url(https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200);
+
+/*rounded icons*/
+@import url(https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200);
+
+.material-symbols-outlined {
+    display: block;
+	font-variation-settings:
+	'FILL' 0,
+	'wght' 400,
+	'GRAD' 0,
+	'opsz' 24
+	}
+
+.material-symbols-rounded {
+    display: block;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+    }
