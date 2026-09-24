@@ -78,6 +78,14 @@ Autor: Danny Estrada
   margin-right: 0;
 }
 
+/* Headings dentro de form apilado — ritmo igual que h1→card en cards.php */
+.rdm-form--stacked > h2.rdm-sys-typography--display-small {
+  margin: 0.25em 0;
+}
+.rdm-form--stacked > h3.rdm-sys-typography--title-large {
+  margin: 0;
+}
+
 /* Anatomy */
 
 /* Media */
