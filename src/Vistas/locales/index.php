@@ -71,14 +71,30 @@ function escaparTextoLocales(string $valor): string
             </div>
         </form>
 
-        <?php if ($busqueda !== ''): ?>
-            <p>Resultados para: <?= escaparTextoLocales($busqueda) ?></p>
+        <?php if ($busqueda !== '' && $locales !== []): ?>
+            <p class="rdm-sys-typography--title-small">Resultados</p>
         <?php endif; ?>
 
         <?php if ($locales === [] && $busqueda === ''): ?>
-            <p>No hay locales registrados.</p>
+            <div class="rdm-empty--container">
+                <div class="rdm-empty--icon"><span class="material-symbols-rounded">inbox</span></div>
+                <h3 class="rdm-empty--headline rdm-sys-typography--title-large">No hay locales</h3>
+                <p class="rdm-empty--support rdm-sys-typography--body-medium">Aún no hay locales registrados.</p>
+                <?php if ($esAdministrador): ?>
+                <div class="rdm-empty--actions">
+                    <button class="rdm-button--filled" type="button" onclick="window.location.href='index.php?accion=crear-local';"><div class="rdm-button--container"><div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">add</span></div></div><div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Crear local</span></div></div></button>
+                </div>
+                <?php endif; ?>
+            </div>
         <?php elseif ($locales === []): ?>
-            <p>No se encontraron locales.</p>
+            <div class="rdm-empty--container">
+                <div class="rdm-empty--icon"><span class="material-symbols-rounded">search_off</span></div>
+                <h3 class="rdm-empty--headline rdm-sys-typography--title-large">Sin resultados para "<?= escaparTextoLocales($busqueda) ?>"</h3>
+                <p class="rdm-empty--support rdm-sys-typography--body-medium">Revisa la ortografía o intenta con otro nombre, código o marca.</p>
+                <div class="rdm-empty--actions">
+                    <button class="rdm-button--text" type="button" onclick="window.location.href='index.php?accion=locales';"><div class="rdm-button--container"><div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Limpiar búsqueda</span></div></div></button>
+                </div>
+            </div>
         <?php else: ?>
             <section class="rdm-card--container">
                 <div class="rdm-card--elevated">

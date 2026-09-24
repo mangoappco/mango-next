@@ -96,16 +96,30 @@ function escaparHtml(string $valor): string
         </div>
     </form>
 
-    <?php if ($busqueda !== ''): ?>
-        <p>
-            Resultados para: <?= escaparHtml($busqueda) ?>
-        </p>
+    <?php if ($busqueda !== '' && $usuarios !== []): ?>
+        <p class="rdm-sys-typography--title-small">Resultados</p>
     <?php endif; ?>
 
     <?php if ($usuarios === [] && $busqueda === ''): ?>
-        <p>No hay usuarios registrados.</p>
+        <div class="rdm-empty--container">
+            <div class="rdm-empty--icon"><span class="material-symbols-rounded">inbox</span></div>
+            <h3 class="rdm-empty--headline rdm-sys-typography--title-large">No hay usuarios</h3>
+            <p class="rdm-empty--support rdm-sys-typography--body-medium">Aún no hay usuarios registrados.</p>
+            <?php if ($esAdministrador): ?>
+            <div class="rdm-empty--actions">
+                <button class="rdm-button--filled" type="button" onclick="window.location.href='index.php?accion=crear';"><div class="rdm-button--container"><div class="rdm-button--media"><div class="rdm-button--icon"><span class="material-symbols-rounded">person_add</span></div></div><div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Crear usuario</span></div></div></button>
+            </div>
+            <?php endif; ?>
+        </div>
     <?php elseif ($usuarios === []): ?>
-        <p>No se encontraron usuarios.</p>
+        <div class="rdm-empty--container">
+            <div class="rdm-empty--icon"><span class="material-symbols-rounded">search_off</span></div>
+            <h3 class="rdm-empty--headline rdm-sys-typography--title-large">Sin resultados para "<?= escaparHtml($busqueda) ?>"</h3>
+            <p class="rdm-empty--support rdm-sys-typography--body-medium">Revisa la ortografía o intenta con otro nombre, correo o tipo.</p>
+            <div class="rdm-empty--actions">
+                <button class="rdm-button--text" type="button" onclick="window.location.href='index.php';"><div class="rdm-button--container"><div class="rdm-button--body"><span class="rdm-sys-typography--label-large">Limpiar búsqueda</span></div></div></button>
+            </div>
+        </div>
     <?php else: ?>
         <section class="rdm-card--container">
             <div class="rdm-card--elevated">
