@@ -42,3 +42,7 @@ Construir **ManGo! desde cero en PHP nativo**, sin arrastrar la arquitectura de 
 ## Qué no hacer
 
 No framework/ORM, no concatenar SQL, no exponer hashes/tokens, no quitar CSRF/verificación, no cambiar `.env` sin `.env.example`, no dejar `public/uploads/` sin ignorar.
+
+## Pruebas en navegador
+
+Siempre verificar con Playwright usando `chromium.launch({ headless: false, slowMo: 100 })` y `DISPLAY=:0` para ventana visible en escritorio Windows.

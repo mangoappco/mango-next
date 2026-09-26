@@ -78,3 +78,8 @@ Stack: PHP 8+, MySQL/MariaDB, HTML/CSS/JS, Composer (solo `vlucas/phpdotenv` + `
 3. Editar un archivo o un criterio a la vez.
 4. Revisar con el usuario y validar en navegador si aplica.
 5. Documentar/commitar en pasos temáticos pequeños.
+
+## Pruebas en navegador (Playwright)
+
+- Siempre que se pida verificar en navegador, usar Playwright con `chromium.launch({ headless: false, slowMo: 100 })` y `DISPLAY=:0` para que la ventana se abra en el escritorio de Windows (WSL2). Lanzó correctamente sin error de DISPLAY ni de headless.
+- Base URL: `http://localhost/proyectos/mango-next/public`. Esperar `networkidle` y capturar screenshot + logs de consola antes de dar por válida la prueba.
