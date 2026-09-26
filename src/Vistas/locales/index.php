@@ -101,7 +101,7 @@ function escaparTextoLocales(string $valor): string
                     <?php foreach ($locales as $local): ?>
                         <a class="rdm-list--container" href="index.php?accion=ver-local&id=<?= (int) $local['id'] ?>" aria-label="Ver detalle de <?= escaparTextoLocales((string) $local['nombre']) ?>">
                             <div class="rdm-list--media">
-                                <div class="rdm-list--avatar" style="background-image: url('<?= escaparTextoLocales((string) ($local['imagen'] ?: 'recursos/img/avatar-default.svg')) ?>');" role="img" aria-label="Imagen de <?= escaparTextoLocales((string) $local['nombre']) ?>"></div>
+                                <div class="rdm-list--avatar" style="background-image: url('<?= escaparTextoLocales((string) ($local['imagen'] ?: 'recursos/img/local-default.svg')) ?>');" role="img" aria-label="Imagen de <?= escaparTextoLocales((string) $local['nombre']) ?>"></div>
                             </div>
                             <div class="rdm-list--body">
                                 <div class="rdm-sys-typography--body-large"><div class="rdm-list--body-headline"><?= escaparTextoLocales((string) $local['nombre']) ?></div></div>

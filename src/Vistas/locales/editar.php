@@ -64,7 +64,7 @@ function formatearHoraLocalesEditar(?string $valor): string
 
             <h2 class="rdm-sys-typography--display-small">Imagen</h2>
             <div class="rdm-form--elevated"><div class="rdm-form--body">
-                <p><img src="<?= escaparTextoLocalesEditar((string) ($datos['imagen'] ?: 'recursos/img/avatar-default.svg')) ?>" alt="Imagen del local <?= escaparTextoLocalesEditar((string) $datos['nombre']) ?>" width="160"></p>
+                <p><img src="<?= escaparTextoLocalesEditar((string) ($datos['imagen'] ?: 'recursos/img/local-default.svg')) ?>" alt="Imagen del local <?= escaparTextoLocalesEditar((string) $datos['nombre']) ?>" width="160"></p>
                 <div class="rdm-fileinput--wrapper" data-fileinput id="fi_imagen">
                     <div class="rdm-fileinput--container rdm-fileinput--outlined">
                         <div class="rdm-fileinput--control">

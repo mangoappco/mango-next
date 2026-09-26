@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" role="img" aria-labelledby="titulo descripcion">
+  <title id="titulo">Avatar predeterminado de local</title>
+  <desc id="descripcion">Icono neutro de tienda</desc>
+  <rect width="300" height="300" fill="#e5e7eb"/>
+  <path d="M62 118h176l-14-52H76l-14 52z" fill="#9ca3af"/>
+  <rect x="76" y="118" width="148" height="120" fill="#9ca3af"/>
+  <rect x="131" y="168" width="38" height="70" fill="#e5e7eb"/>
+  <path d="M76 118h148v18H76z" fill="#6b7280"/>
+</svg>
