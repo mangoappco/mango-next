@@ -147,13 +147,13 @@ function escaparHtml(string $valor): string
                             </div>
                             <div class="rdm-sys-typography--body-medium">
                                 <div class="rdm-list--body-suporting-text">
-                                    <?= escaparHtml((string) $usuario['tipo']) ?>
+                                    <?= escaparHtml((string) $usuario['tipo']) ?> — <?= (int) $usuario['activo'] === 1 ? 'Activo' : 'Inactivo' ?>
                                 </div>
                             </div>
                         </div>
 
                         <div class="rdm-list--action">
-                            <div class="rdm-list--trailing-icon" title="Ver detalle del perfil">
+                            <div class="rdm-list--trailing-icon" title="Ver detalle">
                                 <span class="material-symbols-rounded">chevron_right</span>
                             </div>
                         </div>
