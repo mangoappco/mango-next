@@ -105,7 +105,7 @@ function escaparTextoLocales(string $valor): string
                             </div>
                             <div class="rdm-list--body">
                                 <div class="rdm-sys-typography--body-large"><div class="rdm-list--body-headline"><?= escaparTextoLocales((string) $local['nombre']) ?></div></div>
-                                <div class="rdm-sys-typography--body-medium"><div class="rdm-list--body-suporting-text"><?= escaparTextoLocales((string) $local['marca_nombre']) ?> — <?= (int) $local['activo'] === 1 ? 'Activo' : 'Inactivo' ?></div></div>
+                                <div class="rdm-sys-typography--body-medium"><div class="rdm-list--body-suporting-text"><?= escaparTextoLocales((string) $local['marca_nombre']) ?> — <?= Mango\Core\Texto::estado((int) $local['activo'] === 1) ?></div></div>
                             </div>
                             <div class="rdm-list--action">
                                 <div class="rdm-list--trailing-icon" title="Ver detalle">

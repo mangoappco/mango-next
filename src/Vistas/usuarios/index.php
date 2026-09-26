@@ -147,7 +147,7 @@ function escaparHtml(string $valor): string
                             </div>
                             <div class="rdm-sys-typography--body-medium">
                                 <div class="rdm-list--body-suporting-text">
-                                    <?= escaparHtml((string) $usuario['tipo']) ?> — <?= (int) $usuario['activo'] === 1 ? 'Activo' : 'Inactivo' ?>
+                                    <?= escaparHtml((string) $usuario['tipo']) ?> — <?= Mango\Core\Texto::estado((int) $usuario['activo'] === 1) ?>
                                 </div>
                             </div>
                         </div>

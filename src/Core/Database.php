@@ -61,7 +61,7 @@ final class Database
 
         try {
             // Abre la conexión y configura opciones importantes de seguridad y consistencia.
-            return new PDO($dsn, $username, $password, [
+            $pdo = new PDO($dsn, $username, $password, [
                 // Hace que PDO lance excepciones cuando ocurre un error.
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 
@@ -71,6 +71,12 @@ final class Database
                 // Pide a MySQL que prepare realmente las consultas en lugar de emularlas.
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]);
+
+            // Fuerza a MySQL a usar la zona de Colombia en la sesión actual.
+            // Así CURRENT_TIMESTAMP guarda la hora local que espera el negocio.
+            $pdo->exec("SET time_zone = '-05:00'");
+
+            return $pdo;
         } catch (PDOException $exception) {
             // Evita exponer detalles internos de conexión directamente al usuario.
             throw new RuntimeException(

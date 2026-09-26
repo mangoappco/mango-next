@@ -95,15 +95,15 @@ function escaparTextoDetalle(string $valor): string
                     </p>
                     <p class="rdm-sys-typography--body-large">
                         <strong>Estado:</strong><br>
-                        <?= (int) $usuario['activo'] === 1 ? 'Activo' : 'Inactivo' ?>
+                        <?= Mango\Core\Texto::estado((int) $usuario['activo'] === 1) ?>
                     </p>
                     <p class="rdm-sys-typography--body-large">
                         <strong>Creado:</strong><br>
-                        <?= escaparTextoDetalle((string) $usuario['creado_en']) ?>
+                        <?= Mango\Core\Fechas::relativa((string) $usuario['creado_en']) ?>
                     </p>
                     <p class="rdm-sys-typography--body-large">
                         <strong>Actualizado:</strong><br>
-                        <?= escaparTextoDetalle((string) $usuario['actualizado_en']) ?>
+                        <?= Mango\Core\Fechas::relativa((string) $usuario['actualizado_en']) ?>
                     </p>
                 </div>
 

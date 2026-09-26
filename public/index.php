@@ -7,6 +7,10 @@ declare(strict_types=1);
 // dirname(__DIR__) sube desde public/ hasta la raíz del proyecto.
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+// Configura la zona horaria de Colombia para toda la aplicación.
+// ManGo! opera en Colombia, así que las fechas se guardan y se muestran en hora local.
+date_default_timezone_set('America/Bogota');
+
 // Crea una instancia de la aplicación principal.
 // Composer encuentra esta clase gracias al autoload PSR-4.
 $application = new Mango\Core\Application();
