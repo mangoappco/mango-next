@@ -71,8 +71,9 @@ function escaparTextoDetalle(string $valor): string
 
         <h1 class="rdm-sys-typography--display-medium">Detalle del usuario</h1>
 
-        <section class="rdm-card--container">
-            <article class="rdm-card--elevated">
+        <article class="rdm-card--container">
+            <div class="rdm-card--elevated rdm-card--list">
+
                 <div
                     class="rdm-card--media"
                     style="background-image: url('<?= escaparTextoDetalle((string) ($usuario['foto_perfil'] ?: 'recursos/img/avatar-default.svg')) ?>');"
@@ -85,30 +86,51 @@ function escaparTextoDetalle(string $valor): string
                         <?= escaparTextoDetalle((string) $usuario['nombres']) ?>
                         <?= escaparTextoDetalle((string) $usuario['apellidos']) ?>
                     </h2>
-                    <p class="rdm-sys-typography--body-large">
-                        <strong>Correo:</strong><br>
-                        <?= escaparTextoDetalle((string) $usuario['correo']) ?>
-                    </p>
-                    <p class="rdm-sys-typography--body-large">
-                        <strong>Tipo:</strong><br>
-                        <?= escaparTextoDetalle((string) $usuario['tipo']) ?>
-                    </p>
-                    <p class="rdm-sys-typography--body-large">
-                        <strong>Estado:</strong><br>
-                        <?= Mango\Core\Texto::estado((int) $usuario['activo'] === 1) ?>
-                    </p>
-                    <p class="rdm-sys-typography--body-large">
-                        <strong>Creado:</strong><br>
-                        <?= Mango\Core\Fechas::relativa((string) $usuario['creado_en']) ?>
-                    </p>
-                    <p class="rdm-sys-typography--body-large">
-                        <strong>Actualizado:</strong><br>
-                        <?= Mango\Core\Fechas::relativa((string) $usuario['actualizado_en']) ?>
-                    </p>
-                </div>
 
-            </article>
-        </section>
+                    <?php
+                    // Define los campos del usuario con su ícono, etiqueta y valor a mostrar.
+                    $campos = [
+                        ['mail', 'Correo', (string) $usuario['correo']],
+                        ['manage_accounts', 'Tipo', (string) $usuario['tipo']],
+                        ['verified', 'Estado', Mango\Core\Texto::estado((int) $usuario['activo'] === 1)],
+                    ];
+                    ?>
+
+                    <?php foreach ($campos as [$icono, $etiqueta, $valor]): ?>
+                        <div class="rdm-list--container">
+                            <div class="rdm-list--media">
+                                <div class="rdm-list--leading-icon"><span class="material-symbols-rounded"><?= escaparTextoDetalle($icono) ?></span></div>
+                            </div>
+                            <div class="rdm-list--body">
+                                <div class="rdm-list--body-headline"><?= escaparTextoDetalle($etiqueta) ?></div>
+                                <div class="rdm-list--body-suporting-text"><?= escaparTextoDetalle($valor) ?></div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <div class="rdm-list--container">
+                        <div class="rdm-list--media">
+                            <div class="rdm-list--leading-icon"><span class="material-symbols-rounded">schedule</span></div>
+                        </div>
+                        <div class="rdm-list--body">
+                            <div class="rdm-list--body-headline">Creado</div>
+                            <div class="rdm-list--body-suporting-text"><?= nl2br(escaparTextoDetalle(Mango\Core\Fechas::relativa((string) $usuario['creado_en']))) ?></div>
+                        </div>
+                    </div>
+
+                    <div class="rdm-list--container">
+                        <div class="rdm-list--media">
+                            <div class="rdm-list--leading-icon"><span class="material-symbols-rounded">update</span></div>
+                        </div>
+                        <div class="rdm-list--body">
+                            <div class="rdm-list--body-headline">Actualizado</div>
+                            <div class="rdm-list--body-suporting-text"><?= nl2br(escaparTextoDetalle(Mango\Core\Fechas::relativa((string) $usuario['actualizado_en']))) ?></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </article>
 
         <?php if ($esAdministrador): ?>
             <div class="rdm-button--fab-position">

@@ -1,0 +1,38 @@
+/*
+CSS para ManGoApp
+CARD CON LISTA INTERNA
+Autor: Danny Estrada
+Extiende rdm-card para contener listas sin padding lateral en los items
+*/
+
+/* Card con lista interna: los items ocupan todo el ancho del body de la card */
+.rdm-card--list .rdm-list--container {
+    /* Margen negativo para compensar el padding del card body y llegar al borde. */
+    margin-left: -1em;
+    margin-right: -1em;
+    /* Padding propio para que el texto conserve la alineación de la card. */
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+/* El body de la lista no debe empujar el contenido con su margen lateral */
+.rdm-card--list .rdm-list--body {
+    margin-right: 0;
+}
+
+/* Separación vertical entre items de la lista interna */
+.rdm-card--list .rdm-list--container + .rdm-list--container {
+    margin-top: 0.75em;
+}
+
+/* El último item no necesita separación inferior extra */
+.rdm-card--list .rdm-list--container:last-child {
+    margin-bottom: 0;
+}
+
+/* Variante con divisores: separa los items con una línea sutil */
+.rdm-card--list--divided .rdm-list--container + .rdm-list--container {
+    margin-top: 0;
+    padding-top: 0.75em;
+    border-top: 0.0625em solid var(--md-sys-color-outline-variant);
+}

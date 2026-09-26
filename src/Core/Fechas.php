@@ -13,18 +13,19 @@ use Carbon\Carbon;
 final class Fechas
 {
     // Convierte una fecha de la base de datos en texto relativo con fecha larga.
+    // Devuelve ambos textos en líneas separadas para que la vista las separe.
     public static function relativa(string $fecha): string
     {
         // Interpreta la fecha guardada por MySQL en la zona horaria de Colombia.
         $carbon = Carbon::parse($fecha, 'America/Bogota')->locale('es');
 
-        // Obtiene el texto relativo, por ejemplo "hace 5 minutos".
-        $relativa = $carbon->diffForHumans();
+        // Obtiene el texto relativo en mayúscula inicial, por ejemplo "Hace 5 minutos".
+        $relativa = ucfirst($carbon->diffForHumans());
 
-        // Obtiene la fecha larga con mes abreviado, por ejemplo "21 de sep a las 3:00 pm".
+        // Obtiene la fecha larga con mes abreviado, por ejemplo "26 de Sep de 2026 a la 1:07 pm".
         $larga = $carbon->format('j \d\e M \d\e Y \a \l\a\s g:i a');
 
-        // Devuelve ambos textos combinados para mostrar contexto y precisión.
-        return "{$relativa} ({$larga})";
+        // Devuelve el texto relativo y la fecha en dos líneas separadas.
+        return "{$relativa}\n({$larga})";
     }
 }
